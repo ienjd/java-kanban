@@ -1,7 +1,10 @@
 package TaskMaster;
 
-import java.util.ArrayList;
+import Tasks.Task;
+
+import java.util.HashMap;
 
 class TaskMaster {
-    private final ArrayList
+    private int iDcount = 0;
+    HashMap<Integer, Task> taskList = new HashMap<>();
 }
