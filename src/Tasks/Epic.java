@@ -1,5 +1,7 @@
 package Tasks;
 
+import Enums.Statuses;
+
 import java.util.HashMap;
 
 public class Epic extends Task {
