@@ -1,50 +1,40 @@
 
 import Enums.Statuses;
 import Tasks.Task;
-import Tasks.Epic;
-import Tasks.Subtask;
+import UserInputs.UserInputs;
+
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-
-        Scanner scanner = new Scanner(System.in);
+        UserInputs userInputs = new UserInputs();
         System.out.println("Добро пожаловать!");
         while (true) {
             printMenu();
 
-            String userInput = scanner.next();
+            switch (userInputs.getUserInput()) {
 
-            switch (userInput) {
+                case "1" -> TaskMaster.addTaskToList(TaskMaster.createTask(userInputs.getTitle(), userInputs.getDescription()));
 
-                case "1" -> {
-                    System.out.println("Введите название задачи");
-                    String title = scanner.nextLine();
-                    scanner.nextLine();
-                    System.out.println("Введите описание задачи");
-                    String description = scanner.nextLine();
-                    Task newTask = new Task(title, description, TaskMaster.idCount+1, Statuses.NEW);
-                    TaskMaster.taskList.put(newTask.getId(), newTask);
-                }
                 case "2" -> {
                     System.out.println("Вы действительно хотите очистить список задач? да / нет");
-                    String userAnswer = scanner.next().equals("да") ? "да" : (scanner.next().equals("нет") ? "нет" : "нет");
+                    boolean userAnswer = userInputs.getUserInput().trim().toLowerCase().equals("да");
                     switch (userAnswer) {
-                        case "да" -> {
+                        case true -> {
                             TaskMaster.taskList.clear();
                             System.out.println("Список задач очищен");
                         }
-                        case "нет" -> System.out.println("Здорово, что вы передумали!");
-
+                        case false -> System.out.println("Здорово, что вы передумали!");
                     }
                 }
 
                 case "3" -> {
                 }
                 case "4" -> {
-                    System.out.println(TaskMaster.getTaskList());
+                    for (Object task : TaskMaster.taskList.values()) {
+                        System.out.println(task);
+                    }
                 }
                 case "5" -> {
                 }
@@ -55,7 +45,6 @@ public class Main {
                 }
                 default -> System.out.println("Такой команды нет, введите команду из списка");
             }
-
         }
     }
 
@@ -66,8 +55,9 @@ public class Main {
         for (String menuItem : menuItems) {
             System.out.println(menuItem);
         }
-
     }
+
+
 
     public static class TaskMaster {
         private static int idCount = 0;
@@ -79,6 +69,16 @@ public class Main {
 
         public static int getIdCount() {
             return idCount;
+        }
+
+        private static Task createTask(String title, String description){
+            Task newTask = new Task(title, description, TaskMaster.idCount+1, Statuses.NEW);
+            idCount++;
+            return newTask;
+        }
+
+        private static void addTaskToList(Task task){
+            TaskMaster.taskList.put(task.getId(), task);
         }
     }
 }
