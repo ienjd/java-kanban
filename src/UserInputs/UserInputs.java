@@ -5,8 +5,6 @@ import java.util.Scanner;
 public class UserInputs {
     Scanner scanner = new Scanner(System.in);
 
-
-
     public String getUserInput(){
         String command = scanner.nextLine();
         return command;

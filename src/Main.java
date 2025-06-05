@@ -15,14 +15,15 @@ public class Main {
 
             switch (userInputs.getUserInput()) {
 
-                case "1" -> TaskMaster.addTaskToList(TaskMaster.createTask(userInputs.getTitle(), userInputs.getDescription()));
+                case "1" ->
+                        TaskMaster.addTaskToList(TaskMaster.createTask(userInputs.getTitle(), userInputs.getDescription()));
 
                 case "2" -> {
                     System.out.println("Вы действительно хотите очистить список задач? да / нет");
                     boolean userAnswer = userInputs.getUserInput().trim().toLowerCase().equals("да");
                     switch (userAnswer) {
                         case true -> {
-                            TaskMaster.taskList.clear();
+                            TaskMaster.TASK_LIST.clear();
                             System.out.println("Список задач очищен");
                         }
                         case false -> System.out.println("Здорово, что вы передумали!");
@@ -30,19 +31,26 @@ public class Main {
                 }
 
                 case "3" -> {
+                    System.out.println("Введите id искомого объекта");
+                    System.out.println(TaskMaster.findTask(Integer.parseInt(userInputs.getUserInput())));
                 }
+
                 case "4" -> {
-                    for (Object task : TaskMaster.taskList.values()) {
+                    for (Object task : TaskMaster.TASK_LIST.values()) {
                         System.out.println(task);
                     }
                 }
-                case "5" -> {
-                }
-                case "6" -> {
-                }
+
+                case "5" ->  TaskMaster.updateTask(Integer.parseInt(userInputs.getUserInput()));
+
+
+                case "6" -> TaskMaster.deleteTaskFromList(Integer.parseInt(userInputs.getUserInput()));
+
+
                 case "7" -> {
                     return;
                 }
+
                 default -> System.out.println("Такой команды нет, введите команду из списка");
             }
         }
@@ -57,31 +65,55 @@ public class Main {
         }
     }
 
-
-
     public static class TaskMaster {
         private static int idCount = 0;
-        static HashMap<Integer, Object> taskList = new HashMap<>();
+        public static final HashMap<Integer, Object> TASK_LIST = new HashMap<>();
 
         public static HashMap<Integer, Object> getTaskList() {
-            return taskList;
+            return TASK_LIST;
         }
 
         public static int getIdCount() {
             return idCount;
         }
 
-        private static Task createTask(String title, String description){
-            Task newTask = new Task(title, description, TaskMaster.idCount+1, Statuses.NEW);
+        private static void setIdCount() {
             idCount++;
+        }
+
+        private static Task createTask(String title, String description) {
+            Task newTask = new Task(title, description, TaskMaster.getIdCount() + 1, Statuses.NEW);
+            setIdCount();
             return newTask;
         }
 
-        private static void addTaskToList(Task task){
-            TaskMaster.taskList.put(task.getId(), task);
+        private static void addTaskToList(Task task) {
+            TaskMaster.TASK_LIST.put(task.getId(), task);
+        }
+
+        private static Task findTask(int taskId) {
+            Task task = new Task();
+            for (Integer key : TASK_LIST.keySet()) {
+                if (key.equals(taskId)) {
+                    task = (Task) TASK_LIST.get(taskId);
+                }
+            }
+            return task;
+        }
+
+        private static void deleteTaskFromList(int id){
+            TaskMaster.getTaskList().remove(id);
+        }
+
+        private static Task updateTask(int id){
+
+            Statuses status = findTask(id).getStatus()==Statuses.NEW ? Statuses.IN_PROGRESS : Statuses.DONE;
+           Task task = new Task(findTask(id).getTitle(), findTask(id).getDescription(), findTask(id).getId(), status);
+           return task;
         }
     }
 }
+
 
 
 
