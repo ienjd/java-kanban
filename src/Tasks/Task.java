@@ -1,6 +1,7 @@
 package Tasks;
 
 import Enums.Statuses;
+import com.sun.tools.javac.Main;
 
 import java.util.Objects;
 
@@ -11,6 +12,12 @@ public class Task {
     private Statuses status;
 
     public Task(){
+    }
+
+    public Task(String title, String description, int id) {
+        this.title = title;
+        this.description = description;
+        this.id = id;
     }
 
     public Task(String title, String description, int id, Statuses status) {
@@ -48,8 +55,9 @@ public class Task {
         return status;
     }
 
-    public void setStatus(Statuses status) {
+    public Statuses setStatus(Statuses status) {
         this.status = status;
+        return status;
     }
 
     @Override

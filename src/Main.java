@@ -1,5 +1,6 @@
 
 import Enums.Statuses;
+import Tasks.Epic;
 import Tasks.Task;
 import UserInputs.UserInputs;
 
@@ -16,7 +17,8 @@ public class Main {
             switch (userInputs.getUserInput()) {
 
                 case "1" ->
-                        TaskMaster.addTaskToList(TaskMaster.createTask(userInputs.getTitle(), userInputs.getDescription()));
+                        TaskMaster.addTaskToList(TaskMaster.createTask(userInputs.getUserInput(), userInputs.getTitle(),
+                                userInputs.getDescription()));
 
                 case "2" -> {
                     System.out.println("Вы действительно хотите очистить список задач? да / нет");
@@ -41,10 +43,14 @@ public class Main {
                     }
                 }
 
-                case "5" ->  TaskMaster.updateTask(Integer.parseInt(userInputs.getUserInput()));
+                case "5" -> {
+                    TaskMaster.updateTask(Integer.parseInt(userInputs.getUserInput()));
+                }
 
 
-                case "6" -> TaskMaster.deleteTaskFromList(Integer.parseInt(userInputs.getUserInput()));
+                case "6" -> {
+                    TaskMaster.deleteTaskFromList(Integer.parseInt(userInputs.getUserInput()));
+                }
 
 
                 case "7" -> {
@@ -77,15 +83,28 @@ public class Main {
             return idCount;
         }
 
-        private static void setIdCount() {
+        public static void setIdCount() {
             idCount++;
         }
 
-        private static Task createTask(String title, String description) {
-            Task newTask = new Task(title, description, TaskMaster.getIdCount() + 1, Statuses.NEW);
+        private static Task createTask(String typeOfTask, String title, String description) {
+            typeOfTask = typeOfTask.equals("epic") ? "epic" : "task";
+            switch (typeOfTask){
+                case "task" -> {
+                    Task newTask = new Task(title, description, getIdCount() + 1, Statuses.NEW);
+                }
+
+                case "epic" -> {
+                    Epic newTask = new Epic(title, description, getIdCount() + 1, Statuses.NEW);
+                }
+
+            }
+            Task newTask = new Task(title, description, getIdCount() + 1, Statuses.NEW);
             setIdCount();
             return newTask;
         }
+
+
 
         private static void addTaskToList(Task task) {
             TaskMaster.TASK_LIST.put(task.getId(), task);
@@ -106,9 +125,10 @@ public class Main {
         }
 
         private static Task updateTask(int id){
-
-            Statuses status = findTask(id).getStatus()==Statuses.NEW ? Statuses.IN_PROGRESS : Statuses.DONE;
-           Task task = new Task(findTask(id).getTitle(), findTask(id).getDescription(), findTask(id).getId(), status);
+           Task task = new Task(findTask(id).getTitle(), findTask(id).getDescription(), findTask(id).getId());
+           Statuses status = findTask(id).getStatus()==Statuses.NEW ? task.setStatus(Statuses.IN_PROGRESS) : task.setStatus(Statuses.DONE);
+           task.setStatus(status);
+           addTaskToList(task);
            return task;
         }
     }
