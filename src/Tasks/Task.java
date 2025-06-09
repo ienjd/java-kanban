@@ -1,15 +1,15 @@
 package Tasks;
 
 import Enums.Statuses;
-import com.sun.tools.javac.Main;
+import Main.Main;
 
 import java.util.Objects;
 
 public class Task {
-    private String title;
-    private String description;
-    private int id;
-    private Statuses status;
+    protected String title;
+    protected String description;
+    protected int id;
+    protected Statuses status;
 
     public Task(){
     }
@@ -55,9 +55,34 @@ public class Task {
         return status;
     }
 
+    public static Task updateTask(int id){
+
+        Task task = (Task) Main.TaskMaster.findTask(id);
+        Statuses status = ((Task) Main.TaskMaster.findTask(id)).status == Statuses.NEW ? task.setStatus(Statuses.IN_PROGRESS)
+                : task.setStatus(Statuses.DONE);
+        task.setStatus(status);
+        addTaskToList(task);
+        return task;
+    }
+
     public Statuses setStatus(Statuses status) {
         this.status = status;
         return status;
+    }
+
+    public static Task createTask(String title, String description) {
+        Task newTask = new Task(title, description, Main.TaskMaster.getIdCount() + 1, Statuses.NEW);
+        Main.TaskMaster.setIdCount();
+        return newTask;
+    }
+
+    public static void addTaskToList(Task task) {
+        Main.TaskMaster.TASK_LIST.put(task.getId(), task);
+    }
+
+    public static boolean taskIsInList(int taskId) {
+        boolean isInTaskList = Main.TaskMaster.TASK_LIST.containsKey(taskId) ? true : false;
+        return isInTaskList;
     }
 
     @Override
@@ -67,6 +92,7 @@ public class Task {
         return id == task.id && Objects.equals(title, task.title);
     }
 
+
     @Override
     public int hashCode() {
         return Objects.hash(id, title);
@@ -74,11 +100,12 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status=" + status +
-                '}';
+        return "Task{ " +
+                "title= " + title + '\'' +
+                ", description= " + description + '\'' +
+                ", id= " + id +
+                ", status= " + status + ", class= " +
+                getClass() + " " +
+                " }";
     }
 }
