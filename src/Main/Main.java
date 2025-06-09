@@ -2,6 +2,7 @@ package Main;
 
 import Enums.Statuses;
 import Tasks.Epic;
+import Tasks.Subtask;
 import Tasks.Task;
 import UserInputs.UserInputs;
 
@@ -67,16 +68,27 @@ public class Main {
                 }
 
                 case "5" -> {
-                    Task.updateTask(Integer.parseInt(userInputs.getUserInput()));
+                    System.out.println("Введите id эпика объекта");
+                    System.out.println(Epic.subtasksThisEpic(Integer.parseInt(userInputs.getUserInput())));
                 }
 
 
                 case "6" -> {
-                    TaskMaster.deleteTaskFromList(Integer.parseInt(userInputs.getUserInput()));
+                    System.out.println("Введите номер задачи/подзадачи");
+                    int userCommand = Integer.parseInt(userInputs.getUserInput());
+                    if (TaskMaster.getTaskList().containsKey(userCommand)) {
+                        Task.updateTask(userCommand);
+                    } else if (TaskMaster.getSubtaskList().containsKey(userCommand)){
+                        Subtask.updateSubtask(userCommand);
+                    }
                 }
 
 
                 case "7" -> {
+                    TaskMaster.deleteTaskFromList(Integer.parseInt(userInputs.getUserInput()));
+                }
+
+                case "8" -> {
                     return;
                 }
 
@@ -87,7 +99,7 @@ public class Main {
 
     public static void printMenu() {
         String[] menuItems = new String[]{"1 - Создать задачу", "2 - Очистить список задач", "3 - Найти задачу",
-                "4 - Вывести список задач", "5 - Выполнить задачу", "6 - Удалить задачу", "7 - Выход"};
+                "4 - Вывести список задач","5 - Вывести подзадачи по номеру эпика", "6 - Обновить статус задачи", "7 - Удалить задачу", "8 - Выход"};
         System.out.println("Выберите пункт меню:");
         for (String menuItem : menuItems) {
             System.out.println(menuItem);
@@ -96,19 +108,19 @@ public class Main {
 
     public static class TaskMaster {
         public static int idCount = 0;
-        public static final HashMap<Integer, Object> TASK_LIST = new HashMap<>();
-        public static final HashMap<Integer, Object> EPIC_LIST = new HashMap<>();
-        public static final HashMap<Integer, Object> SUBTASK_LIST = new HashMap<>();
+        public static final HashMap<Integer, Task> TASK_LIST = new HashMap<>();
+        public static final HashMap<Integer, Epic> EPIC_LIST = new HashMap<>();
+        public static final HashMap<Integer, Subtask> SUBTASK_LIST = new HashMap<>();
 
-        public static HashMap<Integer, Object> getTaskList() {
+        public static HashMap<Integer, Task> getTaskList() {
             return TASK_LIST;
         }
 
-        public static HashMap<Integer, Object> getEpicList() {
+        public static HashMap<Integer, Epic> getEpicList() {
             return EPIC_LIST;
         }
 
-        public static HashMap<Integer, Object> getSubtaskList() {
+        public static HashMap<Integer, Subtask> getSubtaskList() {
             return SUBTASK_LIST;
         }
 
@@ -145,6 +157,8 @@ public class Main {
                 System.out.println("Данного элемента уже нет в списке");
             }
         }
+
+
     }
 }
 

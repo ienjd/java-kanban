@@ -14,12 +14,6 @@ public class Task {
     public Task(){
     }
 
-    public Task(String title, String description, int id) {
-        this.title = title;
-        this.description = description;
-        this.id = id;
-    }
-
     public Task(String title, String description, int id, Statuses status) {
         this.title = title;
         this.description = description;
@@ -27,32 +21,8 @@ public class Task {
         this.status = status;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Statuses getStatus() {
-        return status;
     }
 
     public static Task updateTask(int id){
@@ -62,6 +32,7 @@ public class Task {
                 : task.setStatus(Statuses.DONE);
         task.setStatus(status);
         addTaskToList(task);
+        Main.TaskMaster.TASK_LIST.put(task.id, task);
         return task;
     }
 
@@ -78,11 +49,6 @@ public class Task {
 
     public static void addTaskToList(Task task) {
         Main.TaskMaster.TASK_LIST.put(task.getId(), task);
-    }
-
-    public static boolean taskIsInList(int taskId) {
-        boolean isInTaskList = Main.TaskMaster.TASK_LIST.containsKey(taskId) ? true : false;
-        return isInTaskList;
     }
 
     @Override
