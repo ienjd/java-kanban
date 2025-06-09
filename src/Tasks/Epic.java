@@ -6,20 +6,22 @@ import UserInputs.UserInputs;
 
 import java.util.ArrayList;
 
-import static Main.Main.TaskMaster.getSubtaskList;
-
 public class Epic extends Task {
 
     public Epic(String title, String description, int id, Statuses status) {
         super(title, description, id, status);
     }
 
-
-//вот здесь нужно прописать ветвление проверки всех статусов подзадач
-    public static Epic changeEpicStatus(int id){
+    public static Epic changeEpicStatus(int id) {
+        Statuses status;
+        int subtasksInDone = 0;
         Epic epic = (Epic) Main.TaskMaster.findTask(id);
-        Statuses status = ((Task) Main.TaskMaster.findTask(id)).status == Statuses.NEW ? epic.setStatus(Statuses.IN_PROGRESS)
-                : epic.setStatus(Statuses.DONE);
+        for (Subtask subtask : subtasksThisEpic(id)) {
+            if (subtask.status.equals(Statuses.DONE)) {
+                subtasksInDone++;
+            }
+        }
+        status = subtasksInDone == subtasksThisEpic(id).size() ? Statuses.DONE : Statuses.IN_PROGRESS;
         epic.setStatus(status);
         addTaskToList(epic);
         Main.TaskMaster.EPIC_LIST.put(epic.id, epic);
@@ -33,7 +35,7 @@ public class Epic extends Task {
         System.out.println("Введите количество подзадач в данном эпике: ");
         int totalSubtasks = Integer.parseInt(userInputs.getUserInput());
         for (int i = 0; i < totalSubtasks; i++) {
-            Subtask subtask = Subtask.createTask(userInputs.getUserInput(), userInputs.getUserInput());
+            Subtask subtask = Subtask.createTask(userInputs.getTitle(), userInputs.getDescription());
             subtask.setEpicId(newTask.getId());
             Subtask.addSubtaskToList(subtask);
         }
@@ -43,10 +45,11 @@ public class Epic extends Task {
     public static void addTaskToList(Epic epic) {
         Main.TaskMaster.EPIC_LIST.put(epic.getId(), epic);
     }
-    public static ArrayList<Subtask> subtasksThisEpic(int epicId){
+
+    public static ArrayList<Subtask> subtasksThisEpic(int epicId) {
         ArrayList<Subtask> subtasksThisEpic = new ArrayList<>();
         for (Subtask subtask : Main.TaskMaster.getSubtaskList().values()) {
-            if(subtask.getEpicId()==epicId){
+            if (subtask.getEpicId() == epicId) {
                 subtasksThisEpic.add(subtask);
             }
         }

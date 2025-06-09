@@ -1,8 +1,6 @@
 package Tasks;
-
 import Enums.Statuses;
 import Main.Main;
-
 import java.util.Objects;
 
 public class Task {
@@ -11,7 +9,7 @@ public class Task {
     protected int id;
     protected Statuses status;
 
-    public Task(){
+    public Task() {
     }
 
     public Task(String title, String description, int id, Statuses status) {
@@ -25,8 +23,7 @@ public class Task {
         return id;
     }
 
-    public static Task updateTask(int id){
-
+    public static Task updateTask(int id) {
         Task task = (Task) Main.TaskMaster.findTask(id);
         Statuses status = ((Task) Main.TaskMaster.findTask(id)).status == Statuses.NEW ? task.setStatus(Statuses.IN_PROGRESS)
                 : task.setStatus(Statuses.DONE);
@@ -75,3 +72,4 @@ public class Task {
                 " }";
     }
 }
+

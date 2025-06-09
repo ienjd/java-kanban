@@ -1,12 +1,8 @@
 package Main;
-
-import Enums.Statuses;
 import Tasks.Epic;
 import Tasks.Subtask;
 import Tasks.Task;
 import UserInputs.UserInputs;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 public class Main {
 
@@ -19,7 +15,7 @@ public class Main {
             switch (userInputs.getUserInput()) {
 
                 case "1" -> {
-
+                    System.out.println("Введите тип задачи, epic или task: ");
                     String taskOrEpic = userInputs.getUserInput();
                     switch(taskOrEpic.equals("epic") ? "epic" : "task") {
 
@@ -85,6 +81,7 @@ public class Main {
 
 
                 case "7" -> {
+                    System.out.println("Введите номер удаляемой задачи: ");
                     TaskMaster.deleteTaskFromList(Integer.parseInt(userInputs.getUserInput()));
                 }
 
@@ -99,7 +96,8 @@ public class Main {
 
     public static void printMenu() {
         String[] menuItems = new String[]{"1 - Создать задачу", "2 - Очистить список задач", "3 - Найти задачу",
-                "4 - Вывести список задач","5 - Вывести подзадачи по номеру эпика", "6 - Обновить статус задачи", "7 - Удалить задачу", "8 - Выход"};
+                "4 - Вывести список задач","5 - Вывести подзадачи по номеру эпика", "6 - Обновить статус задачи",
+                "7 - Удалить задачу", "8 - Выход"};
         System.out.println("Выберите пункт меню:");
         for (String menuItem : menuItems) {
             System.out.println(menuItem);
