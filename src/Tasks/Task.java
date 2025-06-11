@@ -1,51 +1,55 @@
 package Tasks;
-import Enums.Statuses;
-import Main.Main;
+
 import java.util.Objects;
 
 public class Task {
-    protected String title;
-    protected String description;
-    protected int id;
-    protected Statuses status;
+    private String title;
+    private String description;
+    private int id;
+    private Status status;
 
     public Task() {
     }
 
-    public Task(String title, String description, int id, Statuses status) {
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
         this.description = description;
-        this.id = id;
-        this.status = status;
     }
 
     public int getId() {
         return id;
     }
 
-    public static Task updateTask(int id) {
-        Task task = (Task) Main.TaskMaster.findTask(id);
-        Statuses status = ((Task) Main.TaskMaster.findTask(id)).status == Statuses.NEW ? task.setStatus(Statuses.IN_PROGRESS)
-                : task.setStatus(Statuses.DONE);
-        task.setStatus(status);
-        addTaskToList(task);
-        Main.TaskMaster.TASK_LIST.put(task.id, task);
-        return task;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public Statuses setStatus(Statuses status) {
-        this.status = status;
+    public Status getStatus() {
         return status;
     }
 
-    public static Task createTask(String title, String description) {
-        Task newTask = new Task(title, description, Main.TaskMaster.getIdCount() + 1, Statuses.NEW);
-        Main.TaskMaster.setIdCount();
-        return newTask;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
-    public static void addTaskToList(Task task) {
-        Main.TaskMaster.TASK_LIST.put(task.getId(), task);
+
+    public Task (String title, String description, int id, Status status) {
+        this.title = title;
+        this.description = description;
+        this.id = id;
+        this.status = status;
     }
 
     @Override
@@ -54,7 +58,6 @@ public class Task {
         Task task = (Task) object;
         return id == task.id && Objects.equals(title, task.title);
     }
-
 
     @Override
     public int hashCode() {

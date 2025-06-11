@@ -1,11 +1,45 @@
 package Tasks;
 
-import Enums.Statuses;
-import Main.Main;
-import Main.Main.TaskMaster;
-
 public class Subtask extends Task{
+    private String title;
+    private String description;
+    private int id;
+    private Status status;
     private int epicId;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+
+    public void setSubtaskStatus(Status status) {
+        this.status = status;
+    }
 
     public int getEpicId(){
         return epicId;
@@ -15,41 +49,14 @@ public class Subtask extends Task{
         this.epicId = epicId;
     }
 
-    public Subtask(String title, String description, int id, Statuses status) {
-        super(title, description, id, status);
+    public Subtask(String title, String description, int id, Status status, int epicId) {
+        this.title = title;
+        this.description = description;
+        this.id = id;
+        this.status = status;
+        this.epicId = epicId;
     }
 
-    public static Subtask createTask(String title, String description) {
-        Subtask newTask = new Subtask(title, description, TaskMaster.getIdCount() + 1, Statuses.NEW);
-        TaskMaster.setIdCount();
-        return newTask;
-    }
-
-    public static void addSubtaskToList(Subtask subtask) {
-        TaskMaster.SUBTASK_LIST.put(subtask.getId(), subtask);
-    }
-
-    public static Subtask updateSubtask(int id){
-
-        Subtask subtask = (Subtask) TaskMaster.findTask(id);
-        Statuses status = ((Subtask) TaskMaster.findTask(id)).status == Statuses.NEW ? subtask.setStatus(Statuses.IN_PROGRESS)
-                : subtask.setStatus(Statuses.DONE);
-        subtask.setStatus(status);
-        addSubtaskToList(subtask);
-        Main.TaskMaster.getSubtaskList().put(subtask.id, subtask);
-        Epic.changeEpicStatus(subtask.checkSubtasksThisEpic());
-        return subtask;
-    }
-
-    public int checkSubtasksThisEpic(){
-        int idEpicInProgress = 0;
-        for (Subtask subtask : Epic.subtasksThisEpic(getEpicId())) {
-            if(subtask.status.equals(Statuses.IN_PROGRESS) || (subtask.status.equals(Statuses.DONE))){
-                idEpicInProgress = subtask.getEpicId();
-            }
-        }
-        return idEpicInProgress;
-    }
 
     public String toString() {
         return "Task{ " +
@@ -57,7 +64,7 @@ public class Subtask extends Task{
                 ", description= " + description + '\'' +
                 ", id= " + id +
                 ", status= " + status + ", class= " +
-                getClass() + " " + ", epicId= " + epicId + " " +
+                getClass() + " " + ", epicId= " + getEpicId() + " " +
                 " }";
     }
 }
