@@ -7,28 +7,8 @@ public class Subtask extends Task{
     private Status status;
     private int epicId;
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     @Override
@@ -36,17 +16,12 @@ public class Subtask extends Task{
         return status;
     }
 
-
     public void setSubtaskStatus(Status status) {
         this.status = status;
     }
 
     public int getEpicId(){
         return epicId;
-    }
-
-    public void setEpicId(int epicId){
-        this.epicId = epicId;
     }
 
     public Subtask(String title, String description, int id, Status status, int epicId) {
