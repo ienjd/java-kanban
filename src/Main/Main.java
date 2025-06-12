@@ -24,7 +24,7 @@ public class Main {
                 taskMaster.epicList);
         taskMaster.addTaskToList((taskMaster.createSubtask("Подзадача 3", "Описание подзадачи 3", 6)),
                 taskMaster.subtaskList);
-
+        System.out.println("_____________________________________________________________________________");
         for (Object task : taskMaster.taskList.values()) {
             System.out.println(task);
         }
@@ -40,7 +40,7 @@ public class Main {
         taskMaster.updateSubtask(4);
         taskMaster.updateSubtask(5);
         taskMaster.updateSubtask(7);
-
+        System.out.println("_____________________________________________________________________________");
         for (Object task : taskMaster.taskList.values()) {
             System.out.println(task);
         }
@@ -54,7 +54,7 @@ public class Main {
         taskMaster.deleteTaskFromList(1);
         taskMaster.deleteSubtasksThisEpic(3);
         taskMaster.updateEpic(3);
-
+        System.out.println("_____________________________________________________________________________");
         for (Object task : taskMaster.taskList.values()) {
             System.out.println(task);
         }
@@ -67,7 +67,7 @@ public class Main {
 
 
         taskMaster.deleteTaskFromList(3);
-
+        System.out.println("_____________________________________________________________________________");
         for (Object task : taskMaster.taskList.values()) {
             System.out.println(task);
         }
