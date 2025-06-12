@@ -7,7 +7,7 @@ import Tasks.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-    public class TaskMaster {
+    public class TaskManager {
         public static int idCount = 0;
         public final HashMap<Integer, Task> taskList = new HashMap<>();
         public final HashMap<Integer, Epic> epicList = new HashMap<>();
@@ -18,7 +18,7 @@ import java.util.HashMap;
             return idCount;
         }
 
-        public static void setIdCount() {
+        public static void addIdCount() {
             idCount++;
         }
 
@@ -27,20 +27,20 @@ import java.util.HashMap;
         }
 
         public Task createTask(String title, String description) {
-            Task task = new Task(title, description, idCount + 1, Status.NEW);
-            setIdCount();
+            addIdCount();
+            Task task = new Task(title, description, getIdCount(), Status.NEW);
             return task;
         }
 
         public Epic createEpic(String title, String description) {
-            Epic epic = new Epic(title, description, idCount + 1, Status.NEW);
-            setIdCount();
+            addIdCount();
+            Epic epic = new Epic(title, description, getIdCount(), Status.NEW);
             return epic;
         }
 
         public Subtask createSubtask(String title, String description, int epicId) {
-            Subtask subtask = new Subtask(title, description, TaskMaster.getIdCount() + 1, Status.NEW, epicId);
-            setIdCount();
+            addIdCount();
+            Subtask subtask = new Subtask(title, description, TaskManager.getIdCount(), Status.NEW, epicId);
             return subtask;
         }
 
@@ -125,6 +125,12 @@ import java.util.HashMap;
                 epic.setStatus(Status.DONE);
                 epicList.put(epic.getId(), epic);
             }
+        }
+
+        public void deleteSubtasksThisEpic(int epicId) {
+            subtaskList.values().removeAll(subtasksThisEpic(epicId));
+            epicList.get(epicId).setStatus(Status.DONE);
+            updateEpic(epicId);
         }
     }
 
