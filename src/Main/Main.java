@@ -1,5 +1,5 @@
 package Main;
-import TaskMaster.TaskManager;
+import InMemoryTaskManager.InMemoryTaskManager;
 import Tasks.Epic;
 import UserInputs.UserInput;
 
@@ -7,7 +7,7 @@ public class Main {
 
     public static void main(String[] args) {
         UserInput userInput = new UserInput();
-        TaskManager taskMaster = new TaskManager();
+        InMemoryTaskManager taskMaster = new InMemoryTaskManager();
         System.out.println("Тесты практикума");
 
         taskMaster.addTaskToList((taskMaster.createTask("Задача 1", "Описание задачи 1")),
@@ -179,7 +179,9 @@ public class Main {
                     taskMaster.deleteTaskFromList(Integer.parseInt(userInput.getUserInput()));
                 }
 
-                case "9" -> {
+                case "9" -> taskMaster.getHistory();
+
+                case "10" -> {
                     return;
                 }
 
@@ -192,7 +194,7 @@ public class Main {
         String[] menuItems = new String[]{"1 - Создать задачу", "2 - Очистить список задач", "3 - Найти задачу",
                 "4 - Вывести список задач","5 - Вывести подзадачи по номеру эпика", "6 - Удалить подзадачи по номеру эпика",
                 "7 - Обновить статус задачи",
-                "8 - Удалить задачу", "9 - Выход"};
+                "8 - Удалить задачу", "9 - вывести историю просмотров задач",  "10 - Выход"};
         System.out.println("Выберите пункт меню:");
         for (String menuItem : menuItems) {
             System.out.println(menuItem);
