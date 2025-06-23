@@ -1,20 +1,19 @@
 package InMemoryTaskManager;
+import HistoryManager.InMemoryHistoryManager;
 import Tasks.Epic;
 import Tasks.Status;
 import Tasks.Subtask;
 import Tasks.Task;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+
 
 public class InMemoryTaskManager implements TaskManager {
     public static int idCount = 0;
     public final HashMap<Integer, Task> taskList = new HashMap<>();
     public final HashMap<Integer, Epic> epicList = new HashMap<>();
     public final HashMap<Integer, Subtask> subtaskList = new HashMap<>();
-    private List<Task> viewHistory = new ArrayList<>();
-
+    InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
 
     public static int getIdCount() {
         return idCount;
@@ -46,16 +45,23 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask createSubtask(String title, String description, int epicId) {
         addIdCount();
-        Subtask subtask = new Subtask(title, description, getIdCount(), Status.NEW, epicId);
+        Subtask subtask = new Subtask(title, description, getIdCount(), Status.NEW, epicId = epicId == getIdCount() ?
+                0 : epicId);
         return subtask;
     }
 
     @Override
-    public Task findTask(int findId) {
-        taskList.putAll(subtaskList);
-        taskList.putAll(epicList);
-        updateHistory(taskList.get(findId));
-        return taskList.get(findId);
+    public Object findTask(int findId) throws CloneNotSupportedException {
+        Object object = null;
+        if (taskList.containsKey(findId)) {
+            object = taskList.get(findId);
+        } else if (epicList.containsKey(findId)) {
+            object = epicList.get(findId);
+        } else if (subtaskList.containsKey(findId)) {
+            object = subtaskList.get(findId);
+        }
+        inMemoryHistoryManager.add((Task)object);
+        return object;
     }
 
     @Override
@@ -140,27 +146,7 @@ public class InMemoryTaskManager implements TaskManager {
         updateEpic(epicId);
     }
 
-    @Override
-    public List<Task> getHistory(){
-        System.out.println(viewHistory);
-        return viewHistory;
-    }
-
-    @Override
-    public void updateHistory(Task task) {
-        boolean sizeListMoreThen10 = viewHistory.size() > 10 ? true : false;
-
-        switch(sizeListMoreThen10) {
-            case true -> {
-                viewHistory.remove(viewHistory.get(0));
-                viewHistory.add(task);
-            }
-
-            case false -> viewHistory.add(task);
-        }
-
-        }
-    }
+}
 
 
 

@@ -11,6 +11,10 @@ public class Subtask extends Task{
         return id;
     }
 
+    public void setDescription(String description){
+        this.description = description;
+    }
+
     @Override
     public Status getStatus() {
         return status;
@@ -22,6 +26,12 @@ public class Subtask extends Task{
 
     public int getEpicId(){
         return epicId;
+    }
+
+    public void setEpicId(int epicId){
+        if(epicId != id) {
+            this.epicId = epicId;
+        }
     }
 
     public Subtask(String title, String description, int id, Status status, int epicId) {

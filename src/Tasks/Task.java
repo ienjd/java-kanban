@@ -3,7 +3,7 @@ package Tasks;
 import java.util.List;
 import java.util.Objects;
 
-public class Task {
+public class Task implements Cloneable{
     private String title;
     private String description;
     private int id;
@@ -13,8 +13,24 @@ public class Task {
     public Task() {
     }
 
+    public String getTitle(){
+        return title;
+    }
+
+    public Task clone() throws CloneNotSupportedException {
+        return (Task)super.clone();
+    }
+
+    public String getDescription(){
+        return description;
+    }
+
     public int getId() {
         return id;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Status getStatus() {

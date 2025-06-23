@@ -18,7 +18,7 @@ public interface TaskManager {
 
     Subtask createSubtask(String title, String description, int epicId);
 
-    Task findTask(int findId);
+    Object findTask(int findId) throws CloneNotSupportedException;
 
     void deleteTaskFromList(int id);
 
@@ -32,7 +32,4 @@ public interface TaskManager {
 
     void deleteSubtasksThisEpic(int epicId);
 
-    List<Task> getHistory();
-
-    void updateHistory(Task task);
 }

@@ -11,6 +11,11 @@ public class Epic extends Task {
         return status;
     }
 
+    @Override
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Epic(String title, String description, int id, Status status) {
         super(title, description, id, status);
     }

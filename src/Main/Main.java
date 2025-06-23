@@ -1,13 +1,18 @@
 package Main;
+import HistoryManager.InMemoryHistoryManager;
 import InMemoryTaskManager.InMemoryTaskManager;
 import Tasks.Epic;
+import Tasks.Task;
 import UserInputs.UserInput;
+
+import java.util.HashMap;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CloneNotSupportedException {
         UserInput userInput = new UserInput();
         InMemoryTaskManager taskMaster = new InMemoryTaskManager();
+        InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
         System.out.println("Тесты практикума");
 
         taskMaster.addTaskToList((taskMaster.createTask("Задача 1", "Описание задачи 1")),
@@ -179,7 +184,10 @@ public class Main {
                     taskMaster.deleteTaskFromList(Integer.parseInt(userInput.getUserInput()));
                 }
 
-                case "9" -> taskMaster.getHistory();
+                case "9" -> {
+                    inMemoryHistoryManager.getHistory();
+                }
+
 
                 case "10" -> {
                     return;
