@@ -9,7 +9,7 @@ class TaskTest {
     InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
     @Test//экземпляры Task равны друг другу, если равны их id
-    void createTask() {
+    void TaskEqualsTask() {
         Task firstTask = inMemoryTaskManager.createTask("Первая задача", "Описание первой задачи");
         Task secondTask = firstTask;
 

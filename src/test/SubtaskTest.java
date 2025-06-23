@@ -10,7 +10,7 @@ class SubtaskTest {
     InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
     @Test//экземпляры Subtask равны друг другу, если равны их id
-    void createSubtask() {
+    void SubtaskEqualsSubtask() {
         Subtask firstSubtask = inMemoryTaskManager.createSubtask("Первая подзадача", "Описание первой подзадачи", 1);
         Subtask secondSubtask = firstSubtask;
 

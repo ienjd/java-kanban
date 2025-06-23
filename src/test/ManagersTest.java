@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Test;
 class ManagersTest {
 
     @Test//Метод getDefault класса Manager возвращает объект TaskManager
-    void getDefault() {
+    void MethodGetDefaultReturnObjectTaskManager() {
         Assertions.assertNotNull(Managers.getDefault());
     }
 
     @Test//Метод getDefaultHistory класса Manager возвращает объект HistoryManager
-    void getDefaultHistory() {
+    void MethodGetDefaultHistoryReturnObjectHistoryManager() {
         Assertions.assertNotNull(Managers.getDefaultHistory());
     }
 }
