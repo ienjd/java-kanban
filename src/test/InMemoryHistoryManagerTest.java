@@ -1,8 +1,8 @@
 package test;
 
-import HistoryManager.InMemoryHistoryManager;
-import InMemoryTaskManager.InMemoryTaskManager;
-import Tasks.Task;
+import manager.InMemoryHistoryManager;
+import manager.InMemoryTaskManager;
+import tasks.Task;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +12,7 @@ class InMemoryHistoryManagerTest {
 
     @Test// Данный метод проверяет сохранение предыдущей версии Task
     void previousVersionOfTaskAddedToList() throws CloneNotSupportedException {
-        Task task = inMemoryTaskManager.createSubtask("Первоначальный заголовок", "Первоначальное описание", 2);
+        Task task = inMemoryTaskManager.createTask("Первоначальный заголовок", "Первоначальное описание");
 
         inMemoryHistoryManager.add(task);
 
@@ -20,7 +20,8 @@ class InMemoryHistoryManagerTest {
 
         inMemoryHistoryManager.add(task);
 
-        Assertions.assertEquals(inMemoryHistoryManager.getHistory().get(0), inMemoryHistoryManager.getHistory().get(1));
+        Assertions.assertNotEquals(inMemoryHistoryManager.getViewHistory().get(0).getDescription(),
+                inMemoryHistoryManager.getViewHistory().get(1).getDescription());
     }
 
 }

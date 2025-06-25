@@ -1,9 +1,8 @@
 package test;
-import InMemoryTaskManager.InMemoryTaskManager;
-import Tasks.Epic;
-import Tasks.Status;
-import Tasks.Subtask;
-import Tasks.Task;
+import manager.InMemoryTaskManager;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 import org.junit.jupiter.api.*;
 
 class InMemoryTaskManagerTest {

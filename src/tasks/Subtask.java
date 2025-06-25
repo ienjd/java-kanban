@@ -1,4 +1,4 @@
-package Tasks;
+package tasks;
 
 public class Subtask extends Task{
     private String title;
@@ -9,6 +9,9 @@ public class Subtask extends Task{
 
     public int getId() {
         return id;
+    }
+    public void setId(int id){
+        this.id = id;
     }
 
     public void setDescription(String description){
@@ -28,10 +31,20 @@ public class Subtask extends Task{
         return epicId;
     }
 
+
     public void setEpicId(int epicId){
         if(epicId != id) {
             this.epicId = epicId;
         }
+    }
+
+    public String getDescription(){
+        return description;
+    }
+
+
+    public String getTitle(){
+        return title;
     }
 
     public Subtask(String title, String description, int id, Status status, int epicId) {

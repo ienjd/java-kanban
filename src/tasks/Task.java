@@ -1,6 +1,5 @@
-package Tasks;
+package tasks;
 
-import java.util.List;
 import java.util.Objects;
 
 public class Task implements Cloneable{
@@ -39,6 +38,10 @@ public class Task implements Cloneable{
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public void setId(int id){
+        this.id = id;
     }
 
 

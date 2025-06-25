@@ -1,7 +1,6 @@
 package test;
 
-import InMemoryTaskManager.InMemoryTaskManager;
-import InMemoryTaskManager.Managers;
+import manager.Managers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

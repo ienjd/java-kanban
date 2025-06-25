@@ -1,8 +1,8 @@
-package InMemoryTaskManager;
+package manager;
 
-import Tasks.Epic;
-import Tasks.Subtask;
-import Tasks.Task;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,14 +22,15 @@ public interface TaskManager {
 
     void deleteTaskFromList(int id);
 
-    ArrayList<Subtask> subtasksThisEpic(int epicId);
+    ArrayList<Subtask> getEpicSubtasks(int epicId);
 
-    void updateTask(int id);
+    void updateTask(Task task);
 
-    void updateSubtask(int id);
+    void updateSubtask(Subtask subtask);
 
-    void updateEpic(int id);
+    void updateEpic(Epic epic);
 
-    void deleteSubtasksThisEpic(int epicId);
+    void deleteEpicSubtasks(int epicId);
 
+    <T extends Task> List<T> getHistory();
 }
