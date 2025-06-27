@@ -1,8 +1,9 @@
 package main;
-import manager.InMemoryHistoryManager;
 import manager.InMemoryTaskManager;
 import tasks.Epic;
 import UserInputs.UserInput;
+import tasks.Subtask;
+import tasks.Task;
 
 public class Main {
 
@@ -90,40 +91,34 @@ public class Main {
                     switch(userInput.getUserInput()) {
 
                         case "task" -> {
-                                taskMaster.addTaskToList((taskMaster.createTask(userInput.getTitle(),
-                                    userInput.getDescription())), taskMaster.taskList);
+                            Task newTask = taskMaster.createTask(userInput.getTitle(), userInput.getDescription());
+                            taskMaster.addTaskToList(newTask, taskMaster.taskList);
                         }
 
-
-
                         case "epic" -> {
-                            Epic newEpic;
-                            taskMaster.addTaskToList((newEpic = taskMaster.createEpic(userInput.getTitle(),
-                                    userInput.getDescription())), taskMaster.epicList);
-                                    System.out.println("Введите количество подзадач данного эпика");
-                                    int quantitySubtasks = Integer.parseInt(userInput.getUserInput());
-                                    for (int i = 0; i < quantitySubtasks ; i++) {
-                                        taskMaster.addTaskToList((taskMaster.createSubtask(userInput.getTitle(),
-                                                userInput.getDescription(), newEpic.getId())), taskMaster.subtaskList);
-
+                            Epic newEpic = taskMaster.createEpic(userInput.getTitle(), userInput.getDescription());
+                            taskMaster.addTaskToList(newEpic, taskMaster.epicList);
+                            System.out.println("Введите количество подзадач данного эпика");
+                            int quantitySubtasks = Integer.parseInt(userInput.getUserInput());
+                            for (int i = 0; i < quantitySubtasks ; i++) {
+                                taskMaster.addTaskToList((taskMaster.createSubtask(userInput.getTitle(),
+                                        userInput.getDescription(), newEpic.getId())), taskMaster.subtaskList);
                             }
                                     taskMaster.updateEpic(newEpic);
                         }
 
                         case "subtask" -> {
-                            int epicId;
                             System.out.println("Введите поочередно заголовок задачи, описание, и " +
                                     "номер эпика для данной подзадачи");
-                            taskMaster.addTaskToList(taskMaster.createSubtask(userInput.getTitle(),
-                                userInput.getDescription(), epicId = Integer.parseInt(userInput.getUserInput())),
-                                taskMaster.subtaskList);
-
-                        taskMaster.updateEpic(taskMaster.epicList.get(epicId));
+                            int epicId;
+                            Subtask newSubtask = taskMaster.createSubtask(userInput.getTitle(), userInput.getDescription(),
+                                    epicId = Integer.parseInt(userInput.getUserInput()));
+                            taskMaster.addTaskToList(newSubtask, taskMaster.subtaskList);
+                            taskMaster.updateEpic(taskMaster.epicList.get(epicId));
                         }
 
-
-
                         default -> System.out.println("Нужно указать один из предложенных типов задач: task, epic или subtask");
+
                     }
                 }
 
