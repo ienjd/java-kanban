@@ -12,20 +12,27 @@ public class Task implements Cloneable{
     public Task() {
     }
 
+    public Task (String title, String description, int id, Status status) {
+        this.title = title;
+        this.description = description;
+        this.id = id;
+        this.status = status;
+    }
+
     public String getTitle(){
         return title;
     }
 
-    public Task clone() throws CloneNotSupportedException {
-        return (Task)super.clone();
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
     }
 
     public String getDescription(){
         return description;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public void setDescription(String description) {
@@ -40,16 +47,8 @@ public class Task implements Cloneable{
         this.status = status;
     }
 
-    public void setId(int id){
-        this.id = id;
-    }
-
-
-    public Task (String title, String description, int id, Status status) {
-        this.title = title;
-        this.description = description;
-        this.id = id;
-        this.status = status;
+    public Task clone() throws CloneNotSupportedException {
+        return (Task)super.clone();
     }
 
     @Override

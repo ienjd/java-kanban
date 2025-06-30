@@ -126,7 +126,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic epic) {
-
         Epic newEpic = createEpic(epic.getTitle(), epic.getDescription());
         idCount--;
         newEpic.setId(epic.getId());
@@ -164,10 +163,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public <T extends Task> List<T> getHistory(){
-        inMemoryHistoryManager.getViewHistory().forEach(task -> System.out.println(task));
         return (List<T>) inMemoryHistoryManager.getViewHistory();
     }
-
 }
 
 

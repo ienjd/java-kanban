@@ -7,6 +7,14 @@ public class Subtask extends Task{
     private Status status;
     private int epicId;
 
+    public Subtask(String title, String description, int id, Status status, int epicId) {
+        this.title = title;
+        this.description = description;
+        this.id = id;
+        this.status = status;
+        this.epicId = epicId;
+    }
+
     public int getId() {
         return id;
     }
@@ -14,6 +22,9 @@ public class Subtask extends Task{
         this.id = id;
     }
 
+    public String getDescription(){
+        return description;
+    }
     public void setDescription(String description){
         this.description = description;
     }
@@ -31,31 +42,17 @@ public class Subtask extends Task{
         return epicId;
     }
 
-
     public void setEpicId(int epicId){
         if(epicId != id) {
             this.epicId = epicId;
         }
     }
 
-    public String getDescription(){
-        return description;
-    }
-
-
     public String getTitle(){
         return title;
     }
 
-    public Subtask(String title, String description, int id, Status status, int epicId) {
-        this.title = title;
-        this.description = description;
-        this.id = id;
-        this.status = status;
-        this.epicId = epicId;
-    }
-
-
+    @Override
     public String toString() {
         return "Task{ " +
                 "title= " + title + '\'' +

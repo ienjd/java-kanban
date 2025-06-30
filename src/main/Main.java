@@ -5,6 +5,8 @@ import UserInputs.UserInput;
 import tasks.Subtask;
 import tasks.Task;
 
+import java.util.ArrayList;
+
 public class Main {
 
     public static void main(String[] args) throws CloneNotSupportedException {
@@ -88,7 +90,7 @@ public class Main {
 
                 case "1" -> {
                     System.out.println("Введите тип задачи, epic, task или subtask: ");
-                    switch(userInput.getUserInput()) {
+                    switch (userInput.getUserInput()) {
 
                         case "task" -> {
                             Task newTask = taskMaster.createTask(userInput.getTitle(), userInput.getDescription());
@@ -100,11 +102,11 @@ public class Main {
                             taskMaster.addTaskToList(newEpic, taskMaster.epicList);
                             System.out.println("Введите количество подзадач данного эпика");
                             int quantitySubtasks = Integer.parseInt(userInput.getUserInput());
-                            for (int i = 0; i < quantitySubtasks ; i++) {
+                            for (int i = 0; i < quantitySubtasks; i++) {
                                 taskMaster.addTaskToList((taskMaster.createSubtask(userInput.getTitle(),
                                         userInput.getDescription(), newEpic.getId())), taskMaster.subtaskList);
                             }
-                                    taskMaster.updateEpic(newEpic);
+                            taskMaster.updateEpic(newEpic);
                         }
 
                         case "subtask" -> {
@@ -117,7 +119,8 @@ public class Main {
                             taskMaster.updateEpic(taskMaster.epicList.get(epicId));
                         }
 
-                        default -> System.out.println("Нужно указать один из предложенных типов задач: task, epic или subtask");
+                        default ->
+                                System.out.println("Нужно указать один из предложенных типов задач: task, epic или subtask");
 
                     }
                 }
@@ -142,32 +145,22 @@ public class Main {
                     System.out.println(taskMaster.findTask(findObject));
                 }
 
-                case "4" -> {
-                    for (Object task : taskMaster.taskList.values()) {
-                        System.out.println(task);
-                    }
-                    for (Object task : taskMaster.epicList.values()) {
-                        System.out.println(task);
-                    }
-                    for (Object task : taskMaster.subtaskList.values()) {
-                        System.out.println(task);
-                    }
-                }
+                case "4" -> printItems(taskMaster).forEach(task -> System.out.println(task));
 
                 case "5" -> {
                     System.out.println("Введите id эпика объекта");
                     System.out.println(taskMaster.getEpicSubtasks(Integer.parseInt(userInput.getUserInput())));
                 }
 
-               case "6" -> taskMaster.deleteEpicSubtasks(Integer.parseInt(userInput.getUserInput()));
+                case "6" -> taskMaster.deleteEpicSubtasks(Integer.parseInt(userInput.getUserInput()));
 
                 case "7" -> {
                     System.out.println("Введите номер задачи/подзадачи");
                     int userCommand = Integer.parseInt(userInput.getUserInput());
                     if (taskMaster.taskList.containsKey(userCommand)) {
                         taskMaster.updateTask(taskMaster.taskList.get(userCommand));
-                    } else if (taskMaster.subtaskList.containsKey(userCommand)){
-                       taskMaster.updateSubtask(taskMaster.subtaskList.get(userCommand));
+                    } else if (taskMaster.subtaskList.containsKey(userCommand)) {
+                        taskMaster.updateSubtask(taskMaster.subtaskList.get(userCommand));
                     }
                 }
 
@@ -177,10 +170,7 @@ public class Main {
                     taskMaster.deleteTaskFromList(Integer.parseInt(userInput.getUserInput()));
                 }
 
-                case "9" -> {
-                    taskMaster.getHistory();
-                }
-
+                case "9" -> taskMaster.getHistory().forEach(task -> System.out.println(task));
 
                 case "10" -> {
                     return;
@@ -193,15 +183,25 @@ public class Main {
 
     public static void printMenu() {
         String[] menuItems = new String[]{"1 - Создать задачу", "2 - Очистить список задач", "3 - Найти задачу",
-                "4 - Вывести список задач","5 - Вывести подзадачи по номеру эпика", "6 - Удалить подзадачи по номеру эпика",
+                "4 - Вывести список задач", "5 - Вывести подзадачи по номеру эпика", "6 - Удалить подзадачи по номеру эпика",
                 "7 - Обновить статус задачи",
-                "8 - Удалить задачу", "9 - вывести историю просмотров задач",  "10 - Выход"};
+                "8 - Удалить задачу", "9 - Вывести историю просмотров задач", "10 - Выход"};
         System.out.println("Выберите пункт меню:");
         for (String menuItem : menuItems) {
             System.out.println(menuItem);
         }
     }
+
+    public static <T extends Task> ArrayList<T> printItems(InMemoryTaskManager taskMaster){
+        ArrayList<T> allItems = new ArrayList<>();
+        taskMaster.taskList.values().forEach(task -> allItems.add((T) task));
+        taskMaster.epicList.values().forEach(epic -> allItems.add((T) epic));
+        taskMaster.subtaskList.values().forEach(subtask -> allItems.add((T)subtask));
+        return allItems;
+    }
+
 }
+
 
 
 

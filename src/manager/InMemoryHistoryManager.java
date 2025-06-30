@@ -1,13 +1,11 @@
 package manager;
-
 import tasks.Task;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private List<Task> viewHistory = new ArrayList<>();
+    private final List<Task> viewHistory = new ArrayList<>();
 
     public List<Task> getViewHistory() {
         return viewHistory;
