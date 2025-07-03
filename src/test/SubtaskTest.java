@@ -1,9 +1,7 @@
 package test;
 
 import manager.InMemoryTaskManager;
-import manager.TaskManager;
 import org.junit.jupiter.api.*;
-import tasks.Epic;
 import tasks.Subtask;
 
 class SubtaskTest {

@@ -1,7 +1,7 @@
 package main;
 import manager.InMemoryTaskManager;
 import tasks.Epic;
-import UserInputs.UserInput;
+import userInputs.UserInput;
 import tasks.Subtask;
 import tasks.Task;
 
