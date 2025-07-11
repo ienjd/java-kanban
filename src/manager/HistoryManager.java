@@ -1,6 +1,7 @@
 package manager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public interface HistoryManager<T>{
 
@@ -11,4 +12,6 @@ public interface HistoryManager<T>{
    Node linkLast(T task);
 
    void add (T task);
+
+   HashMap<Integer, Node> getNodes();
 }

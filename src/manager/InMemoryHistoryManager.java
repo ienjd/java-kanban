@@ -14,7 +14,7 @@ public class InMemoryHistoryManager <T extends Task> implements HistoryManager<T
         for (Node node : viewHistory) {
             history.add((T) node.getData());
         }
-        return history
+        return history;
     }
 
     @Override
@@ -35,5 +35,10 @@ public class InMemoryHistoryManager <T extends Task> implements HistoryManager<T
             removeNode(nodes.get(task.getId()));
         }
         nodes.put(task.getId(), linkLast(task));
+    }
+
+    @Override
+    public HashMap<Integer, Node> getNodes(){
+        return nodes;
     }
 }
