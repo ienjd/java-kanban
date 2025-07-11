@@ -1,24 +1,39 @@
 package manager;
 import tasks.Task;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.LinkedList;
 
-public class InMemoryHistoryManager implements HistoryManager {
+public class InMemoryHistoryManager <T extends Task> implements HistoryManager<T> {
 
-    private final List<Task> viewHistory = new ArrayList<>();
+    private final LinkedList<Node> viewHistory = new LinkedList<>();
+    private final HashMap<Integer, Node> nodes = new HashMap<>();
 
-    public List<Task> getViewHistory() {
-        return viewHistory;
+    public ArrayList<T> getTasks() {
+        ArrayList<T> history = new ArrayList<>();
+        for (Node node : viewHistory) {
+            history.add((T) node.getData());
+        }
+        return history;
     }
 
     @Override
-    public <T extends Task> void add(T task) throws CloneNotSupportedException {
+    public void removeNode(Node node) {
+        viewHistory.remove(node);
+    }
 
-        T copy = (T) task.clone();
+    @Override
+    public Node linkLast(T task) {
+        Node newNode = new Node<>(task);
+        viewHistory.addLast(newNode);
+        return newNode;
+    }
 
-        if (viewHistory.size() >= 10) {
-            viewHistory.remove(viewHistory.get(0));
+    @Override
+    public void add(T task) {
+        if (nodes.containsKey(task.getId())) {
+            removeNode(nodes.get(task.getId()));
         }
-        viewHistory.add(copy);
+        nodes.put(task.getId(), linkLast(task));
     }
 }

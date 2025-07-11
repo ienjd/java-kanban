@@ -51,7 +51,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Object findTask(int findId) throws CloneNotSupportedException {
+    public Object findTask(int findId) {
         Object object = null;
         if (taskList.containsKey(findId)) {
             object = taskList.get(findId);
@@ -60,7 +60,7 @@ public class InMemoryTaskManager implements TaskManager {
         } else if (subtaskList.containsKey(findId)) {
             object = subtaskList.get(findId);
         }
-        inMemoryHistoryManager.add((Task)object);
+        inMemoryHistoryManager.add(object);
         return object;
     }
 
@@ -163,7 +163,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public <T extends Task> List<T> getHistory(){
-        return (List<T>) inMemoryHistoryManager.getViewHistory();
+        return (List<T>) inMemoryHistoryManager.getTasks();
     }
 }
 

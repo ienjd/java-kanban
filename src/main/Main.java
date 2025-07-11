@@ -4,12 +4,11 @@ import tasks.Epic;
 import userInputs.UserInput;
 import tasks.Subtask;
 import tasks.Task;
-
 import java.util.ArrayList;
 
 public class Main {
 
-    public static void main(String[] args) throws CloneNotSupportedException {
+    public static void main(String[] args) {
         UserInput userInput = new UserInput();
         InMemoryTaskManager taskMaster = new InMemoryTaskManager();
         System.out.println("Тесты практикума");
@@ -199,7 +198,6 @@ public class Main {
         taskMaster.subtaskList.values().forEach(subtask -> allItems.add((T)subtask));
         return allItems;
     }
-
 }
 
 
