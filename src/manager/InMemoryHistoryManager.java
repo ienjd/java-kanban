@@ -14,7 +14,7 @@ public class InMemoryHistoryManager <T extends Task> implements HistoryManager<T
         for (Node node : viewHistory) {
             history.add((T) node.getData());
         }
-        return history;
+        return history
     }
 
     @Override
