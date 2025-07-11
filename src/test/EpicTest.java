@@ -10,7 +10,7 @@ class EpicTest {
     InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
     @Test//экземпляры Epic равны друг другу, если равны их id
-    void EpicEqualsEpic() {
+    void EpicEqualsEpic(){
         Epic firstEpic = inMemoryTaskManager.createEpic("Первый эпик", "Описание первого эпика");
         Epic secondTask = firstEpic;
 

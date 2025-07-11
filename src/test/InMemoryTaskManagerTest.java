@@ -28,7 +28,7 @@ class InMemoryTaskManagerTest {
         return inMemoryTaskManager.epicList.get(2);
     }
 
-    public static Subtask createSubtask() {
+    public static Subtask createSubtask(){
         Subtask firstSubtask = inMemoryTaskManager.createSubtask("Первая подзадача", "Описание первой подзадачи", 2);
         inMemoryTaskManager.addTaskToList(firstSubtask, inMemoryTaskManager.subtaskList);
         return inMemoryTaskManager.subtaskList.get(3);

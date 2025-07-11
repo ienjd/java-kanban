@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public interface TaskManager {
+public interface TaskManager{
 
     void addTaskToList(Task task, HashMap hashMap);
 

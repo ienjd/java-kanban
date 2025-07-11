@@ -10,13 +10,13 @@ public class UserInput {
         return command;
     }
 
-    public String getTitle() {
+    public String getTitle(){
         System.out.println("Введите название задачи");
         String title = scanner.nextLine();
         return title;
     }
 
-    public String getDescription() {
+    public String getDescription(){
         System.out.println("Введите описание задачи");
         String description = scanner.nextLine();
         return description;

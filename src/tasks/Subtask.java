@@ -15,7 +15,7 @@ public class Subtask extends Task{
         this.epicId = epicId;
     }
 
-    public int getId() {
+    public int getId(){
         return id;
     }
     public void setId(int id){
@@ -30,11 +30,11 @@ public class Subtask extends Task{
     }
 
     @Override
-    public Status getStatus() {
+    public Status getStatus(){
         return status;
     }
 
-    public void setSubtaskStatus(Status status) {
+    public void setSubtaskStatus(Status status){
         this.status = status;
     }
 
@@ -53,7 +53,7 @@ public class Subtask extends Task{
     }
 
     @Override
-    public String toString() {
+    public String toString(){
         return "Task{ " +
                 "title= " + title + '\'' +
                 ", description= " + description + '\'' +

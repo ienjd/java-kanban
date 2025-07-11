@@ -11,7 +11,7 @@ class InMemoryHistoryManagerTest {
     InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
     @Test// Данный метод проверяет что в список просмотренных задач попадает только одна задача в актуальном состоянии на момент добавления
-    void onlyActualVersionOfTaskAddedToHistoryView() {
+    void onlyActualVersionOfTaskAddedToHistoryView(){
         Task task = inMemoryTaskManager.createTask("Первоначальный заголовок", "Первоначальное описание");
         Task taskTwo = task;
         Task taskThree = inMemoryTaskManager.createTask("Третья таска", "Описание третьей таски");
