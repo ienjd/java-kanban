@@ -2,7 +2,7 @@ package tasks;
 
 import java.util.Objects;
 
-public class Task implements Cloneable{
+public class Task {
     private String title;
     private String description;
     private int id;
@@ -45,10 +45,6 @@ public class Task implements Cloneable{
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public Task clone() throws CloneNotSupportedException {
-        return (Task)super.clone();
     }
 
     @Override

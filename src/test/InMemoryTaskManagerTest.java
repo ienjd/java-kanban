@@ -18,7 +18,7 @@ class InMemoryTaskManagerTest {
 
     @Test// Тест проверяет, что задачи добавляемые в менеджер неизменны, а также, что менеджер возвращет корректные
         // задачи при использовании поиска
-    void TasksAddedToManagerAreNotChangedAndManagerReturnCorrectTasksInFindMethod() throws CloneNotSupportedException {
+    void TasksAddedToManagerAreNotChangedAndManagerReturnCorrectTasksInFindMethod(){
         Task firstTask = inMemoryTaskManager.createTask("Первая задача", "Описание первой задачи");
         Epic firstEpic = inMemoryTaskManager.createEpic("Первый эпик", "Описание первого эпика");
         Subtask firstSubtask = inMemoryTaskManager.createSubtask("Первая подзадача", "Описание первой подзадачи", firstEpic.getId());

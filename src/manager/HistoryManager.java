@@ -1,10 +1,14 @@
 package manager;
-import tasks.Task;
-import java.util.List;
 
-public interface HistoryManager{
+import java.util.ArrayList;
 
-   List<Task> getViewHistory();
+public interface HistoryManager<T>{
 
-   <T extends Task> void add (T task) throws CloneNotSupportedException;
+   ArrayList<T> getTasks();
+
+   void removeNode(Node node);
+
+   Node linkLast(T task);
+
+   void add (T task);
 }

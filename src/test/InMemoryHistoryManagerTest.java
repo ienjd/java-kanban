@@ -11,17 +11,17 @@ class InMemoryHistoryManagerTest {
     InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
     @Test// Данный метод проверяет сохранение предыдущей версии Task
-    void previousVersionOfTaskAddedToList() throws CloneNotSupportedException {
+    void previousVersionOfTaskAddedToList() {
         Task task = inMemoryTaskManager.createTask("Первоначальный заголовок", "Первоначальное описание");
 
-        inMemoryHistoryManager.add(task);
+        inMemoryHistoryManager.linkLast(task);
 
         task.setDescription("Обновленное описание");
 
-        inMemoryHistoryManager.add(task);
+        inMemoryHistoryManager.linkLast(task);
 
-        Assertions.assertNotEquals(inMemoryHistoryManager.getViewHistory().get(0).getDescription(),
-                inMemoryHistoryManager.getViewHistory().get(1).getDescription());
+        Assertions.assertNotEquals(inMemoryHistoryManager.getTasks().get(0),
+                inMemoryHistoryManager.getTasks().get(1));
     }
 
 }
