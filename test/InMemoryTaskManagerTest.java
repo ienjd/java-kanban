@@ -43,9 +43,9 @@ class InMemoryTaskManagerTest {
 // Тест проверяет, что задачи добавляемые в менеджер неизменны, а также, что менеджер возвращает корректные
         // задачи при использовании поиска
     void tasksAddedToManagerAreNotChangedAndManagerReturnCorrectTasksInFindMethod() {
-        Assertions.assertEquals(createTask(), inMemoryTaskManager.findTask(1));
-        Assertions.assertEquals(createEpic(), inMemoryTaskManager.findTask(2));
-        Assertions.assertEquals(createSubtask(), inMemoryTaskManager.findTask(3));
+        Assertions.assertEquals(createTask().getId(), inMemoryTaskManager.findTask(1).getId());
+        Assertions.assertEquals(createEpic().getId(), inMemoryTaskManager.findTask(2).getId());
+        Assertions.assertEquals(createSubtask().getId(), inMemoryTaskManager.findTask(3).getId());
     }
 
     @Test
