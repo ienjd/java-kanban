@@ -6,6 +6,8 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
+import static tasks.Status.NEW;
+
 class InMemoryTaskManagerTest {
 
     private static InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
@@ -43,9 +45,15 @@ class InMemoryTaskManagerTest {
 // Тест проверяет, что задачи добавляемые в менеджер неизменны, а также, что менеджер возвращает корректные
         // задачи при использовании поиска
     void tasksAddedToManagerAreNotChangedAndManagerReturnCorrectTasksInFindMethod() {
-        Assertions.assertEquals(createTask().getId(), inMemoryTaskManager.findTask(1).getId());
-        Assertions.assertEquals(createEpic().getId(), inMemoryTaskManager.findTask(2).getId());
-        Assertions.assertEquals(createSubtask().getId(), inMemoryTaskManager.findTask(3).getId());
+        Task task = new Task("Первая задача", "Описание первой задачи", 1, NEW);
+        inMemoryTaskManager.addTaskToList(task, inMemoryTaskManager.taskList);
+        Epic epic = new Epic("Первый эпик", "Описание первого эпика", 2, NEW);
+        inMemoryTaskManager.addTaskToList(epic, inMemoryTaskManager.epicList);
+        Subtask subtask = new Subtask("Первая подзадача", "Описание первой подзадачи", 3, NEW, 2);
+        inMemoryTaskManager.addTaskToList(subtask, inMemoryTaskManager.subtaskList);
+        Assertions.assertEquals(task.getId(), inMemoryTaskManager.findTask(1).getId());
+        Assertions.assertEquals(epic.getId(), inMemoryTaskManager.findTask(2).getId());
+        Assertions.assertEquals(subtask.getId(), inMemoryTaskManager.findTask(3).getId());
     }
 
     @Test
@@ -54,5 +62,4 @@ class InMemoryTaskManagerTest {
         inMemoryTaskManager.deleteTaskFromList(2);
         Assertions.assertTrue(inMemoryTaskManager.getEpicSubtasks(2).isEmpty());
     }
-
 }
