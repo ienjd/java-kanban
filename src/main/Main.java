@@ -4,7 +4,7 @@ import manager.InMemoryTaskManager;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
-import userInputs.UserInput;
+import inputs.UserInput;
 
 import java.util.ArrayList;
 
