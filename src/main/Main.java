@@ -129,14 +129,13 @@ public class Main {
                 case "2" -> {
                     System.out.println("Вы действительно хотите очистить список задач? да / нет");
                     boolean userAnswer = userInput.getUserInput().trim().toLowerCase().equals("да");
-                    switch (userAnswer) {
-                        case true -> {
+                    if (userAnswer) {
                             taskMaster.taskList.clear();
                             taskMaster.epicList.clear();
                             taskMaster.subtaskList.clear();
                             System.out.println("Список задач очищен");
-                        }
-                        case false -> System.out.println("Здорово, что вы передумали!");
+                    } else {
+                            System.out.println("Здорово, что вы передумали!");
                     }
                 }
 
