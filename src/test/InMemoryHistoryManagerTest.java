@@ -22,10 +22,10 @@ class InMemoryHistoryManagerTest {
         inMemoryHistoryManager.add(taskThree);
         Task taskFour = (Task) inMemoryHistoryManager.getTasks().getFirst();
 
-        Assertions.assertTrue(inMemoryHistoryManager.getTasks().size() == 2);
-        Assertions.assertTrue(inMemoryHistoryManager.getTasks().getFirst().equals(taskTwo));
-        Assertions.assertTrue(inMemoryHistoryManager.getTasks().getLast().equals(taskThree));
-        Assertions.assertTrue(taskFour.getDescription().equals("Новое описание"));
-        Assertions.assertTrue(inMemoryHistoryManager.getTasks().size() == inMemoryHistoryManager.getNodes().size());
+        Assertions.assertEquals(2, inMemoryHistoryManager.getTasks().size());
+        Assertions.assertEquals(inMemoryHistoryManager.getTasks().getFirst(), taskTwo);
+        Assertions.assertEquals(inMemoryHistoryManager.getTasks().getLast(), taskThree);
+        Assertions.assertEquals("Новое описание", taskFour.getDescription());
+        Assertions.assertEquals(inMemoryHistoryManager.getTasks().size(), inMemoryHistoryManager.getNodes().size());
     }
 }
