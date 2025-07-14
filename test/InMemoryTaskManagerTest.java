@@ -1,4 +1,3 @@
-
 import manager.InMemoryTaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,21 +16,35 @@ class InMemoryTaskManagerTest {
      связь Subtask с Epicом реализована через создание у Subtask приватного поля epicId. Таким образом, Epic в принципе
      невозможно сделать Subtaskом */
 
+    public static Task createTask() {
+        Task firstTask = inMemoryTaskManager.createTask("Первая задача", "Описание первой задачи");
+        inMemoryTaskManager.addTaskToList(firstTask, inMemoryTaskManager.taskList);
+        firstTask.setId(1);
+        return inMemoryTaskManager.taskList.get(1);
+    }
+
+    public static Epic createEpic() {
+        Epic firstEpic = inMemoryTaskManager.createEpic("Первый эпик", "Описание первого эпика");
+        inMemoryTaskManager.addTaskToList(firstEpic, inMemoryTaskManager.epicList);
+        firstEpic.setId(2);
+        return inMemoryTaskManager.epicList.get(2);
+    }
+
+    public static Subtask createSubtask() {
+        Subtask firstSubtask = inMemoryTaskManager.createSubtask("Первая подзадача", "Описание первой подзадачи", 2);
+        inMemoryTaskManager.addTaskToList(firstSubtask, inMemoryTaskManager.subtaskList);
+        firstSubtask.setId(3);
+        return inMemoryTaskManager.subtaskList.get(3);
+    }
+
     @Test
 // Тест проверяет, что задачи добавляемые в менеджер неизменны, а также, что менеджер возвращает корректные
         // задачи при использовании поиска
     void tasksAddedToManagerAreNotChangedAndManagerReturnCorrectTasksInFindMethod() {
-        Task firstTask = inMemoryTaskManager.createTask("Первая задача", "Описание первой задачи");
-        inMemoryTaskManager.addTaskToList(firstTask, inMemoryTaskManager.taskList);
-        Epic firstEpic = inMemoryTaskManager.createEpic("Первый эпик", "Описание первого эпика");
-        inMemoryTaskManager.addTaskToList(firstEpic, inMemoryTaskManager.epicList);
-        Subtask firstSubtask = inMemoryTaskManager.createSubtask("Первая подзадача", "Описание первой подзадачи", 2);
-        inMemoryTaskManager.addTaskToList(firstSubtask, inMemoryTaskManager.subtaskList);
-        Assertions.assertEquals(firstTask, inMemoryTaskManager.findTask(1));
-        Assertions.assertEquals(firstEpic, inMemoryTaskManager.findTask(2));
-        Assertions.assertEquals(firstSubtask, inMemoryTaskManager.findTask(3));
+        Assertions.assertEquals(createTask(), inMemoryTaskManager.findTask(1));
+        Assertions.assertEquals(createEpic(), inMemoryTaskManager.findTask(2));
+        Assertions.assertEquals(createSubtask(), inMemoryTaskManager.findTask(3));
     }
-
 
     @Test
         //Тест проверяет, что удаление эпика влечет за собой удаление сабтасков данного эпика
