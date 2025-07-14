@@ -17,19 +17,19 @@ class InMemoryTaskManagerTest {
      связь Subtask с Epicом реализована через создание у Subtask приватного поля epicId. Таким образом, Epic в принципе
      невозможно сделать Subtaskом */
 
-    public static Task createTask() {
+    public static Task testCreateTask() {
         Task firstTask = inMemoryTaskManager.createTask("Первая задача", "Описание первой задачи");
         inMemoryTaskManager.addTaskToList(firstTask, inMemoryTaskManager.taskList);
         return inMemoryTaskManager.taskList.get(1);
     }
 
-    public static Epic createEpic() {
+    public static Epic testCreateEpic() {
         Epic firstEpic = inMemoryTaskManager.createEpic("Первый эпик", "Описание первого эпика");
         inMemoryTaskManager.addTaskToList(firstEpic, inMemoryTaskManager.epicList);
         return inMemoryTaskManager.epicList.get(2);
     }
 
-    public static Subtask createSubtask() {
+    public static Subtask testCreateSubtask() {
         Subtask firstSubtask = inMemoryTaskManager.createSubtask("Первая подзадача", "Описание первой подзадачи", 2);
         inMemoryTaskManager.addTaskToList(firstSubtask, inMemoryTaskManager.subtaskList);
         return inMemoryTaskManager.subtaskList.get(3);
@@ -39,9 +39,9 @@ class InMemoryTaskManagerTest {
 // Тест проверяет, что задачи добавляемые в менеджер неизменны, а также, что менеджер возвращает корректные
         // задачи при использовании поиска
     void tasksAddedToManagerAreNotChangedAndManagerReturnCorrectTasksInFindMethod() {
-        Assertions.assertEquals(createTask(), inMemoryTaskManager.findTask(1));
-        Assertions.assertEquals(createEpic(), inMemoryTaskManager.findTask(2));
-        Assertions.assertEquals(createSubtask(), inMemoryTaskManager.findTask(3));
+        Assertions.assertEquals(testCreateTask(), inMemoryTaskManager.findTask(1));
+        Assertions.assertEquals(testCreateEpic(), inMemoryTaskManager.findTask(2));
+        Assertions.assertEquals(testCreateSubtask(), inMemoryTaskManager.findTask(3));
     }
 
     @Test
