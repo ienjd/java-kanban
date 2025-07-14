@@ -1,4 +1,3 @@
-package tests;
 
 import manager.Managers;
 import org.junit.jupiter.api.Assertions;
