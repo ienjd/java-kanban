@@ -3,15 +3,15 @@ package manager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public interface HistoryManager<T>{
+public interface HistoryManager<T> {
 
-   ArrayList<T> getTasks();
+    ArrayList<T> getTasks();
 
-   void removeNode(Node node);
+    void removeNode(Node node);
 
-   Node linkLast(T task);
+    Node linkLast(T task);
 
-   void add (T task);
+    void add(T task);
 
-   HashMap<Integer, Node> getNodes();
+    HashMap<Integer, Node> getNodes();
 }

@@ -1,9 +1,11 @@
 package test;
+
 import manager.InMemoryTaskManager;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
-import org.junit.jupiter.api.*;
 
 class InMemoryTaskManagerTest {
 
@@ -16,34 +18,36 @@ class InMemoryTaskManagerTest {
      связь Subtask с Epicом реализована через создание у Subtask приватного поля epicId. Таким образом, Epic в принципе
      невозможно сделать Subtaskом */
 
-    public static Task createTask(){
+    public static Task createTask() {
         Task firstTask = inMemoryTaskManager.createTask("Первая задача", "Описание первой задачи");
         inMemoryTaskManager.addTaskToList(firstTask, inMemoryTaskManager.taskList);
         return inMemoryTaskManager.taskList.get(1);
     }
 
-    public static Epic createEpic(){
+    public static Epic createEpic() {
         Epic firstEpic = inMemoryTaskManager.createEpic("Первый эпик", "Описание первого эпика");
         inMemoryTaskManager.addTaskToList(firstEpic, inMemoryTaskManager.epicList);
         return inMemoryTaskManager.epicList.get(2);
     }
 
-    public static Subtask createSubtask(){
+    public static Subtask createSubtask() {
         Subtask firstSubtask = inMemoryTaskManager.createSubtask("Первая подзадача", "Описание первой подзадачи", 2);
         inMemoryTaskManager.addTaskToList(firstSubtask, inMemoryTaskManager.subtaskList);
         return inMemoryTaskManager.subtaskList.get(3);
     }
 
-    @Test// Тест проверяет, что задачи добавляемые в менеджер неизменны, а также, что менеджер возвращает корректные
+    @Test
+// Тест проверяет, что задачи добавляемые в менеджер неизменны, а также, что менеджер возвращает корректные
         // задачи при использовании поиска
-    void TasksAddedToManagerAreNotChangedAndManagerReturnCorrectTasksInFindMethod(){
+    void TasksAddedToManagerAreNotChangedAndManagerReturnCorrectTasksInFindMethod() {
         Assertions.assertEquals(createTask(), inMemoryTaskManager.findTask(1));
         Assertions.assertEquals(createEpic(), inMemoryTaskManager.findTask(2));
         Assertions.assertEquals(createSubtask(), inMemoryTaskManager.findTask(3));
     }
 
-    @Test //Тест проверяет, что удаление эпика влечет за собой удаление сабтасков данного эпика
-    void DeleteEpicDeletingSubtasksThisEpic(){
+    @Test
+        //Тест проверяет, что удаление эпика влечет за собой удаление сабтасков данного эпика
+    void DeleteEpicDeletingSubtasksThisEpic() {
         inMemoryTaskManager.deleteTaskFromList(2);
         Assertions.assertTrue(inMemoryTaskManager.getEpicSubtasks(2).isEmpty());
     }

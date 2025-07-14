@@ -1,6 +1,6 @@
 package tasks;
 
-public class Subtask extends Task{
+public class Subtask extends Task {
     private String title;
     private String description;
     private int id;
@@ -15,45 +15,47 @@ public class Subtask extends Task{
         this.epicId = epicId;
     }
 
-    public int getId(){
+    public int getId() {
         return id;
     }
-    public void setId(int id){
+
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getDescription(){
+    public String getDescription() {
         return description;
     }
-    public void setDescription(String description){
+
+    public void setDescription(String description) {
         this.description = description;
     }
 
     @Override
-    public Status getStatus(){
+    public Status getStatus() {
         return status;
     }
 
-    public void setSubtaskStatus(Status status){
+    public void setSubtaskStatus(Status status) {
         this.status = status;
     }
 
-    public int getEpicId(){
+    public int getEpicId() {
         return epicId;
     }
 
-    public void setEpicId(int epicId){
-        if(epicId != id) {
+    public void setEpicId(int epicId) {
+        if (epicId != id) {
             this.epicId = epicId;
         }
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return title;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "Task{ " +
                 "title= " + title + '\'' +
                 ", description= " + description + '\'' +
