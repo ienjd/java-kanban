@@ -1,3 +1,4 @@
+import manager.InMemoryHistoryManager;
 import manager.InMemoryTaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import tasks.Task;
 class InMemoryTaskManagerTest {
 
     private static InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
+    private static InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
 
     /*Тест "проверьте, что задачи с заданным id и сгенерированным id не конфликтуют внутри менеджера" невозможно провести
     поскольку в рамках менеджера задач невозможно задавать id вручную, все id генерируются;*/
@@ -41,9 +43,9 @@ class InMemoryTaskManagerTest {
 // Тест проверяет, что задачи добавляемые в менеджер неизменны, а также, что менеджер возвращает корректные
         // задачи при использовании поиска
     void tasksAddedToManagerAreNotChangedAndManagerReturnCorrectTasksInFindMethod() {
-        Assertions.assertTrue(createTask().equals(inMemoryTaskManager.findTask(1)));
-        Assertions.assertTrue(createEpic().equals(inMemoryTaskManager.findTask(2)));
-        Assertions.assertTrue(createSubtask().equals(inMemoryTaskManager.findTask(3)));
+        Assertions.assertEquals(createTask(), inMemoryTaskManager.findTask(1));
+        Assertions.assertEquals(createEpic(), inMemoryTaskManager.findTask(2));
+        Assertions.assertEquals(createSubtask(), inMemoryTaskManager.findTask(3));
     }
 
     @Test

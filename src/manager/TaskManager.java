@@ -18,7 +18,7 @@ public interface TaskManager {
 
     Subtask createSubtask(String title, String description, int epicId);
 
-    Object findTask(int findId) throws CloneNotSupportedException;
+    <T extends Task> T findTask(int id);
 
     void deleteTaskFromList(int id);
 
