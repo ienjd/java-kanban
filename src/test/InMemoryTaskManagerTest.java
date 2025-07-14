@@ -39,7 +39,7 @@ class InMemoryTaskManagerTest {
     @Test
 // Тест проверяет, что задачи добавляемые в менеджер неизменны, а также, что менеджер возвращает корректные
         // задачи при использовании поиска
-    void TasksAddedToManagerAreNotChangedAndManagerReturnCorrectTasksInFindMethod() {
+    void tasksAddedToManagerAreNotChangedAndManagerReturnCorrectTasksInFindMethod() {
         Assertions.assertEquals(createTask(), inMemoryTaskManager.findTask(1));
         Assertions.assertEquals(createEpic(), inMemoryTaskManager.findTask(2));
         Assertions.assertEquals(createSubtask(), inMemoryTaskManager.findTask(3));
@@ -47,7 +47,7 @@ class InMemoryTaskManagerTest {
 
     @Test
         //Тест проверяет, что удаление эпика влечет за собой удаление сабтасков данного эпика
-    void DeleteEpicDeletingSubtasksThisEpic() {
+    void deleteEpicDeletingSubtasksThisEpic() {
         inMemoryTaskManager.deleteTaskFromList(2);
         Assertions.assertTrue(inMemoryTaskManager.getEpicSubtasks(2).isEmpty());
     }
