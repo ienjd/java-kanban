@@ -10,8 +10,6 @@ public class Main {
     public void main(String[] args) {
         InMemoryTaskManager taskMaster = new InMemoryTaskManager();
         System.out.println("Тесты практикума");
-        
-
         taskMaster.addTaskToList((taskMaster.createTask("Задача 1", "Описание задачи 1")),
                 taskMaster.taskList);
         taskMaster.addTaskToList((taskMaster.createTask("Задача 2", "Описание задачи 2")),
@@ -26,7 +24,6 @@ public class Main {
                 taskMaster.subtaskList);
         taskMaster.addTaskToList((taskMaster.createEpic("Эпик 2", "Описание эпика 2")),
                 taskMaster.epicList);
-
         for (Object task : taskMaster.taskList.values()) {
             System.out.println(task);
         }
@@ -37,7 +34,6 @@ public class Main {
             System.out.println(task);
         }
         System.out.println("_____________________________________________________________________________");
-
         taskMaster.findTask(1);
         taskMaster.findTask(2);
         taskMaster.findTask(7);
@@ -51,7 +47,6 @@ public class Main {
         taskMaster.findTask(4);
         taskMaster.getHistory().forEach(task -> System.out.println(task));
         System.out.println("_____________________________________________________________________________");
-
         taskMaster.findTask(7);
         taskMaster.findTask(4);
         taskMaster.findTask(6);
@@ -65,12 +60,10 @@ public class Main {
         taskMaster.findTask(1);
         taskMaster.getHistory().forEach(task -> System.out.println(task));
         System.out.println("_____________________________________________________________________________");
-
         taskMaster.deleteTaskFromList(1);
         taskMaster.deleteTaskFromList(3);
         taskMaster.getHistory().forEach(task -> System.out.println(task));
         System.out.println("_____________________________________________________________________________");
-
         System.out.println("Добро пожаловать!");
         while (true) {
             printMenu();
