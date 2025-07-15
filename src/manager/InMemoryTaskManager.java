@@ -75,6 +75,7 @@ public class InMemoryTaskManager implements TaskManager {
             epicList.remove(id);
         } else if (subtaskList.containsKey(id)) {
             int epicIdRemovedSubtask = subtaskList.get(id).getEpicId();
+            forgetTask(id);
             subtaskList.remove(id);
             updateEpic(epicList.get(epicIdRemovedSubtask));
         } else {

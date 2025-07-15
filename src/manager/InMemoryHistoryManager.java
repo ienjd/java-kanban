@@ -46,9 +46,5 @@ public class InMemoryHistoryManager<T extends Task> implements HistoryManager<T>
         viewHistory.addLast(newNode);
         return newNode;
     }
-
-    private HashMap<Integer, Node> getNodes() {
-        return nodes;
-    }
 }
 
