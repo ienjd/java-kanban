@@ -1,46 +1,54 @@
 package manager;
 
 import tasks.Task;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 public class InMemoryHistoryManager<T extends Task> implements HistoryManager<T> {
 
     private final LinkedList<Node> viewHistory = new LinkedList<>();
     private final HashMap<Integer, Node> nodes = new HashMap<>();
 
-    public ArrayList<T> getTasks() {
-        ArrayList<T> history = new ArrayList<>();
+    @Override
+    public List<T> getHistory() {
+        return getTasks();
+    }
+
+    @Override
+    public void remove(int id) {
+        removeNode(nodes.get(id));
+    }
+
+    @Override
+    public void add(T task) {
+        if (nodes.containsKey(task.getId())) {
+            remove(task.getId());
+        }
+        nodes.put(task.getId(), linkLast(task));
+    }
+
+    private List<T> getTasks() {
+        List<T> history = new ArrayList<>();
         for (Node node : viewHistory) {
             history.add((T) node.getData());
         }
         return history;
     }
 
-    @Override
-    public void removeNode(Node node) {
+    private void removeNode(Node node) {
         viewHistory.remove(node);
     }
 
-    @Override
-    public Node linkLast(T task) {
+    private Node linkLast(T task) {
         Node newNode = new Node<>(task);
         viewHistory.addLast(newNode);
         return newNode;
     }
 
-    @Override
-    public void add(T task) {
-        if (nodes.containsKey(task.getId())) {
-            removeNode(nodes.get(task.getId()));
-        }
-        nodes.put(task.getId(), linkLast(task));
-    }
-
-    @Override
-    public HashMap<Integer, Node> getNodes() {
+    private HashMap<Integer, Node> getNodes() {
         return nodes;
     }
 }
+

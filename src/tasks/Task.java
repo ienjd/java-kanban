@@ -8,7 +8,6 @@ public class Task {
     private int id;
     private Status status;
 
-
     public Task() {
     }
 

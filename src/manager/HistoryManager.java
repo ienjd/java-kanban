@@ -1,17 +1,13 @@
 package manager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 public interface HistoryManager<T> {
 
-    ArrayList<T> getTasks();
+    List<T> getHistory();
 
-    void removeNode(Node node);
-
-    Node linkLast(T task);
+    void remove(int id);
 
     void add(T task);
 
-    HashMap<Integer, Node> getNodes();
 }

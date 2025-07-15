@@ -1,5 +1,7 @@
 package tasks;
 
+import java.util.Objects;
+
 public class Epic extends Task {
 
     private String title;
@@ -13,6 +15,19 @@ public class Epic extends Task {
 
     public Status getStatus() {
         return status;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || getClass() != object.getClass()) return false;
+        if (!super.equals(object)) return false;
+        Epic epic = (Epic) object;
+        return id == epic.id && Objects.equals(title, epic.title) && Objects.equals(description, epic.description) && status == epic.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), title, description, id, status);
     }
 
     @Override

@@ -4,11 +4,9 @@ import tasks.Epic;
 import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 
 public class InMemoryTaskManager implements TaskManager {
     public static int idCount = 0;
@@ -68,7 +66,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTaskFromList(int id) {
-
         if (taskList.containsKey(id)) {
             forgetTask(id);
             taskList.remove(id);
@@ -115,8 +112,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateSubtask(Subtask subtask) {
         Status currentStatus = subtask.getStatus();
-        Subtask newSubtask = createSubtask(subtask.getTitle(), subtask.getDescription(),
-                subtask.getEpicId());
+        Subtask newSubtask = createSubtask(subtask.getTitle(), subtask.getDescription(), subtask.getEpicId());
         idCount--;
         newSubtask.setId(subtask.getId());
         switch (currentStatus) {
@@ -147,12 +143,10 @@ public class InMemoryTaskManager implements TaskManager {
                 subtasksInDone++;
             }
         }
-
         if (subtasksInProgress > 0) {
             epic.setStatus(Status.IN_PROGRESS);
             epicList.put(epic.getId(), epic);
         }
-
         if (subtasksInDone == getEpicSubtasks(epic.getId()).size()) {
             epic.setStatus(Status.DONE);
             epicList.put(epic.getId(), epic);
@@ -171,11 +165,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public <T extends Task> List<T> getHistory() {
-        return (List<T>) inMemoryHistoryManager.getTasks();
+        return inMemoryHistoryManager.getHistory();
     }
 
     public void forgetTask(int id) {
-        inMemoryHistoryManager.removeNode((Node) inMemoryHistoryManager.getNodes().get(id));
+        inMemoryHistoryManager.remove(id);
     }
 }
 

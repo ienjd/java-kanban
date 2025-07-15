@@ -1,7 +1,6 @@
 package manager;
 
 import tasks.Task;
-
 import java.util.Objects;
 
 public class Node<T extends Task> {
