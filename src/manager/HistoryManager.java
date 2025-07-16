@@ -1,10 +1,13 @@
 package manager;
-import tasks.Task;
+
 import java.util.List;
 
-public interface HistoryManager{
+public interface HistoryManager<T> {
 
-   List<Task> getViewHistory();
+    List<T> getHistory();
 
-   <T extends Task> void add (T task) throws CloneNotSupportedException;
+    void remove(int id);
+
+    void add(T task);
+
 }

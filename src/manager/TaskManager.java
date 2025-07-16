@@ -1,4 +1,5 @@
 package manager;
+
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -16,7 +17,7 @@ public interface TaskManager {
 
     Subtask createSubtask(String title, String description, int epicId);
 
-    Object findTask(int findId) throws CloneNotSupportedException;
+    <T extends Task> T findTask(int id);
 
     void deleteTaskFromList(int id);
 
@@ -30,5 +31,5 @@ public interface TaskManager {
 
     void deleteEpicSubtasks(int epicId);
 
-    <T extends Task> List<T> getHistory();
+    List getHistory();
 }

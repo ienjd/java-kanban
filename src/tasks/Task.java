@@ -2,24 +2,23 @@ package tasks;
 
 import java.util.Objects;
 
-public class Task implements Cloneable{
+public class Task {
     private String title;
     private String description;
     private int id;
     private Status status;
 
-
     public Task() {
     }
 
-    public Task (String title, String description, int id, Status status) {
+    public Task(String title, String description, int id, Status status) {
         this.title = title;
         this.description = description;
         this.id = id;
         this.status = status;
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return title;
     }
 
@@ -27,11 +26,11 @@ public class Task implements Cloneable{
         return id;
     }
 
-    public void setId(int id){
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getDescription(){
+    public String getDescription() {
         return description;
     }
 
@@ -45,10 +44,6 @@ public class Task implements Cloneable{
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public Task clone() throws CloneNotSupportedException {
-        return (Task)super.clone();
     }
 
     @Override

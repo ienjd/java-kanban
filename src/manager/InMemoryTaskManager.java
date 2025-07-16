@@ -1,4 +1,5 @@
 package manager;
+
 import tasks.Epic;
 import tasks.Status;
 import tasks.Subtask;
@@ -6,7 +7,6 @@ import tasks.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 
 public class InMemoryTaskManager implements TaskManager {
     public static int idCount = 0;
@@ -51,28 +51,31 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Object findTask(int findId) throws CloneNotSupportedException {
-        Object object = null;
+    public <T extends Task> T findTask(int findId) {
+        T object = null;
         if (taskList.containsKey(findId)) {
-            object = taskList.get(findId);
+            object = (T) taskList.get(findId);
         } else if (epicList.containsKey(findId)) {
-            object = epicList.get(findId);
+            object = (T) epicList.get(findId);
         } else if (subtaskList.containsKey(findId)) {
-            object = subtaskList.get(findId);
+            object = (T) subtaskList.get(findId);
         }
-        inMemoryHistoryManager.add((Task)object);
+        inMemoryHistoryManager.add(object);
         return object;
     }
 
     @Override
     public void deleteTaskFromList(int id) {
-
         if (taskList.containsKey(id)) {
+            forgetTask(id);
             taskList.remove(id);
         } else if (epicList.containsKey(id)) {
+            forgetTask(id);
+            deleteEpicSubtasks(id);
             epicList.remove(id);
         } else if (subtaskList.containsKey(id)) {
             int epicIdRemovedSubtask = subtaskList.get(id).getEpicId();
+            forgetTask(id);
             subtaskList.remove(id);
             updateEpic(epicList.get(epicIdRemovedSubtask));
         } else {
@@ -110,8 +113,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateSubtask(Subtask subtask) {
         Status currentStatus = subtask.getStatus();
-        Subtask newSubtask = createSubtask(subtask.getTitle(), subtask.getDescription(),
-                subtask.getEpicId());
+        Subtask newSubtask = createSubtask(subtask.getTitle(), subtask.getDescription(), subtask.getEpicId());
         idCount--;
         newSubtask.setId(subtask.getId());
         switch (currentStatus) {
@@ -132,7 +134,7 @@ public class InMemoryTaskManager implements TaskManager {
         updateEpicStatus(newEpic);
     }
 
-    public void updateEpicStatus(Epic epic){
+    public void updateEpicStatus(Epic epic) {
         int subtasksInDone = 0;
         int subtasksInProgress = 0;
         for (Subtask subtask : getEpicSubtasks(epic.getId())) {
@@ -142,12 +144,10 @@ public class InMemoryTaskManager implements TaskManager {
                 subtasksInDone++;
             }
         }
-
         if (subtasksInProgress > 0) {
             epic.setStatus(Status.IN_PROGRESS);
             epicList.put(epic.getId(), epic);
         }
-
         if (subtasksInDone == getEpicSubtasks(epic.getId()).size()) {
             epic.setStatus(Status.DONE);
             epicList.put(epic.getId(), epic);
@@ -156,14 +156,21 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteEpicSubtasks(int epicId) {
+        for (Subtask value : getEpicSubtasks(epicId)) {
+            forgetTask(value.getId());
+        }
         subtaskList.values().removeAll(getEpicSubtasks(epicId));
         epicList.get(epicId).setStatus(Status.DONE);
         updateEpic(epicList.get(epicId));
     }
 
     @Override
-    public <T extends Task> List<T> getHistory(){
-        return (List<T>) inMemoryHistoryManager.getViewHistory();
+    public List<Task> getHistory() {
+        return inMemoryHistoryManager.getHistory();
+    }
+
+    public void forgetTask(int id) {
+        inMemoryHistoryManager.remove(id);
     }
 }
 
