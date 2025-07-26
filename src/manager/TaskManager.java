@@ -3,6 +3,8 @@ package manager;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +21,7 @@ public interface TaskManager {
 
     <T extends Task> T findTask(int id);
 
-    void deleteTaskFromList(int id);
+    void deleteTaskFromList(int id) throws IOException;
 
     ArrayList<Subtask> getEpicSubtasks(int epicId);
 

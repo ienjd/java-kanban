@@ -4,12 +4,14 @@ import manager.InMemoryTaskManager;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MainUI {
 
-    void main() {
+    void main() throws IOException {
 
         InMemoryTaskManager taskMaster = new InMemoryTaskManager();
         while (true) {

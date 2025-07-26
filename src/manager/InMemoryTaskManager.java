@@ -4,6 +4,8 @@ import tasks.Epic;
 import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,7 +67,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteTaskFromList(int id) {
+    public void deleteTaskFromList(int id) throws IOException {
         if (taskList.containsKey(id)) {
             forgetTask(id);
             taskList.remove(id);
