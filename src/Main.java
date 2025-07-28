@@ -5,8 +5,12 @@ import java.io.IOException;
 
 public class Main {
     public void main(String[] args) throws IOException {
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager("C:\\Users\\coldh\\OneDrive\\Рабочий стол\\Тест");
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager();
         fileBackedTaskManager.createFileForSaving();
+        fileBackedTaskManager.createTask("er", "er");
+        fileBackedTaskManager.addTaskToList(fileBackedTaskManager.createTask("er", "er"), fileBackedTaskManager.taskList);
+        fileBackedTaskManager.save();
+        //fileBackedTaskManager.save();
         //fileBackedTaskManager.save();
        /* System.out.println("Тесты практикума");
         fileBackedTaskManager.addTaskToList((fileBackedTaskManager.createTask("Задача 1", "Описание задачи 1")),

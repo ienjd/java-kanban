@@ -7,7 +7,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,10 +14,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FileBackedTaskManager extends InMemoryTaskManager{
-    String filePathForSave;
+    public static final String filePathForSave = "C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks";
+    public static final String filePathForDelete = "C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks\\file.csv";
 
-    public FileBackedTaskManager(String filePathForSave){
-        this.filePathForSave = filePathForSave;
+    public FileBackedTaskManager() {
+
     }
 
     public <T> void save() throws IOException {
@@ -26,18 +26,28 @@ public class FileBackedTaskManager extends InMemoryTaskManager{
         taskList.values().forEach(task -> allItems.add((T) task));
         epicList.values().forEach(epic -> allItems.add((T) epic));
         subtaskList.values().forEach(subtask -> allItems.add((T) subtask));
-        Writer fileWriter = new FileWriter(filePathForSave,true);
-        try(BufferedWriter bw = new BufferedWriter(fileWriter)){
+        Writer fileWriter = new FileWriter(filePathForSave+"\\file.csv");
+        try (BufferedWriter bw = new BufferedWriter(fileWriter)){
             for (T item : allItems) {
                 bw.write(item.toString());
             }
         }
     }
 
+    public void deleteFile() {
+        try {
+            Files.delete(Path.of(filePathForDelete));
+            System.out.println("Файл успешно удален");
+        } catch (IOException e) {
+            System.out.println("проблемка");
+        }
+    }
+
+
     public Path createFileForSaving (){
         Path fileForSaving = null;
         try {
-            fileForSaving = Files.createFile(Paths.get(filePathForSave, "file.csv"));
+            fileForSaving = Files.createFile(Path.of(filePathForSave+"\\file.csv"));
             if(Files.exists(fileForSaving)){
                 System.out.println("Файл успешно создан");
             }
