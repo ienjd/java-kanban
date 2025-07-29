@@ -2,41 +2,47 @@ package manager;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import tasks.Status;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FileBackedTaskManager extends InMemoryTaskManager{
-    public static final String filePathForSave = "C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks";
-    public static final String filePathForDelete = "C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks\\file.csv";
+    public final String filePath = "C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks\\file.csv";
 
     public FileBackedTaskManager() {
-
     }
 
-    public <T> void save() throws IOException {
-        ArrayList<T> allItems = new ArrayList<>();
-        taskList.values().forEach(task -> allItems.add((T) task));
-        epicList.values().forEach(epic -> allItems.add((T) epic));
-        subtaskList.values().forEach(subtask -> allItems.add((T) subtask));
-        Writer fileWriter = new FileWriter(filePathForSave+"\\file.csv");
-        try (BufferedWriter bw = new BufferedWriter(fileWriter)){
-            for (T item : allItems) {
-                bw.write(item.toString());
+    public FileBackedTaskManager(String path) {
+    }
+
+    public void save() throws IOException {
+
+        Writer fileWriter = new FileWriter(filePath, Charset.forName("Windows-1251"));
+        try (BufferedWriter bw = new BufferedWriter(fileWriter)) {
+            bw.write(String.format("%-5s" + "%-20s" + "%-20s" + "%-20s" + "%-20s"+ "\n", "id", "Class", "title", "status", "description"));
+            for (Task item : taskList.values()) {
+                bw.write(item.toString() + "\n");
+
+            }
+            for (Epic item : epicList.values()) {
+                bw.write(item.toString() + "\n");
+
+            }
+            for (Subtask item : subtaskList.values()) {
+                bw.write(item.toString() + "\n");
+
             }
         }
     }
 
     public void deleteFile() {
         try {
-            Files.delete(Path.of(filePathForDelete));
+            Files.delete(Path.of(filePath));
             System.out.println("Файл успешно удален");
         } catch (IOException e) {
             System.out.println("проблемка");
@@ -47,7 +53,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager{
     public Path createFileForSaving (){
         Path fileForSaving = null;
         try {
-            fileForSaving = Files.createFile(Path.of(filePathForSave+"\\file.csv"));
+            fileForSaving = Files.createFile(Path.of(filePath));
             if(Files.exists(fileForSaving)){
                 System.out.println("Файл успешно создан");
             }
@@ -55,6 +61,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager{
             System.out.println("Ошибка при создании файла");
         }
         return fileForSaving;
+    }
+
+    public static void loadFromFile(File file){
+        try(FileReader fr = new FileReader(file, Charset.forName("Windows-1251")); BufferedReader br = new BufferedReader(fr)) {
+            while (br.ready()){
+                String line = br.readLine();
+                String[] tasks = line.split(";");
+                for (String task : tasks) {
+                    String[] attributes = task.split(",");
+                    for (String attribute : attributes) {
+                        System.out.println(attribute.trim());
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

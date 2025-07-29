@@ -6,6 +6,8 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
+import java.io.IOException;
+
 import static tasks.Status.NEW;
 
 class InMemoryTaskManagerTest {
@@ -58,7 +60,7 @@ class InMemoryTaskManagerTest {
 
     @Test
         //Тест проверяет, что удаление эпика влечет за собой удаление сабтасков данного эпика
-    void deleteEpicDeletingSubtasksThisEpic() {
+    void deleteEpicDeletingSubtasksThisEpic() throws IOException {
         inMemoryTaskManager.deleteTaskFromList(2);
         Assertions.assertTrue(inMemoryTaskManager.getEpicSubtasks(2).isEmpty());
     }

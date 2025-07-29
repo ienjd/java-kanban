@@ -1,18 +1,22 @@
 import manager.FileBackedTaskManager;
 import manager.InMemoryTaskManager;
+import tasks.Status;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Main {
     public void main(String[] args) throws IOException {
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager();
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager("C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks\\file.csv");
         fileBackedTaskManager.createFileForSaving();
-        fileBackedTaskManager.createTask("er", "er");
-        fileBackedTaskManager.addTaskToList(fileBackedTaskManager.createTask("er", "er"), fileBackedTaskManager.taskList);
-        fileBackedTaskManager.save();
-        //fileBackedTaskManager.save();
-        //fileBackedTaskManager.save();
-       /* System.out.println("Тесты практикума");
+        fileBackedTaskManager.addTaskToList((fileBackedTaskManager.createTask("er", "er")), fileBackedTaskManager.taskList);
+        fileBackedTaskManager.addTaskToList((fileBackedTaskManager.createTask("er2", "er2")), fileBackedTaskManager.taskList);
+        fileBackedTaskManager.addTaskToList((fileBackedTaskManager.createEpic("er3", "er3")), fileBackedTaskManager.epicList);
+        fileBackedTaskManager.addTaskToList((fileBackedTaskManager.createEpic("er4", "er4")), fileBackedTaskManager.epicList);
+        fileBackedTaskManager.addTaskToList((fileBackedTaskManager.createEpic("er5", "er5")), fileBackedTaskManager.epicList);
+        fileBackedTaskManager.addTaskToList((fileBackedTaskManager.createEpic("er6", "er6")), fileBackedTaskManager.epicList);
+        fileBackedTaskManager.addTaskToList((fileBackedTaskManager.createSubtask("er7", "er7", 3)), fileBackedTaskManager.subtaskList);
+        System.out.println("Тесты практикума");
         fileBackedTaskManager.addTaskToList((fileBackedTaskManager.createTask("Задача 1", "Описание задачи 1")),
                 fileBackedTaskManager.taskList);
         fileBackedTaskManager.addTaskToList((fileBackedTaskManager.createTask("Задача 2", "Описание задачи 2")),
@@ -64,9 +68,9 @@ public class Main {
         fileBackedTaskManager.getHistory().forEach(task -> System.out.println(task));
         System.out.println("_____________________________________________________________________________");
         fileBackedTaskManager.deleteTaskFromList(1);
-        fileBackedTaskManager.deleteTaskFromList(3);
         fileBackedTaskManager.getHistory().forEach(task -> System.out.println(task));
-        System.out.println("_____________________________________________________________________________");*/
+        System.out.println("_____________________________________________________________________________");
+        fileBackedTaskManager.save();
     }
 }
 
