@@ -10,8 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-
 public class FileBackedTaskManager extends InMemoryTaskManager {
     public static void main(String[] args) throws ManagerSaveException {
         FileBackedTaskManager fileBackedTaskManager1 = new FileBackedTaskManager(
