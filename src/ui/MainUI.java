@@ -1,10 +1,12 @@
 package ui;
 
+import manager.FileBackedTaskManager;
 import manager.InMemoryTaskManager;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -13,7 +15,8 @@ public class MainUI {
 
     void main() throws IOException {
 
-        InMemoryTaskManager taskMaster = new InMemoryTaskManager();
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager("C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks\\file.csv");
+        fileBackedTaskManager.loadFromFile(new File("C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks\\file.csv"));
         while (true) {
             System.out.println("Добро пожаловать!");
             printMenu();
@@ -25,30 +28,30 @@ public class MainUI {
                     switch (getUserInput()) {
 
                         case "task" -> {
-                            Task newTask = taskMaster.createTask(getTitle(), getDescription());
-                            taskMaster.addTaskToList(newTask, taskMaster.taskList);
+                            Task newTask = fileBackedTaskManager.createTask(getTitle(), getDescription());
+                            fileBackedTaskManager.addTaskToList(newTask, fileBackedTaskManager.taskList);
                         }
 
                         case "epic" -> {
-                            Epic newEpic = taskMaster.createEpic(getTitle(), getDescription());
-                            taskMaster.addTaskToList(newEpic, taskMaster.epicList);
+                            Epic newEpic = fileBackedTaskManager.createEpic(getTitle(), getDescription());
+                            fileBackedTaskManager.addTaskToList(newEpic, fileBackedTaskManager.epicList);
                             System.out.println("Введите количество подзадач данного эпика");
                             int quantitySubtasks = Integer.parseInt(getUserInput());
                             for (int i = 0; i < quantitySubtasks; i++) {
-                                taskMaster.addTaskToList((taskMaster.createSubtask(getTitle(), getDescription(),
-                                        newEpic.getId())), taskMaster.subtaskList);
+                                fileBackedTaskManager.addTaskToList((fileBackedTaskManager.createSubtask(getTitle(), getDescription(),
+                                        newEpic.getId())), fileBackedTaskManager.subtaskList);
                             }
-                            taskMaster.updateEpic(newEpic);
+                            fileBackedTaskManager.updateEpic(newEpic);
                         }
 
                         case "subtask" -> {
                             System.out.println("Введите поочередно заголовок задачи, описание, и " +
                                     "номер эпика для данной подзадачи");
                             int epicId;
-                            Subtask newSubtask = taskMaster.createSubtask(getTitle(), getDescription(),
+                            Subtask newSubtask = fileBackedTaskManager.createSubtask(getTitle(), getDescription(),
                                     epicId = Integer.parseInt(getUserInput()));
-                            taskMaster.addTaskToList(newSubtask, taskMaster.subtaskList);
-                            taskMaster.updateEpic(taskMaster.epicList.get(epicId));
+                            fileBackedTaskManager.addTaskToList(newSubtask, fileBackedTaskManager.subtaskList);
+                            fileBackedTaskManager.updateEpic(fileBackedTaskManager.epicList.get(epicId));
                         }
 
                         default ->
@@ -60,9 +63,9 @@ public class MainUI {
                     System.out.println("Вы действительно хотите очистить список задач? да / нет");
                     boolean userAnswer = getUserInput().trim().toLowerCase().equals("да");
                     if (userAnswer) {
-                        taskMaster.taskList.clear();
-                        taskMaster.epicList.clear();
-                        taskMaster.subtaskList.clear();
+                        fileBackedTaskManager.taskList.clear();
+                        fileBackedTaskManager.epicList.clear();
+                        fileBackedTaskManager.subtaskList.clear();
                         System.out.println("Список задач очищен");
                     } else {
                         System.out.println("Здорово, что вы передумали!");
@@ -72,34 +75,34 @@ public class MainUI {
                 case "3" -> {
                     System.out.println("Введите id искомого объекта");
                     int findObject = Integer.parseInt(getUserInput());
-                    System.out.println(taskMaster.findTask(findObject));
+                    System.out.println(fileBackedTaskManager.findTask(findObject));
                 }
 
-                case "4" -> printItems(taskMaster).forEach(task -> System.out.println(task));
+                case "4" -> printItems(fileBackedTaskManager).forEach(task -> System.out.println(task));
 
                 case "5" -> {
                     System.out.println("Введите id эпика объекта");
-                    System.out.println(taskMaster.getEpicSubtasks(Integer.parseInt(getUserInput())));
+                    System.out.println(fileBackedTaskManager.getEpicSubtasks(Integer.parseInt(getUserInput())));
                 }
 
-                case "6" -> taskMaster.deleteEpicSubtasks(Integer.parseInt(getUserInput()));
+                case "6" -> fileBackedTaskManager.deleteEpicSubtasks(Integer.parseInt(getUserInput()));
 
                 case "7" -> {
                     System.out.println("Введите номер задачи/подзадачи");
                     int userCommand = Integer.parseInt(getUserInput());
-                    if (taskMaster.taskList.containsKey(userCommand)) {
-                        taskMaster.updateTask(taskMaster.taskList.get(userCommand));
-                    } else if (taskMaster.subtaskList.containsKey(userCommand)) {
-                        taskMaster.updateSubtask(taskMaster.subtaskList.get(userCommand));
+                    if (fileBackedTaskManager.taskList.containsKey(userCommand)) {
+                        fileBackedTaskManager.updateTask(fileBackedTaskManager.taskList.get(userCommand));
+                    } else if (fileBackedTaskManager.subtaskList.containsKey(userCommand)) {
+                        fileBackedTaskManager.updateSubtask(fileBackedTaskManager.subtaskList.get(userCommand));
                     }
                 }
 
                 case "8" -> {
                     System.out.println("Введите номер удаляемой задачи: ");
-                    taskMaster.deleteTaskFromList(Integer.parseInt(getUserInput()));
+                    fileBackedTaskManager.deleteTaskFromList(Integer.parseInt(getUserInput()));
                 }
 
-                case "9" -> taskMaster.getHistory().forEach(task -> System.out.println(task));
+                case "9" -> fileBackedTaskManager.getHistory().forEach(task -> System.out.println(task));
 
                 case "10" -> {
                     return;

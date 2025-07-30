@@ -1,5 +1,6 @@
 package manager;
 
+import exceptions.ManagerSaveException;
 import tasks.Epic;
 import tasks.Status;
 import tasks.Subtask;
@@ -26,7 +27,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void addTaskToList(Task task, HashMap hashMap) {
+    public void addTaskToList(Task task, HashMap hashMap) throws ManagerSaveException {
         hashMap.put(task.getId(), task);
     }
 
@@ -97,7 +98,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(Task task) {
+    public void updateTask(Task task) throws ManagerSaveException {
         Status currentStatus = task.getStatus();
         Task newTask = createTask(task.getTitle(), task.getDescription());
         idCount--;
@@ -113,7 +114,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) {
+    public void updateSubtask(Subtask subtask) throws ManagerSaveException {
         Status currentStatus = subtask.getStatus();
         Subtask newSubtask = createSubtask(subtask.getTitle(), subtask.getDescription(), subtask.getEpicId());
         idCount--;
@@ -129,7 +130,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateEpic(Epic epic) {
+    public void updateEpic(Epic epic) throws ManagerSaveException {
         Epic newEpic = createEpic(epic.getTitle(), epic.getDescription());
         idCount--;
         newEpic.setId(epic.getId());
@@ -157,7 +158,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteEpicSubtasks(int epicId) {
+    public void deleteEpicSubtasks(int epicId) throws ManagerSaveException {
         for (Subtask value : getEpicSubtasks(epicId)) {
             forgetTask(value.getId());
         }

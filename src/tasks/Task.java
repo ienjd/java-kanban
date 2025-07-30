@@ -60,7 +60,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return String.format("%-5s" + ", " + "%-20s" + ", " + "%-20s" + ", " + "%-20s" + ", " + "%-20s" + ";" + "\n", id, getClass().getSimpleName(), title, status, description);
+        return String.format("%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + ";", id, getClass().getSimpleName(), title, status, description);
     }
 }
 
