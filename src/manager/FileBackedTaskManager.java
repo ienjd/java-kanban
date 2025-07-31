@@ -11,106 +11,47 @@ import java.nio.file.Path;
 import java.util.HashMap;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    public static void main(String[] args) throws ManagerSaveException {
-        FileBackedTaskManager fileBackedTaskManager1 = new FileBackedTaskManager(
-                "C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks\\file.csv");
-        System.out.println("Загружено из fileBackedTaskManager1");
-        fileBackedTaskManager1.addTaskToList((fileBackedTaskManager1.createTask("Задача 1", "Описание задачи 1")),
-                fileBackedTaskManager1.taskList);
-        fileBackedTaskManager1.addTaskToList((fileBackedTaskManager1.createTask("Задача 2", "Описание задачи 2")),
-                fileBackedTaskManager1.taskList);
-        fileBackedTaskManager1.addTaskToList((fileBackedTaskManager1.createEpic("Эпик 1", "Описание эпика 1")),
-                fileBackedTaskManager1.epicList);
-        fileBackedTaskManager1.addTaskToList((fileBackedTaskManager1.createSubtask("Подзадача 1", "Описание подзадачи 1", 3)),
-                fileBackedTaskManager1.subtaskList);
-        fileBackedTaskManager1.addTaskToList((fileBackedTaskManager1.createSubtask("Подзадача 2", "Описание подзадачи 2", 3)),
-                fileBackedTaskManager1.subtaskList);
-        fileBackedTaskManager1.addTaskToList((fileBackedTaskManager1.createSubtask("Подзадача 3", "Описание подзадачи 3", 3)),
-                fileBackedTaskManager1.subtaskList);
-        fileBackedTaskManager1.addTaskToList((fileBackedTaskManager1.createEpic("Эпик 2", "Описание эпика 2")),
-                fileBackedTaskManager1.epicList);
-        for (Task value : fileBackedTaskManager1.taskList.values()) {
-            System.out.println(value);
-        }
-        for (Epic value : fileBackedTaskManager1.epicList.values()) {
-            System.out.println(value);
-        }
-        for (Subtask value : fileBackedTaskManager1.subtaskList.values()) {
-            System.out.println(value);
-        }
 
+    public File file;
 
-        fileBackedTaskManager1.addTaskToList((fileBackedTaskManager1.createTask("Задача 666", "Описание задачи 666")),
-                fileBackedTaskManager1.taskList);
-
-        System.out.println("добавлены новые задачи, выгружены в fileBackedTaskManager2 из уже имеющегося файла");
-
-        FileBackedTaskManager fileBackedTaskManager2 = new FileBackedTaskManager();
-
-        fileBackedTaskManager2.loadFromFile(new File("C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks\\file.csv"));
-
-        for (Task value : fileBackedTaskManager1.taskList.values()) {
-            System.out.println(value);
-        }
-        for (Epic value : fileBackedTaskManager1.epicList.values()) {
-            System.out.println(value);
-        }
-        for (Subtask value : fileBackedTaskManager1.subtaskList.values()) {
-            System.out.println(value);
-        }
-    }
-
-    public String filePath;
-
-    public FileBackedTaskManager() {
+    public FileBackedTaskManager(){
     }
 
     public FileBackedTaskManager(String filePath) {
-        this.filePath = filePath;
+        this.file = new File(filePath);
         if (!Files.exists(Path.of(filePath))) {
             createFileForSaving();
         }
     }
 
-    public void save() throws ManagerSaveException {
-        try (Writer fileWriter = new FileWriter(filePath, Charset.forName("Windows-1251"), true);
-             BufferedWriter bw = new BufferedWriter(fileWriter)) {
-            bw.write(String.format("%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "\n", "id",
-                    "Class", "title", "status", "description"));
-            for (Task item : taskList.values()) {
-                if (findTask(item.getId()).equals(null)) {
-                    bw.write(item.toString() + "\n");
-                }
+    public FileBackedTaskManager(File file) {
+        this.file = file;
+    }
 
+    public void save() throws ManagerSaveException {
+        try (Writer fileWriter = new FileWriter(file, Charset.forName("Windows-1251"));
+             BufferedWriter bw = new BufferedWriter(fileWriter)) {
+            bw.write(String.format("%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "\n", "id",
+                    "Class", "title", "status", "description", "epicId"));
+
+            for (Task item : taskList.values()) {
+                    bw.write(item + "\n");
             }
             for (Epic item : epicList.values()) {
-                if (findTask(item.getId()).equals(null)) {
-                    bw.write(item.toString() + "\n");
-                }
+                    bw.write(item + "\n");
             }
             for (Subtask item : subtaskList.values()) {
-                if (findTask(item.getId()).equals(null)) {
-                    bw.write(item.toString() + "\n");
-                }
+                    bw.write(item + "\n");
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка сохранения!");
         }
     }
 
-    public void deleteFile() throws ManagerSaveException {
-        try {
-            Files.delete(Path.of(filePath));
-        } catch (IOException e) {
-            throw new ManagerSaveException("Есть проблемы");
-        }
-    }
-
-
     public Path createFileForSaving() {
         Path fileForSaving = null;
         try {
-            fileForSaving = Files.createFile(Path.of(filePath));
+            fileForSaving = Files.createFile(Path.of(file.toURI()));
             if (Files.exists(fileForSaving)) {
                 System.out.println("Файл успешно создан");
             }
@@ -120,7 +61,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return fileForSaving;
     }
 
-    public void loadFromFile(File file) {
+    public static FileBackedTaskManager loadFromFile(File file) {
+       FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
+       fileBackedTaskManager.loadingFile(file);
+       return fileBackedTaskManager;
+    }
+
+
+    public void loadingFile(File file) {
         try (FileReader fr = new FileReader(file, Charset.forName("Windows-1251"));
              BufferedReader br = new BufferedReader(fr)) {
             while (br.ready()) {
@@ -130,8 +78,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     fromString(task);
                 }
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -154,7 +100,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             addTaskToList(object, subtaskList);
         }
     }
-
 
     @Override
     public void addTaskToList(Task task, HashMap hashMap) throws ManagerSaveException {
