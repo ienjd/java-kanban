@@ -14,7 +14,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public File file;
 
-    public FileBackedTaskManager(){
+    public FileBackedTaskManager() {
     }
 
     public FileBackedTaskManager(String filePath) {
@@ -35,13 +35,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     "Class", "title", "status", "description", "epicId"));
 
             for (Task item : taskList.values()) {
-                    bw.write(item + "\n");
+                bw.write(item + "\n");
             }
             for (Epic item : epicList.values()) {
-                    bw.write(item + "\n");
+                bw.write(item + "\n");
             }
             for (Subtask item : subtaskList.values()) {
-                    bw.write(item + "\n");
+                bw.write(item + "\n");
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка сохранения!");
@@ -62,9 +62,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public static FileBackedTaskManager loadFromFile(File file) {
-       FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
-       fileBackedTaskManager.loadingFile(file);
-       return fileBackedTaskManager;
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
+        fileBackedTaskManager.loadingFile(file);
+        return fileBackedTaskManager;
     }
 
 
