@@ -1,65 +1,64 @@
-import manager.InMemoryTaskManager;
+
+import manager.FileBackedTaskManager;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
+
+import java.io.File;
+import java.io.IOException;
 
 public class Main {
-    public void main(String[] args) {
-        InMemoryTaskManager taskMaster = new InMemoryTaskManager();
-        System.out.println("Тесты практикума");
-        taskMaster.addTaskToList((taskMaster.createTask("Задача 1", "Описание задачи 1")),
-                taskMaster.taskList);
-        taskMaster.addTaskToList((taskMaster.createTask("Задача 2", "Описание задачи 2")),
-                taskMaster.taskList);
-        taskMaster.addTaskToList((taskMaster.createEpic("Эпик 1", "Описание эпика 1")),
-                taskMaster.epicList);
-        taskMaster.addTaskToList((taskMaster.createSubtask("Подзадача 1", "Описание подзадачи 1", 3)),
-                taskMaster.subtaskList);
-        taskMaster.addTaskToList((taskMaster.createSubtask("Подзадача 2", "Описание подзадачи 2", 3)),
-                taskMaster.subtaskList);
-        taskMaster.addTaskToList((taskMaster.createSubtask("Подзадача 3", "Описание подзадачи 3", 3)),
-                taskMaster.subtaskList);
-        taskMaster.addTaskToList((taskMaster.createEpic("Эпик 2", "Описание эпика 2")),
-                taskMaster.epicList);
-        for (Object task : taskMaster.taskList.values()) {
-            System.out.println(task);
+    public void main(String[] args) throws IOException {
+
+        FileBackedTaskManager fileBackedTaskManager1 = new FileBackedTaskManager(
+                "C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks\\file.csv");
+        System.out.println("Загружено из fileBackedTaskManager1");
+        fileBackedTaskManager1.addTaskToList((fileBackedTaskManager1.createTask("Задача 1", "Описание задачи 1")),
+                fileBackedTaskManager1.taskList);
+        fileBackedTaskManager1.addTaskToList((fileBackedTaskManager1.createTask("Задача 2", "Описание задачи 2")),
+                fileBackedTaskManager1.taskList);
+        fileBackedTaskManager1.addTaskToList((fileBackedTaskManager1.createEpic("Эпик 1", "Описание эпика 1")),
+                fileBackedTaskManager1.epicList);
+        fileBackedTaskManager1.addTaskToList((fileBackedTaskManager1.createSubtask("Подзадача 1", "Описание подзадачи 1", 3)),
+                fileBackedTaskManager1.subtaskList);
+        fileBackedTaskManager1.addTaskToList((fileBackedTaskManager1.createSubtask("Подзадача 2", "Описание подзадачи 2", 3)),
+                fileBackedTaskManager1.subtaskList);
+        fileBackedTaskManager1.addTaskToList((fileBackedTaskManager1.createSubtask("Подзадача 3", "Описание подзадачи 3", 3)),
+                fileBackedTaskManager1.subtaskList);
+        fileBackedTaskManager1.addTaskToList((fileBackedTaskManager1.createEpic("Эпик 2", "Описание эпика 2")),
+                fileBackedTaskManager1.epicList);
+        for (Task value : fileBackedTaskManager1.taskList.values()) {
+            System.out.println(value);
         }
-        for (Object task : taskMaster.epicList.values()) {
-            System.out.println(task);
+        for (Epic value : fileBackedTaskManager1.epicList.values()) {
+            System.out.println(value);
         }
-        for (Object task : taskMaster.subtaskList.values()) {
-            System.out.println(task);
+        for (Subtask value : fileBackedTaskManager1.subtaskList.values()) {
+            System.out.println(value);
         }
-        System.out.println("_____________________________________________________________________________");
-        taskMaster.findTask(1);
-        taskMaster.findTask(2);
-        taskMaster.findTask(7);
-        taskMaster.findTask(3);
-        taskMaster.findTask(5);
-        taskMaster.findTask(4);
-        taskMaster.findTask(3);
-        taskMaster.findTask(7);
-        taskMaster.findTask(6);
-        taskMaster.findTask(2);
-        taskMaster.findTask(4);
-        taskMaster.getHistory().forEach(task -> System.out.println(task));
-        System.out.println("_____________________________________________________________________________");
-        taskMaster.findTask(7);
-        taskMaster.findTask(4);
-        taskMaster.findTask(6);
-        taskMaster.findTask(5);
-        taskMaster.findTask(7);
-        taskMaster.findTask(2);
-        taskMaster.findTask(1);
-        taskMaster.findTask(4);
-        taskMaster.findTask(7);
-        taskMaster.findTask(2);
-        taskMaster.findTask(1);
-        taskMaster.getHistory().forEach(task -> System.out.println(task));
-        System.out.println("_____________________________________________________________________________");
-        taskMaster.deleteTaskFromList(1);
-        taskMaster.deleteTaskFromList(3);
-        taskMaster.getHistory().forEach(task -> System.out.println(task));
-        System.out.println("_____________________________________________________________________________");
+
+        fileBackedTaskManager1.addTaskToList((fileBackedTaskManager1.createTask("Задача 666", "Описание задачи 666")),
+                fileBackedTaskManager1.taskList);
+        fileBackedTaskManager1.addTaskToList((fileBackedTaskManager1.createTask("Задача 666", "Описание задачи 667")),
+                fileBackedTaskManager1.taskList);
+
+        System.out.println("добавлены новые задачи, выгружены в fileBackedTaskManager2 из уже имеющегося файла");
+
+        FileBackedTaskManager fileBackedTaskManager2 = FileBackedTaskManager.loadFromFile(new File("C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks\\file.csv"));
+
+        for (Task value : fileBackedTaskManager2.taskList.values()) {
+            System.out.println(value);
+        }
+        for (Epic value : fileBackedTaskManager2.epicList.values()) {
+            System.out.println(value);
+        }
+        for (Subtask value : fileBackedTaskManager2.subtaskList.values()) {
+            System.out.println(value);
+        }
     }
+
 }
+
 
 
 

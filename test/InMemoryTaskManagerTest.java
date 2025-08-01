@@ -1,3 +1,4 @@
+import exceptions.ManagerSaveException;
 import manager.InMemoryHistoryManager;
 import manager.InMemoryTaskManager;
 import org.junit.jupiter.api.Assertions;
@@ -5,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
+
+import java.io.IOException;
 
 import static tasks.Status.NEW;
 
@@ -20,21 +23,21 @@ class InMemoryTaskManagerTest {
      связь Subtask с Epicом реализована через создание у Subtask приватного поля epicId. Таким образом, Epic в принципе
      невозможно сделать Subtaskом */
 
-    public static Task createTask() {
+    public static Task createTask() throws ManagerSaveException {
         Task firstTask = inMemoryTaskManager.createTask("Первая задача", "Описание первой задачи");
         inMemoryTaskManager.addTaskToList(firstTask, inMemoryTaskManager.taskList);
         firstTask.setId(1);
         return inMemoryTaskManager.taskList.get(1);
     }
 
-    public static Epic createEpic() {
+    public static Epic createEpic() throws ManagerSaveException {
         Epic firstEpic = inMemoryTaskManager.createEpic("Первый эпик", "Описание первого эпика");
         inMemoryTaskManager.addTaskToList(firstEpic, inMemoryTaskManager.epicList);
         firstEpic.setId(2);
         return inMemoryTaskManager.epicList.get(2);
     }
 
-    public static Subtask createSubtask() {
+    public static Subtask createSubtask() throws ManagerSaveException {
         Subtask firstSubtask = inMemoryTaskManager.createSubtask("Первая подзадача", "Описание первой подзадачи", 2);
         inMemoryTaskManager.addTaskToList(firstSubtask, inMemoryTaskManager.subtaskList);
         firstSubtask.setId(3);
@@ -44,7 +47,7 @@ class InMemoryTaskManagerTest {
     @Test
 // Тест проверяет, что задачи добавляемые в менеджер неизменны, а также, что менеджер возвращает корректные
         // задачи при использовании поиска
-    void tasksAddedToManagerAreNotChangedAndManagerReturnCorrectTasksInFindMethod() {
+    void tasksAddedToManagerAreNotChangedAndManagerReturnCorrectTasksInFindMethod() throws ManagerSaveException {
         Task task = new Task("Первая задача", "Описание первой задачи", 1, NEW);
         inMemoryTaskManager.addTaskToList(task, inMemoryTaskManager.taskList);
         Epic epic = new Epic("Первый эпик", "Описание первого эпика", 2, NEW);
@@ -58,7 +61,7 @@ class InMemoryTaskManagerTest {
 
     @Test
         //Тест проверяет, что удаление эпика влечет за собой удаление сабтасков данного эпика
-    void deleteEpicDeletingSubtasksThisEpic() {
+    void deleteEpicDeletingSubtasksThisEpic() throws IOException {
         inMemoryTaskManager.deleteTaskFromList(2);
         Assertions.assertTrue(inMemoryTaskManager.getEpicSubtasks(2).isEmpty());
     }
