@@ -1,5 +1,7 @@
 package tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -7,6 +9,8 @@ public class Task {
     private String description;
     private int id;
     private Status status;
+    Duration duration;
+    LocalDateTime startTime;
 
     public Task() {
     }

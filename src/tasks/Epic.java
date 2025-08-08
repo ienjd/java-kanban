@@ -1,5 +1,7 @@
 package tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Epic extends Task {
@@ -8,6 +10,8 @@ public class Epic extends Task {
     private String description;
     private int id;
     private Status status;
+    Duration duration;
+    LocalDateTime startTime;
 
     public Epic(String title, String description, int id, Status status) {
         super(title, description, id, status);
