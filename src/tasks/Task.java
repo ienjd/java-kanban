@@ -14,12 +14,33 @@ public class Task {
 
     public Task() {
     }
-
-    public Task(String title, String description, int id, Status status) {
+    public Task(
+            String title,
+            String description,
+            int id,
+            Status status) {
         this.title = title;
         this.description = description;
         this.id = id;
         this.status = status;
+    }
+    public Task(
+            String title,
+            String description,
+            int id,
+            Status status,
+            Duration duration,
+            LocalDateTime startTime) {
+        this.title = title;
+        this.description = description;
+        this.id = id;
+        this.status = status;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = Duration.ofMinutes(duration);
     }
 
     public String getTitle() {
@@ -48,6 +69,10 @@ public class Task {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public LocalDateTime getEndIme(){
+        return startTime.plus(duration);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package tasks;
 
+import com.sun.jdi.request.DuplicateRequestException;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -10,12 +12,14 @@ public class Epic extends Task {
     private String description;
     private int id;
     private Status status;
-    Duration duration;
+    public Duration duration;
     LocalDateTime startTime;
+
 
     public Epic(String title, String description, int id, Status status) {
         super(title, description, id, status);
     }
+
 
     public Status getStatus() {
         return status;

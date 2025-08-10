@@ -7,9 +7,13 @@ import tasks.Subtask;
 import tasks.Task;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class InMemoryTaskManager implements TaskManager {
     public static int idCount = 0;
@@ -88,12 +92,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public ArrayList<Subtask> getEpicSubtasks(int epicId) {
-        ArrayList<Subtask> subtasksThisEpic = new ArrayList<>();
-        for (Subtask subtask : subtaskList.values()) {
-            if (subtask.getEpicId() == epicId) {
-                subtasksThisEpic.add(subtask);
-            }
-        }
+        ArrayList<Subtask> subtasksThisEpic = (ArrayList<Subtask>) subtaskList.values().stream()
+                .filter(subtask -> (subtask.getEpicId() == epicId))
+                .collect(Collectors.toList());
         return subtasksThisEpic;
     }
 
@@ -159,9 +160,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteEpicSubtasks(int epicId) throws ManagerSaveException {
-        for (Subtask value : getEpicSubtasks(epicId)) {
-            forgetTask(value.getId());
-        }
+        getEpicSubtasks(epicId).stream()
+                .map(Subtask::getId)
+                .forEach(id -> forgetTask(id));
         subtaskList.values().removeAll(getEpicSubtasks(epicId));
         epicList.get(epicId).setStatus(Status.DONE);
         updateEpic(epicList.get(epicId));
@@ -174,6 +175,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     public void forgetTask(int id) {
         inMemoryHistoryManager.remove(id);
+    }
+
+    public void setEpicDuration(int epicId){
+        Epic newEpic = findTask(epicId);
+        newEpic.duration = getEpicSubtasks(epicId).stream()
+                .map(subtask -> subtask.getDuration())
+                .reduce(Duration.ofMinutes(0), (a, b) -> a.plus(b));
+        System.out.println(newEpic.duration);
     }
 }
 

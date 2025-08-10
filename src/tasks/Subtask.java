@@ -10,15 +10,24 @@ public class Subtask extends Task {
     private int id;
     private Status status;
     private int epicId;
-    Duration duration;
-    LocalDateTime startTime;
+    private Duration duration;
+    private LocalDateTime startTime;
 
-    public Subtask(String title, String description, int id, Status status, int epicId) {
+    public Subtask(
+            String title,
+            String description,
+            int id,
+            Status status,
+            int epicId) {
         this.title = title;
         this.description = description;
         this.id = id;
         this.status = status;
         this.epicId = epicId;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = Duration.ofMinutes(duration);
     }
 
     public int getId() {
@@ -54,6 +63,21 @@ public class Subtask extends Task {
         if (epicId != id) {
             this.epicId = epicId;
         }
+    }
+    public Duration getDuration(){
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndIme(){
+        return startTime.plus(duration);
     }
 
     public String getTitle() {

@@ -13,7 +13,7 @@ import java.util.Scanner;
 
 public class MainUI {
 
-    void main() throws IOException {
+    public static void main() throws IOException {
 
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager("C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks\\file.csv");
         fileBackedTaskManager.loadFromFile(new File("C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks\\file.csv"));
