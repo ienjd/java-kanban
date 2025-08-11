@@ -63,12 +63,20 @@ public class Task {
         this.description = description;
     }
 
+    public void setStartTime(LocalDateTime startTime){
+        this.startTime = startTime;
+    }
+
     public Status getStatus() {
         return status;
     }
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
     public LocalDateTime getEndIme(){

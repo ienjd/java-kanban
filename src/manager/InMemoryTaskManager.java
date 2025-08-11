@@ -9,7 +9,9 @@ import tasks.Task;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +22,7 @@ public class InMemoryTaskManager implements TaskManager {
     public final HashMap<Integer, Task> taskList = new HashMap<>();
     public final HashMap<Integer, Epic> epicList = new HashMap<>();
     public final HashMap<Integer, Subtask> subtaskList = new HashMap<>();
+    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
     HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
     public static int getIdCount() {
@@ -178,12 +181,20 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public void setEpicDuration(int epicId){
-        Epic newEpic = findTask(epicId);
-        newEpic.duration = getEpicSubtasks(epicId).stream()
+        findTask(epicId).setDuration((int)(getEpicSubtasks(epicId).stream()
                 .map(subtask -> subtask.getDuration())
-                .reduce(Duration.ofMinutes(0), (a, b) -> a.plus(b));
-        System.out.println(newEpic.duration);
+                .reduce(Duration.ofMinutes(0), (a, b) -> a.plus(b))
+                .toMinutes()));
     }
+
+    public void setEpicStartTime(int epicId){
+        findTask(epicId).setStartTime((getEpicSubtasks(epicId).stream()
+                .map(subtask -> subtask.getStartTime())
+                .sorted()
+                .findFirst()
+                .get()));
+    }
+
 }
 
 
