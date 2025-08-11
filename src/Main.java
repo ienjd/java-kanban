@@ -46,6 +46,7 @@ public class Main {
     Epic epic = inMemoryTaskManager.findTask(1);
     System.out.println(epic.getStartEpicTime());
     System.out.println(epic.getEpicDuration());
+    System.out.println(epic.getEndTime());
     }
 }
 
