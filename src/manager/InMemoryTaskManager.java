@@ -10,10 +10,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,6 +21,7 @@ public class InMemoryTaskManager implements TaskManager {
     public final HashMap<Integer, Subtask> subtaskList = new HashMap<>();
     public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
     HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
+    public final TreeSet <Task> sortedTasks = new TreeSet<>();
 
     public static int getIdCount() {
         return idCount;
@@ -193,6 +191,10 @@ public class InMemoryTaskManager implements TaskManager {
                 .sorted()
                 .findFirst()
                 .get()));
+    }
+
+    public TreeSet getPrioritizedTasks(){
+        return sortedTasks;
     }
 
 }

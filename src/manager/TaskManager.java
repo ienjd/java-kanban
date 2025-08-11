@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface TaskManager {
 
-    void addTaskToList(Task task, HashMap hashMap) throws ManagerSaveException;
+    void addTaskToList(Task task, HashMap hashmap) throws ManagerSaveException;
 
     Task createTask(String title, String description);
 

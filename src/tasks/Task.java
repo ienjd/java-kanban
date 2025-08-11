@@ -79,7 +79,7 @@ public class Task {
         return startTime;
     }
 
-    public LocalDateTime getEndIme(){
+    public LocalDateTime getEndTime(){
         return startTime.plus(duration);
     }
 

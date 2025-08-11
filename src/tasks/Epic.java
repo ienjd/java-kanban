@@ -36,6 +36,9 @@ public class Epic extends Task {
         return status;
     }
 
+    public LocalDateTime getEndTime(){
+        return startTime.plus(duration);
+    }
 
     public LocalDateTime getStartEpicTime() {
         return startTime;
