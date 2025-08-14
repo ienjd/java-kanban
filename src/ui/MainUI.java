@@ -1,14 +1,23 @@
 package ui;
 
+import manager.FileBackedTaskManager;
 import manager.InMemoryTaskManager;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 
-/*
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+
 public class MainUI {
 
-    public static void main() throws IOException {
+    public static void main(String[] args) throws IOException {
 
-        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager("C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks\\file.csv");
-        fileBackedTaskManager.loadFromFile(new File("C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks\\file.csv"));
+        InMemoryTaskManager fileBackedTaskManager = new InMemoryTaskManager();
+
         while (true) {
             System.out.println("Добро пожаловать!");
             printMenu();
@@ -43,7 +52,7 @@ public class MainUI {
                             Subtask newSubtask = fileBackedTaskManager.createSubtask(getTitle(), getDescription(),
                                     epicId = Integer.parseInt(getUserInput()));
                             fileBackedTaskManager.addTaskToList(newSubtask, fileBackedTaskManager.subtaskList);
-                            fileBackedTaskManager.updateEpic(fileBackedTaskManager.epicList.get(epicId));
+                            fileBackedTaskManager.updateEpic((Epic) fileBackedTaskManager.epicList.get(epicId));
                         }
 
                         default ->
@@ -70,7 +79,7 @@ public class MainUI {
                     System.out.println(fileBackedTaskManager.findTask(findObject));
                 }
 
-                case "4" -> printItems(fileBackedTaskManager).forEach(task -> System.out.println(task));
+                case "4" -> printItems(fileBackedTaskManager);
 
                 case "5" -> {
                     System.out.println("Введите id эпика объекта");
@@ -83,9 +92,9 @@ public class MainUI {
                     System.out.println("Введите номер задачи/подзадачи");
                     int userCommand = Integer.parseInt(getUserInput());
                     if (fileBackedTaskManager.taskList.containsKey(userCommand)) {
-                        fileBackedTaskManager.updateTask(fileBackedTaskManager.taskList.get(userCommand));
+                        fileBackedTaskManager.updateTask((Task) fileBackedTaskManager.taskList.get(userCommand));
                     } else if (fileBackedTaskManager.subtaskList.containsKey(userCommand)) {
-                        fileBackedTaskManager.updateSubtask(fileBackedTaskManager.subtaskList.get(userCommand));
+                        fileBackedTaskManager.updateSubtask((Subtask) fileBackedTaskManager.subtaskList.get(userCommand));
                     }
                 }
 
@@ -144,5 +153,5 @@ public class MainUI {
         return description;
     }
 }
-*/
+
 

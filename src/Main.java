@@ -1,5 +1,6 @@
 
 import manager.FileBackedTaskManager;
+import manager.InMemoryHistoryManager;
 import manager.InMemoryTaskManager;
 import tasks.Epic;
 import tasks.Subtask;
@@ -12,8 +13,7 @@ import java.time.LocalDateTime;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        FileBackedTaskManager fileBackedTaskManager1 = new FileBackedTaskManager("C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks\\file.csv");
-
+        InMemoryTaskManager fileBackedTaskManager1 = new InMemoryTaskManager();
 
         Task task1 = fileBackedTaskManager1.createTask("er", "er");
         task1.setDuration(15);
@@ -54,14 +54,7 @@ public class Main {
         Epic epic1 = fileBackedTaskManager1.createEpic("EE", "ee");
         fileBackedTaskManager1.addTaskToList(epic1, fileBackedTaskManager1.epicList);
 
-        fileBackedTaskManager1.save();
-        FileBackedTaskManager.loadFromFile(new File("C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks\\file.csv"));
-
-        FileBackedTaskManager fileBackedTaskManager2 = FileBackedTaskManager.loadFromFile(
-                new File("C:\\Users\\coldh\\IdeaProjects\\java-kanban\\fileForSavingTasks\\file.csv"));
-
         System.out.println(fileBackedTaskManager1.getPrioritizedTasks());
-
     }
 }
 

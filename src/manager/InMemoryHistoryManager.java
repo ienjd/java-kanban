@@ -31,9 +31,9 @@ public class InMemoryHistoryManager<T extends Task> implements HistoryManager<T>
 
     private List<T> getTasks() {
         List<T> history = new ArrayList<>();
-        for (Node node : viewHistory) {
-            history.add((T) node.getData());
-        }
+        viewHistory.stream()
+                .map(node -> node.getData())
+                .forEach(data -> history.add((T) data));
         return history;
     }
 

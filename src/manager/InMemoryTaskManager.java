@@ -216,16 +216,18 @@ public class InMemoryTaskManager<T> implements TaskManager {
     }
 
     public void sortingTasks() throws ManagerSaveException {
-        for (Epic epic : epicList.values()) {
-            List<Subtask> subs = getEpicSubtasks(epic.getId());
-            if (subs.isEmpty()) {
-                epic.setDuration(0);
-                epic.setStartTime(null);
-            } else {
-                setEpicDuration(epic.getId());
-                setEpicStartTime(epic.getId());
-            }
-        }
+        epicList.values().stream().map( epic -> {
+                    List<Subtask> subs = getEpicSubtasks(epic.getId());
+                    if (subs.isEmpty()) {
+                        epic.setDuration(0);
+                        epic.setStartTime(null);
+                    } else {
+                        setEpicDuration(epic.getId());
+                        setEpicStartTime(epic.getId());
+                    }
+                    return null;
+                }
+        );
 
         List<Task> allTasks = new ArrayList<>();
         allTasks.addAll(taskList.values());
@@ -264,9 +266,7 @@ public class InMemoryTaskManager<T> implements TaskManager {
                     .filter(sortedTask -> (sortedTask.getStartTime().isAfter(nonSortedTask.getStartTime()) &&
                             sortedTask.getStartTime().isBefore(nonSortedTask.getEndTime())) ||
                             (sortedTask.getEndTime().isAfter(nonSortedTask.getStartTime()) &&
-                                    (sortedTask.getEndTime().isBefore(nonSortedTask.getEndTime()))) /*||
-                                        (sortedTask.getStartTime().equals(nonSortedTask.getEndTime()) ||
-                                                sortedTask.getEndTime().equals(nonSortedTask.getStartTime()))*/)
+                                    (sortedTask.getEndTime().isBefore(nonSortedTask.getEndTime()))))
                     .findFirst()
                     .isPresent();
         return isIntersect;

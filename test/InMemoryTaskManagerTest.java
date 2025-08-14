@@ -27,21 +27,21 @@ class InMemoryTaskManagerTest {
         Task firstTask = inMemoryTaskManager.createTask("Первая задача", "Описание первой задачи");
         inMemoryTaskManager.addTaskToList(firstTask, inMemoryTaskManager.taskList);
         firstTask.setId(1);
-        return inMemoryTaskManager.taskList.get(1);
+        return (Task) inMemoryTaskManager.taskList.get(1);
     }
 
     public static Epic createEpic() throws ManagerSaveException {
         Epic firstEpic = inMemoryTaskManager.createEpic("Первый эпик", "Описание первого эпика");
         inMemoryTaskManager.addTaskToList(firstEpic, inMemoryTaskManager.epicList);
         firstEpic.setId(2);
-        return inMemoryTaskManager.epicList.get(2);
+        return (Epic) inMemoryTaskManager.epicList.get(2);
     }
 
     public static Subtask createSubtask() throws ManagerSaveException {
         Subtask firstSubtask = inMemoryTaskManager.createSubtask("Первая подзадача", "Описание первой подзадачи", 2);
         inMemoryTaskManager.addTaskToList(firstSubtask, inMemoryTaskManager.subtaskList);
         firstSubtask.setId(3);
-        return inMemoryTaskManager.subtaskList.get(3);
+        return (Subtask) inMemoryTaskManager.subtaskList.get(3);
     }
 
     @Test
@@ -49,14 +49,14 @@ class InMemoryTaskManagerTest {
         // задачи при использовании поиска
     void tasksAddedToManagerAreNotChangedAndManagerReturnCorrectTasksInFindMethod() throws ManagerSaveException {
         Task task = new Task("Первая задача", "Описание первой задачи", 1, NEW);
-        inMemoryTaskManager.addTaskToList(task, inMemoryTaskManager.taskList);
-        Epic epic = new Epic("Первый эпик", "Описание первого эпика", 2, NEW);
-        inMemoryTaskManager.addTaskToList(epic, inMemoryTaskManager.epicList);
-        Subtask subtask = new Subtask("Первая подзадача", "Описание первой подзадачи", 3, NEW, 2);
-        inMemoryTaskManager.addTaskToList(subtask, inMemoryTaskManager.subtaskList);
-        Assertions.assertEquals(task.getId(), inMemoryTaskManager.findTask(1).getId());
-        Assertions.assertEquals(epic.getId(), inMemoryTaskManager.findTask(2).getId());
-        Assertions.assertEquals(subtask.getId(), inMemoryTaskManager.findTask(3).getId());
+        inMemoryTaskManager.taskList.put(task.getId(), task);
+        Subtask subtask = new Subtask("Первая подзадача", "Описание первой подзадачи", 2, NEW, 3);
+        inMemoryTaskManager.subtaskList.put(subtask.getId(), subtask);
+        Epic epic = new Epic("Первый эпик", "Описание первого эпика", 3, NEW);
+        inMemoryTaskManager.epicList.put(epic.getId(), epic);
+        Assertions.assertEquals(task, inMemoryTaskManager.findTask(1));
+        Assertions.assertEquals(epic, inMemoryTaskManager.findTask(3));
+        Assertions.assertEquals(subtask, inMemoryTaskManager.findTask(2));
     }
 
     @Test
