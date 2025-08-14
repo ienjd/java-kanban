@@ -6,9 +6,9 @@ import java.util.Comparator;
 import java.util.Objects;
 
 public class Task {
-    private String title;
-    private String description;
-    private int id;
+    public String title;
+    public String description;
+    public int id;
     Status status;
     public Duration duration;
     LocalDateTime startTime;

@@ -6,9 +6,6 @@ import java.util.Objects;
 
 public class Epic extends Task {
 
-    private String title;
-    private String description;
-    private int id;
     private Duration duration;
     private LocalDateTime startTime;
     LocalDateTime endTime;

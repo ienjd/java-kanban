@@ -45,7 +45,13 @@ public class Main {
         fileBackedTaskManager1.addTaskToList(task5, fileBackedTaskManager1.taskList);
 
 
-        Subtask subtask1 = fileBackedTaskManager1.createSubtask("SS", "ss", 7);
+        Subtask subtask1 = fileBackedTaskManager1.createSubtask("SS", "ss", 8);
+        subtask1.setDuration(15);
+        subtask1.setStartTime(LocalDateTime.of(2025, 8, 11, 20, 30));
+        fileBackedTaskManager1.addTaskToList(subtask1, fileBackedTaskManager1.subtaskList);
+
+
+        Subtask subtask2 = fileBackedTaskManager1.createSubtask("SS", "ss", 8);
         subtask1.setDuration(15);
         subtask1.setStartTime(LocalDateTime.of(2025, 8, 11, 20, 30));
         fileBackedTaskManager1.addTaskToList(subtask1, fileBackedTaskManager1.subtaskList);

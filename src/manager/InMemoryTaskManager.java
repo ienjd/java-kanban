@@ -32,7 +32,7 @@ public class InMemoryTaskManager<T> implements TaskManager {
 
     @Override
     public void addTaskToList(Task task, HashMap hashMap) throws ManagerSaveException {
-        sortingTasks();
+
         if(sortedTasks.isEmpty()){
             hashMap.put(task.getId(), task);
         }
@@ -40,7 +40,7 @@ public class InMemoryTaskManager<T> implements TaskManager {
         if (!isTimeLapsesIntersects(task)) {
             hashMap.put(task.getId(), task);
         }
-
+        sortingTasks();
     }
 
     @Override
@@ -262,13 +262,24 @@ public class InMemoryTaskManager<T> implements TaskManager {
     }
 
     public <T extends Task> boolean isTimeLapsesIntersects(T nonSortedTask) {
-        boolean isIntersect = sortedTasks.stream()
+        boolean isIntersect;
+
+        if ((nonSortedTask instanceof Epic) && (subtaskList.values()
+                .stream()
+                .map(subtask -> subtask.getEpicId())
+                .filter(epicId -> !(epicId == nonSortedTask.getId()))
+                .findFirst()
+                .isPresent())){
+            isIntersect = false;
+        } else {
+            isIntersect = sortedTasks.stream()
                     .filter(sortedTask -> (sortedTask.getStartTime().isAfter(nonSortedTask.getStartTime()) &&
                             sortedTask.getStartTime().isBefore(nonSortedTask.getEndTime())) ||
                             (sortedTask.getEndTime().isAfter(nonSortedTask.getStartTime()) &&
                                     (sortedTask.getEndTime().isBefore(nonSortedTask.getEndTime()))))
                     .findFirst()
                     .isPresent();
+        }
         return isIntersect;
     }
 }
