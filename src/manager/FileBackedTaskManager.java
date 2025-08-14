@@ -31,15 +31,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public void save() throws ManagerSaveException {
         try (Writer fileWriter = new FileWriter(file, Charset.forName("Windows-1251"));
              BufferedWriter bw = new BufferedWriter(fileWriter)) {
-            bw.write(String.format("%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "\n", "id",
-                    "Class", "title", "status", "description", "epicId"));
-            for (Object item : taskList.values()) {
-                bw.write(item + "\n");
-            }
-            for (Object item : epicList.values()) {
-                bw.write(item + "\n");
-            }
-            for (Object item : subtaskList.values()) {
+            bw.write(String.format("%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" +
+                            "," + "%s" + "\n", "id",
+                    "class", "title", "status", "description", "epicId", "timeStart", "duration"));
+            for (Object item : getPrioritizedTasks()) {
                 bw.write(item + "\n");
             }
         } catch (IOException e) {
