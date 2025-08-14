@@ -12,16 +12,15 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public class InMemoryTaskManager implements TaskManager {
+public class InMemoryTaskManager<T> implements TaskManager {
     public static int idCount = 0;
     public final HashMap<Integer, Task> taskList = new HashMap<>();
     public final HashMap<Integer, Epic> epicList = new HashMap<>();
     public final HashMap<Integer, Subtask> subtaskList = new HashMap<>();
     public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
     HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
-    public final TreeSet <Task> sortedTasks = new TreeSet<>();
+    public TreeSet<Task> sortedTasks = new TreeSet<>();
 
     public static int getIdCount() {
         return idCount;
@@ -33,7 +32,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addTaskToList(Task task, HashMap hashMap) throws ManagerSaveException {
-        hashMap.put(task.getId(), task);
+        sortingTasks();
+        if(sortedTasks.isEmpty()){
+            hashMap.put(task.getId(), task);
+        }
+
+        if (!isTimeLapsesIntersects(task)) {
+            hashMap.put(task.getId(), task);
+        }
+
     }
 
     @Override
@@ -47,6 +54,17 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic createEpic(String title, String description) {
         addIdCount();
         Epic epic = new Epic(title, description, getIdCount(), Status.NEW);
+        Optional<LocalDateTime> minStart = getEpicSubtasks(epic.getId()).stream()
+                .map(Subtask::getStartTime)
+                .filter(Objects::nonNull)
+                .min(LocalDateTime::compareTo);
+        epic.setStartTime(minStart.orElse(null));
+        long totalMinutes = getEpicSubtasks(epic.getId()).stream()
+                .map(Subtask::getDuration)
+                .filter(Objects::nonNull)
+                .mapToLong(Duration::toMinutes)
+                .sum();
+        epic.setDuration((int) totalMinutes);
         return epic;
     }
 
@@ -121,6 +139,8 @@ public class InMemoryTaskManager implements TaskManager {
         Subtask newSubtask = createSubtask(subtask.getTitle(), subtask.getDescription(), subtask.getEpicId());
         idCount--;
         newSubtask.setId(subtask.getId());
+        newSubtask.setStartTime(subtask.getStartTime());
+        newSubtask.duration = subtask.getDuration();
         switch (currentStatus) {
 
             case NEW -> newSubtask.setSubtaskStatus(Status.IN_PROGRESS);
@@ -178,25 +198,79 @@ public class InMemoryTaskManager implements TaskManager {
         inMemoryHistoryManager.remove(id);
     }
 
-    public void setEpicDuration(int epicId){
-        findTask(epicId).setDuration((int)(getEpicSubtasks(epicId).stream()
-                .map(subtask -> subtask.getDuration())
-                .reduce(Duration.ofMinutes(0), (a, b) -> a.plus(b))
-                .toMinutes()));
+    public void setEpicDuration(int epicId) {
+        long totalMinutes = getEpicSubtasks(epicId).stream()
+                .map(Subtask::getDuration)
+                .filter(Objects::nonNull)
+                .mapToLong(Duration::toMinutes)
+                .sum();
+        findTask(epicId).setDuration((int) totalMinutes);
     }
 
-    public void setEpicStartTime(int epicId){
-        findTask(epicId).setStartTime((getEpicSubtasks(epicId).stream()
-                .map(subtask -> subtask.getStartTime())
-                .sorted()
-                .findFirst()
-                .get()));
+    public void setEpicStartTime(int epicId) {
+        Optional<LocalDateTime> minStart = getEpicSubtasks(epicId).stream()
+                .map(Subtask::getStartTime)
+                .filter(Objects::nonNull)
+                .min(LocalDateTime::compareTo);
+                epicList.get(epicId).setStartTime(minStart.orElse(null));
     }
 
-    public TreeSet getPrioritizedTasks(){
+    public void sortingTasks() throws ManagerSaveException {
+        epicList.values().stream().map( epic -> {
+                    List<Subtask> subs = getEpicSubtasks(epic.getId());
+                    if (subs.isEmpty()) {
+                        epic.setDuration(0);
+                        epic.setStartTime(null);
+                    } else {
+                        setEpicDuration(epic.getId());
+                        setEpicStartTime(epic.getId());
+                    }
+                    return null;
+                }
+        );
+
+        List<Task> allTasks = new ArrayList<>();
+        allTasks.addAll(taskList.values());
+        allTasks.addAll(epicList.values());
+        allTasks.addAll(subtaskList.values());
+
+        Comparator<Task> comparator = (a, b) -> {
+            LocalDateTime timeA = a.getStartTime();
+            LocalDateTime timeB = b.getStartTime();
+            if (timeA == null && timeB == null) {
+                return Integer.compare(a.getId(), b.getId());
+            } else if (timeA == null) {
+                return 1;
+            } else if (timeB == null) {
+                return -1;
+            } else {
+                int timeCompare = timeA.compareTo(timeB);
+                if (timeCompare != 0) {
+                    return timeCompare;
+                } else {
+                    return Integer.compare(a.getId(), b.getId());
+                }
+            }
+        };
+
+        sortedTasks = new TreeSet<>(comparator);
+        sortedTasks.addAll(allTasks);
+    }
+
+    public TreeSet getPrioritizedTasks() {
         return sortedTasks;
     }
 
+    public <T extends Task> boolean isTimeLapsesIntersects(T nonSortedTask) {
+        boolean isIntersect = sortedTasks.stream()
+                    .filter(sortedTask -> (sortedTask.getStartTime().isAfter(nonSortedTask.getStartTime()) &&
+                            sortedTask.getStartTime().isBefore(nonSortedTask.getEndTime())) ||
+                            (sortedTask.getEndTime().isAfter(nonSortedTask.getStartTime()) &&
+                                    (sortedTask.getEndTime().isBefore(nonSortedTask.getEndTime()))))
+                    .findFirst()
+                    .isPresent();
+        return isIntersect;
+    }
 }
 
 

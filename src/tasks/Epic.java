@@ -9,7 +9,6 @@ public class Epic extends Task {
     private String title;
     private String description;
     private int id;
-    private Status status;
     private Duration duration;
     private LocalDateTime startTime;
     LocalDateTime endTime;
@@ -36,11 +35,11 @@ public class Epic extends Task {
         return status;
     }
 
-    public LocalDateTime getEndTime(){
+    public LocalDateTime getEndTime() {
         return startTime.plus(duration);
     }
 
-    public LocalDateTime getStartEpicTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
@@ -61,4 +60,9 @@ public class Epic extends Task {
     public void setDescription(String description) {
         this.description = description;
     }
-}
+
+    @Override
+    public String toString() {
+        return String.format("%s" + " " + "%s" + " " + "%s" + " " + "%s" + " " + "%s" + " " + "%s" + " " + "%s" + ";", getId(),
+                getClass().getSimpleName(), getTitle(), status, getDescription(), getEpicDuration(), getStartTime());
+    }}
