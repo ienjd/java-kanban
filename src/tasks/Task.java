@@ -2,14 +2,15 @@ package tasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class Task {
     private String title;
     private String description;
     private int id;
-    private Status status;
-    Duration duration;
+    Status status;
+    public Duration duration;
     LocalDateTime startTime;
 
     public Task() {
@@ -79,7 +80,7 @@ public class Task {
         return startTime;
     }
 
-    public LocalDateTime getEndIme(){
+    public LocalDateTime getEndTime(){
         return startTime.plus(duration);
     }
 
@@ -97,7 +98,8 @@ public class Task {
 
     @Override
     public String toString() {
-        return String.format("%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + ";", id, getClass().getSimpleName(), title, status, description);
+        return String.format("%s" + " " + "%s" + " " + "%s" + " " + "%s" + " " + "%s" + " " + "%s" + " " + "%s" + ";", id,
+                getClass().getSimpleName(), title, status, description, startTime, duration);
     }
 }
 

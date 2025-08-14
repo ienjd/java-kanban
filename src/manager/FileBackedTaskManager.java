@@ -33,13 +33,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
              BufferedWriter bw = new BufferedWriter(fileWriter)) {
             bw.write(String.format("%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "\n", "id",
                     "Class", "title", "status", "description", "epicId"));
-            for (Task item : taskList.values()) {
+            for (Object item : taskList.values()) {
                 bw.write(item + "\n");
             }
-            for (Epic item : epicList.values()) {
+            for (Object item : epicList.values()) {
                 bw.write(item + "\n");
             }
-            for (Subtask item : subtaskList.values()) {
+            for (Object item : subtaskList.values()) {
                 bw.write(item + "\n");
             }
         } catch (IOException e) {

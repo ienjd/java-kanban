@@ -2,15 +2,14 @@ package tasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class Subtask extends Task {
     private String title;
     private String description;
     private int id;
-    private Status status;
     private int epicId;
-    private Duration duration;
     private LocalDateTime startTime;
 
     public Subtask(
@@ -25,13 +24,18 @@ public class Subtask extends Task {
         this.status = status;
         this.epicId = epicId;
     }
-
+    @Override
     public void setDuration(int duration) {
         this.duration = Duration.ofMinutes(duration);
     }
 
     public int getId() {
         return id;
+    }
+
+    @Override
+    public void setStatus(Status status) {
+        super.setStatus(status);
     }
 
     public void setId(int id) {
@@ -76,7 +80,7 @@ public class Subtask extends Task {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndIme(){
+    public LocalDateTime getEndTime(){
         return startTime.plus(duration);
     }
 
@@ -99,6 +103,9 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return String.format("%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + ";", id, getClass().getSimpleName(), title, status, description, epicId);
+        return String.format("%s" + " " + "%s" + " " + "%s" + " " + "%s" + " " + "%s" + " " + "%s" + " " + "%s" + " " + "%s" + ";", id,
+                getClass().getSimpleName(), title, status, description, epicId, duration, startTime);
     }
+
+
 }

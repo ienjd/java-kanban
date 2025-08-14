@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/*
 public class MainUI {
 
     public static void main() throws IOException {
@@ -152,4 +153,5 @@ public class MainUI {
         return description;
     }
 }
+*/
 
