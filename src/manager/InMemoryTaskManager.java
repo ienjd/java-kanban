@@ -33,10 +33,6 @@ public class InMemoryTaskManager<T> implements TaskManager {
     @Override
     public void addTaskToList(Task task, HashMap hashMap) throws ManagerSaveException {
 
-        if(sortedTasks.isEmpty()){
-            hashMap.put(task.getId(), task);
-        }
-
         if (!isTimeLapsesIntersects(task)) {
             hashMap.put(task.getId(), task);
         }
@@ -199,12 +195,11 @@ public class InMemoryTaskManager<T> implements TaskManager {
     }
 
     public void setEpicDuration(int epicId) {
-        long totalMinutes = getEpicSubtasks(epicId).stream()
+        epicList.get(epicId).setDuration((int) getEpicSubtasks(epicId).stream()
                 .map(Subtask::getDuration)
                 .filter(Objects::nonNull)
                 .mapToLong(Duration::toMinutes)
-                .sum();
-        findTask(epicId).setDuration((int) totalMinutes);
+                .sum());
     }
 
     public void setEpicStartTime(int epicId) {
@@ -264,10 +259,10 @@ public class InMemoryTaskManager<T> implements TaskManager {
     public <T extends Task> boolean isTimeLapsesIntersects(T nonSortedTask) {
         boolean isIntersect;
 
-        if ((nonSortedTask instanceof Epic) && (subtaskList.values()
+        if ((nonSortedTask.getClass().getSimpleName().equals("Epic")) && (subtaskList.values()
                 .stream()
                 .map(subtask -> subtask.getEpicId())
-                .filter(epicId -> !(epicId == nonSortedTask.getId()))
+                .filter(epicId -> (epicId == nonSortedTask.getId()))
                 .findFirst()
                 .isPresent())){
             isIntersect = false;
@@ -275,8 +270,9 @@ public class InMemoryTaskManager<T> implements TaskManager {
             isIntersect = sortedTasks.stream()
                     .filter(sortedTask -> (sortedTask.getStartTime().isAfter(nonSortedTask.getStartTime()) &&
                             sortedTask.getStartTime().isBefore(nonSortedTask.getEndTime())) ||
-                            (sortedTask.getEndTime().isAfter(nonSortedTask.getStartTime()) &&
-                                    (sortedTask.getEndTime().isBefore(nonSortedTask.getEndTime()))))
+                                (sortedTask.getEndTime().isAfter(nonSortedTask.getStartTime()) &&
+                                    (sortedTask.getEndTime().isBefore(nonSortedTask.getEndTime()))) ||
+                            (sortedTask.getStartTime().equals(nonSortedTask.getStartTime())))
                     .findFirst()
                     .isPresent();
         }

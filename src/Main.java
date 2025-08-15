@@ -52,14 +52,15 @@ public class Main {
 
 
         Subtask subtask2 = fileBackedTaskManager1.createSubtask("SS", "ss", 8);
-        subtask1.setDuration(15);
-        subtask1.setStartTime(LocalDateTime.of(2025, 8, 11, 20, 30));
-        fileBackedTaskManager1.addTaskToList(subtask1, fileBackedTaskManager1.subtaskList);
+        subtask2.setDuration(15);
+        subtask2.setStartTime(LocalDateTime.of(2025, 8, 11, 20, 30));
+        fileBackedTaskManager1.addTaskToList(subtask2, fileBackedTaskManager1.subtaskList);
 
 
         Epic epic1 = fileBackedTaskManager1.createEpic("EE", "ee");
         fileBackedTaskManager1.addTaskToList(epic1, fileBackedTaskManager1.epicList);
 
+        //System.out.println(epic1.getEpicDuration().equals(subtask1.getDuration().plus(subtask2.getDuration())));
         System.out.println(fileBackedTaskManager1.getPrioritizedTasks());
     }
 }

@@ -44,6 +44,10 @@ public class Task {
         this.duration = Duration.ofMinutes(duration);
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
     public String getTitle() {
         return title;
     }
