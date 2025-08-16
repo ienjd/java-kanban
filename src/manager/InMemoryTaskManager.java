@@ -156,20 +156,25 @@ public class InMemoryTaskManager<T> implements TaskManager {
     }
 
     public void updateEpicStatus(Epic epic) {
+        int subtasksInNew = 0;
         int subtasksInDone = 0;
         int subtasksInProgress = 0;
         for (Subtask subtask : getEpicSubtasks(epic.getId())) {
-            if (subtask.getStatus().equals(Status.IN_PROGRESS)) {
+            if (subtask.getStatus().equals(Status.NEW)) {
+                subtasksInNew++;
+            } else if (subtask.getStatus().equals(Status.IN_PROGRESS)) {
                 subtasksInProgress++;
             } else if (subtask.getStatus().equals(Status.DONE)) {
                 subtasksInDone++;
             }
         }
-        if (subtasksInProgress > 0) {
+        if (subtasksInNew < getEpicSubtasks(epic.getId()).size()){
             epic.setStatus(Status.IN_PROGRESS);
             epicList.put(epic.getId(), epic);
-        }
-        if (subtasksInDone == getEpicSubtasks(epic.getId()).size()) {
+        } else if ((subtasksInProgress > 0) || (subtasksInDone > 0 && (subtasksInDone < getEpicSubtasks(epic.getId()).size()))) {
+            epic.setStatus(Status.IN_PROGRESS);
+            epicList.put(epic.getId(), epic);
+        } else if (subtasksInDone == getEpicSubtasks(epic.getId()).size()) {
             epic.setStatus(Status.DONE);
             epicList.put(epic.getId(), epic);
         }
@@ -256,7 +261,7 @@ public class InMemoryTaskManager<T> implements TaskManager {
         return sortedTasks;
     }
 
-    public <T extends Task> boolean isTimeLapsesIntersects(T nonSortedTask) {
+    public <T extends Task> boolean isTimeLapsesIntersects(T nonSortedTask)  {
         boolean isIntersect;
 
         if ((nonSortedTask.getClass().getSimpleName().equals("Epic")) && (subtaskList.values()
