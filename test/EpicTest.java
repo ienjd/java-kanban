@@ -49,6 +49,6 @@ class EpicTest {
         Assertions.assertEquals(epic1.getStartTime(), subtask1.getStartTime());
         // проверяется невключение подзадачи, пересекающейся по времени выполнения с другой подзадачей
         // в приоритезированный список
-        Assertions.assertTrue(!inMemoryTaskManager.getPrioritizedTasks().contains(subtask3));
+        Assertions.assertFalse(inMemoryTaskManager.getPrioritizedTasks().contains(subtask3));
     }
 }
