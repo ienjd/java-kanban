@@ -69,7 +69,7 @@ public class Task {
         this.description = description;
     }
 
-    public void setStartTime(LocalDateTime startTime){
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
@@ -85,7 +85,7 @@ public class Task {
         return startTime;
     }
 
-    public LocalDateTime getEndTime(){
+    public LocalDateTime getEndTime() {
         return startTime.plus(duration);
     }
 
