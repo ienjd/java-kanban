@@ -11,11 +11,17 @@ class EpicTest {
 
     public InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
+    @BeforeEach
+    void cleanAll(){
+        inMemoryTaskManager.subtaskList.clear();
+        inMemoryTaskManager.taskList.clear();
+        inMemoryTaskManager.epicList.clear();
+        inMemoryTaskManager.idCount = 0;
+    }
 
     @Test
     void epicDurationEqualDurationsAllSubtasksThisEpicAndEpicStartTimeEqualEarlierStartTimeThisEpicSubtasks()
             throws ManagerSaveException {
-
 
         Subtask subtask1 = inMemoryTaskManager.createSubtask("subtask1", "subtask1", 4);
         subtask1.setDuration(15);
@@ -49,6 +55,25 @@ class EpicTest {
         Assertions.assertEquals(epic1.getStartTime(), subtask1.getStartTime());
         // проверяется невключение подзадачи, пересекающейся по времени выполнения с другой подзадачей
         // в приоритезированный список
+
+    }
+    @Test
+    void prioretizedTaskListNotContainsTaskWithIntersectsTimeLapses() throws ManagerSaveException {
+        Subtask subtask2 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 3);
+        subtask2.setDuration(15);
+        subtask2.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 20));
+        inMemoryTaskManager.addTaskToList(subtask2, inMemoryTaskManager.subtaskList);
+
+
+        Subtask subtask3 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 3);
+        subtask3.setDuration(15);
+        subtask3.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 20));
+        inMemoryTaskManager.addTaskToList(subtask3, inMemoryTaskManager.subtaskList);
+
+
+        Epic epic1 = inMemoryTaskManager.createEpic("epic1", "epic1");
+        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.epicList);
+
         Assertions.assertFalse(inMemoryTaskManager.getPrioritizedTasks().contains(subtask3));
     }
 }
