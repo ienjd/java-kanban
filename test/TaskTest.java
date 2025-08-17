@@ -1,9 +1,7 @@
-
 import exceptions.ManagerSaveException;
 import manager.InMemoryTaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import tasks.Subtask;
 import tasks.Task;
 
 import java.time.LocalDateTime;
@@ -34,5 +32,4 @@ class TaskTest {
         Assertions.assertEquals("PT15M", firstTask.getDuration().toString());
         Assertions.assertEquals(LocalDateTime.of(2025, 1, 1, 1, 1), firstTask.getStartTime());
     }
-
 }

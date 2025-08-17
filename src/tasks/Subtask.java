@@ -2,7 +2,6 @@ package tasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.Objects;
 
 public class Subtask extends Task {
@@ -107,6 +106,4 @@ public class Subtask extends Task {
         return String.format("%s" + ", " + "%s" + ", " + "%s" + ", " + "%s" + ", " + "%s" + ", " + "%s" + ", " + "%s" + ", " + "%s" + ";", id,
                 getClass().getSimpleName(), title, status, description, epicId, duration, startTime);
     }
-
-
 }

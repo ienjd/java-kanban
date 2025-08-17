@@ -8,5 +8,4 @@ public interface HistoryManager<T> {
     void remove(int id);
 
     void add(T task);
-
 }

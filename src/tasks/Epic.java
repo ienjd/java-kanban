@@ -62,4 +62,5 @@ public class Epic extends Task {
     public String toString() {
         return String.format("%s" + " " + "%s" + " " + "%s" + " " + "%s" + " " + "%s" + " " + "%s" + " " + "%s" + ";", getId(),
                 getClass().getSimpleName(), getTitle(), status, getDescription(), getEpicDuration(), getStartTime());
-    }}
+    }
+}

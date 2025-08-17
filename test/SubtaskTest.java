@@ -1,11 +1,8 @@
-
 import exceptions.ManagerSaveException;
 import manager.InMemoryTaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import tasks.Subtask;
-
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 class SubtaskTest {
@@ -20,6 +17,7 @@ class SubtaskTest {
         Assertions.assertEquals(firstSubtask.getId(), secondSubtask.getId());
         Assertions.assertEquals(firstSubtask, secondSubtask);
     }
+
     @Test
     void subtaskDurationAndStartTimeNotChangedAfterAddingInTaskList() throws ManagerSaveException {
 
