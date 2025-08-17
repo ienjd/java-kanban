@@ -1,12 +1,9 @@
 package ui;
 
-import manager.FileBackedTaskManager;
 import manager.InMemoryTaskManager;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
-
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
