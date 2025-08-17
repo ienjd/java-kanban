@@ -14,6 +14,7 @@ public class Task {
 
     public Task() {
     }
+
     public Task(
             String title,
             String description,
@@ -24,6 +25,7 @@ public class Task {
         this.id = id;
         this.status = status;
     }
+
     public Task(
             String title,
             String description,
