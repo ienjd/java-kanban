@@ -23,6 +23,7 @@ public class Subtask extends Task {
         this.status = status;
         this.epicId = epicId;
     }
+
     @Override
     public void setDuration(int duration) {
         this.duration = Duration.ofMinutes(duration);
@@ -68,7 +69,7 @@ public class Subtask extends Task {
         }
     }
 
-    public Duration getDuration(){
+    public Duration getDuration() {
         return duration;
     }
 
@@ -80,7 +81,7 @@ public class Subtask extends Task {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime(){
+    public LocalDateTime getEndTime() {
         return startTime.plus(duration);
     }
 
