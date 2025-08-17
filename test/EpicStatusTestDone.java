@@ -1,17 +1,15 @@
 import exceptions.ManagerSaveException;
 import manager.InMemoryTaskManager;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import tasks.Epic;
 import tasks.Status;
 import tasks.Subtask;
 
 class EpicStatusTestDone {
-    static InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
     @Test
     void epicStatusDoneCalculatesBasedOnStatusesEpicSubtasksDone() throws ManagerSaveException {
-
+        InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
         Subtask subtask3 = inMemoryTaskManager.createSubtask("subtask1", "subtask1", 6);
         subtask3.setStatus(Status.DONE);
         inMemoryTaskManager.subtaskList.put(subtask3.getId(), subtask3);
