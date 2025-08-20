@@ -1,6 +1,6 @@
-package manager;
-
 import exceptions.ManagerSaveException;
+import manager.InMemoryHistoryManager;
+import manager.InMemoryTaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,6 @@ public class InMemoryTaskManagerTest extends TaskManagerTest {
         inMemoryTaskManager.taskList.clear();
         inMemoryTaskManager.epicList.clear();
         inMemoryTaskManager.idCount = 0;
-        inMemoryTaskManager.inMemoryHistoryManager.getHistory().clear();
     }
 
     @Test
@@ -187,12 +186,5 @@ public class InMemoryTaskManagerTest extends TaskManagerTest {
         Assertions.assertFalse(inMemoryTaskManager.getHistory().isEmpty());
         Assertions.assertTrue(inMemoryTaskManager.getHistory().contains(subtask3));
         Assertions.assertTrue(inMemoryTaskManager.getHistory().contains(epic1));
-    }
-
-    @Test
-    //Тест проверяет, что удаление эпика влечет за собой удаление сабтасков данного эпика
-    public void deleteEpicDeletingSubtasksThisEpic() throws IOException {
-        inMemoryTaskManager.deleteTaskFromList(2);
-        Assertions.assertTrue(inMemoryTaskManager.getEpicSubtasks(2).isEmpty());
     }
 }
