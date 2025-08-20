@@ -18,7 +18,7 @@ public class EpicTest {
     }
 
     @Test
-    public void EpicEqualsEpic() throws ManagerSaveException {
+    public void EpicEquals() throws ManagerSaveException {
         Epic firstEpic = inMemoryTaskManager.createEpic("Первый эпик", "Описание первого эпика");
         Epic secondTask = firstEpic;
         // проверяется идентичность эпиков
