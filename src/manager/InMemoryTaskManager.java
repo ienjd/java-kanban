@@ -200,7 +200,7 @@ public class InMemoryTaskManager<T> implements TaskManager {
             long duration = getEpicSubtasks(epicId).stream()
                     .map(Subtask::getDuration)
                     .filter(Objects::nonNull)
-                    .mapToLong(Duration :: toMinutes)
+                    .mapToLong(Duration::toMinutes)
                     .sum();
             epicList.get(epicId).setDuration((int) duration);
         } else {

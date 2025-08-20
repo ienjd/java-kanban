@@ -10,7 +10,7 @@ public class EpicTest {
     public InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
     @BeforeEach
-    public void cleanAll(){
+    public void cleanAll() {
         inMemoryTaskManager.subtaskList.clear();
         inMemoryTaskManager.taskList.clear();
         inMemoryTaskManager.epicList.clear();
@@ -58,6 +58,7 @@ public class EpicTest {
         // в приоритезированный список
 
     }
+
     @Test
     public void prioretizedTaskListNotContainsTaskWithIntersectsTimeLapses() throws ManagerSaveException {
         Subtask subtask2 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 3);

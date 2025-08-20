@@ -18,7 +18,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
     @Test
-    public void createTask(){
+    public void createTask() {
     }
 
     @Test
@@ -26,11 +26,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void createSubtask(){
+    public void createSubtask() {
     }
 
     @Test
-    public void addTaskToList() throws ManagerSaveException{
+    public void addTaskToList() throws ManagerSaveException {
     }
 
     @Test
@@ -38,7 +38,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void deleteTaskFromList() throws IOException{
+    public void deleteTaskFromList() throws IOException {
     }
 
     @Test
@@ -46,23 +46,22 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void updateTask() throws ManagerSaveException{
+    public void updateTask() throws ManagerSaveException {
     }
 
     @Test
-    public void updateSubtask() throws ManagerSaveException{
+    public void updateSubtask() throws ManagerSaveException {
     }
 
     @Test
-    public void updateEpic() throws ManagerSaveException{
+    public void updateEpic() throws ManagerSaveException {
     }
 
     @Test
-    public void deleteEpicSubtasks() throws ManagerSaveException{
+    public void deleteEpicSubtasks() throws ManagerSaveException {
     }
 
     @Test
     public void getHistory() throws ManagerSaveException {
     }
-
 }

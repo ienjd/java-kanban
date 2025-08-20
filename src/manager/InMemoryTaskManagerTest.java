@@ -14,13 +14,13 @@ import java.util.HashMap;
 
 import static tasks.Status.*;
 
-public class InMemoryTaskManagerTest extends TaskManagerTest{
+public class InMemoryTaskManagerTest extends TaskManagerTest {
 
     private static InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
     private static InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
 
     @BeforeEach
-    public void cleanAll(){
+    public void cleanAll() {
         inMemoryTaskManager.subtaskList.clear();
         inMemoryTaskManager.taskList.clear();
         inMemoryTaskManager.epicList.clear();
@@ -29,7 +29,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest{
     }
 
     @Test
-    public void createTask(){
+    public void createTask() {
         Task firstTask = inMemoryTaskManager.createTask("Первая задача", "Описание первой задачи");
 
         Assertions.assertNotEquals(null, firstTask);
@@ -43,7 +43,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest{
     }
 
     @Test
-    public void creatingSubtask(){
+    public void creatingSubtask() {
         Subtask subtask = inMemoryTaskManager.createSubtask("ER", "ER", 1);
 
         Assertions.assertNotEquals(null, subtask);
@@ -66,7 +66,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest{
     }
 
     @Test
-    public void deleteTaskFromList() throws IOException{
+    public void deleteTaskFromList() throws IOException {
         Task task = new Task("Первая задача", "Описание первой задачи", 1, NEW);
         inMemoryTaskManager.addTaskToList(task, inMemoryTaskManager.taskList);
 
@@ -106,7 +106,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest{
     }
 
     @Test
-    public void updateTask() throws ManagerSaveException{
+    public void updateTask() throws ManagerSaveException {
 
         Task task1 = inMemoryTaskManager.createTask("task1", "task1");
         task1.setDuration(15);
@@ -119,7 +119,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest{
     }
 
     @Test
-    public void updateSubtask() throws ManagerSaveException{
+    public void updateSubtask() throws ManagerSaveException {
         Subtask subtask3 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 2);
         subtask3.setDuration(15);
         subtask3.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 40));
@@ -137,7 +137,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest{
     }
 
     @Test
-    public void updateEpic() throws ManagerSaveException{
+    public void updateEpic() throws ManagerSaveException {
         Subtask subtask3 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 2);
         subtask3.setDuration(15);
         subtask3.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 40));
@@ -155,7 +155,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest{
     }
 
     @Test
-    public void deleteEpicSubtasks() throws ManagerSaveException{
+    public void deleteEpicSubtasks() throws ManagerSaveException {
         Subtask subtask3 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 2);
         subtask3.setDuration(15);
         subtask3.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 40));
@@ -192,7 +192,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest{
     }
 
     @Test
-        //Тест проверяет, что удаление эпика влечет за собой удаление сабтасков данного эпика
+    //Тест проверяет, что удаление эпика влечет за собой удаление сабтасков данного эпика
     public void deleteEpicDeletingSubtasksThisEpic() throws IOException {
         inMemoryTaskManager.deleteTaskFromList(2);
         Assertions.assertTrue(inMemoryTaskManager.getEpicSubtasks(2).isEmpty());

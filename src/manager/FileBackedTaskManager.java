@@ -62,7 +62,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return fileBackedTaskManager;
     }
 
-
     public void loadingFile(File file) {
         try (FileReader fr = new FileReader(file, Charset.forName("Windows-1251"));
              BufferedReader br = new BufferedReader(fr)) {

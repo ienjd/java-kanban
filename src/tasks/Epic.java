@@ -13,10 +13,10 @@ public class Epic extends Task {
     public Epic(String title, String description, int id, Status status) {
         super(title, description, id, status);
         this.duration = Duration.ofMinutes(0);
-        this.startTime = LocalDateTime.of(2021, 1, 1, 1,1);
+        this.startTime = LocalDateTime.of(2021, 1, 1, 1, 1);
     }
 
-    public void fillSubtasks(ArrayList listOfSubtasks){
+    public void fillSubtasks(ArrayList listOfSubtasks) {
         subtasks.addAll(listOfSubtasks);
     }
 
