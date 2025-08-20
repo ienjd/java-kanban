@@ -10,11 +10,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class FileBackedTaskManagerTest extends TaskManagerTest{
+public class FileBackedTaskManagerTest extends TaskManagerTest {
     FileBackedTaskManager fileBackedTaskManager1 = new FileBackedTaskManager();
 
     @BeforeEach
-    public void cleanAll(){
+    public void cleanAll() {
         fileBackedTaskManager1.subtaskList.clear();
         fileBackedTaskManager1.taskList.clear();
         fileBackedTaskManager1.epicList.clear();
@@ -25,8 +25,8 @@ public class FileBackedTaskManagerTest extends TaskManagerTest{
     @Test
     public void testException() {
         Assertions.assertThrows(NullPointerException.class, () ->
-            fileBackedTaskManager1.save()
-        , "Ошибка сохранения");
+                        fileBackedTaskManager1.save(),
+                "Ошибка сохранения");
     }
 
     @Test
