@@ -1,17 +1,8 @@
 package manager;
 
 import exceptions.ManagerSaveException;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import tasks.Epic;
-import tasks.Subtask;
-import tasks.Task;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 abstract class TaskManagerTest<T extends TaskManager> {
 
