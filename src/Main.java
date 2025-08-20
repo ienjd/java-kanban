@@ -1,60 +1,38 @@
+import exceptions.ManagerSaveException;
+import manager.FileBackedTaskManager;
 import manager.InMemoryTaskManager;
+import org.junit.jupiter.api.Assertions;
 import tasks.Epic;
+import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
+
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+import static tasks.Status.*;
+
 public class Main {
     public static void main(String[] args) throws IOException {
-        InMemoryTaskManager fileBackedTaskManager1 = new InMemoryTaskManager();
+        InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
-        Task task1 = fileBackedTaskManager1.createTask("er", "er");
-        task1.setDuration(15);
-        task1.setStartTime(LocalDateTime.of(2025, 8, 11, 14, 30));
-        fileBackedTaskManager1.addTaskToList(task1, fileBackedTaskManager1.taskList);
-
-
-        Task task2 = fileBackedTaskManager1.createTask("er1", "er1");
-        task2.setDuration(15);
-        task2.setStartTime(LocalDateTime.of(2025, 8, 11, 14, 30));
-        fileBackedTaskManager1.addTaskToList(task2, fileBackedTaskManager1.taskList);
+        Subtask subtask3 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 2);
+        subtask3.setDuration(15);
+        subtask3.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 40));
+        inMemoryTaskManager.addTaskToList(subtask3, inMemoryTaskManager.subtaskList);
 
 
-        Task task3 = fileBackedTaskManager1.createTask("er2", "er2");
-        task3.setDuration(15);
-        task3.setStartTime(LocalDateTime.of(2025, 8, 11, 14, 46));
-        fileBackedTaskManager1.addTaskToList(task3, fileBackedTaskManager1.taskList);
+        Epic epic1 = inMemoryTaskManager.createEpic("epic1", "epic1");
+        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.epicList);
 
 
-        Task task4 = fileBackedTaskManager1.createTask("er3", "er3");
-        task4.setDuration(15);
-        task4.setStartTime(LocalDateTime.of(2025, 8, 11, 14, 44));
-        fileBackedTaskManager1.addTaskToList(task4, fileBackedTaskManager1.taskList);
+        inMemoryTaskManager.updateSubtask(subtask3);
 
-
-        Task task5 = fileBackedTaskManager1.createTask("er4", "er4");
-        task5.setDuration(15);
-        task5.setStartTime(LocalDateTime.of(2025, 8, 11, 14, 44));
-        fileBackedTaskManager1.addTaskToList(task5, fileBackedTaskManager1.taskList);
-
-
-        Subtask subtask1 = fileBackedTaskManager1.createSubtask("SS", "ss", 8);
-        subtask1.setDuration(15);
-        subtask1.setStartTime(LocalDateTime.of(2025, 8, 11, 20, 30));
-        fileBackedTaskManager1.addTaskToList(subtask1, fileBackedTaskManager1.subtaskList);
-
-
-        Subtask subtask2 = fileBackedTaskManager1.createSubtask("SS", "ss", 8);
-        subtask2.setDuration(15);
-        subtask2.setStartTime(LocalDateTime.of(2025, 8, 11, 20, 30));
-        fileBackedTaskManager1.addTaskToList(subtask2, fileBackedTaskManager1.subtaskList);
-
-
-        Epic epic1 = fileBackedTaskManager1.createEpic("EE", "ee");
-        fileBackedTaskManager1.addTaskToList(epic1, fileBackedTaskManager1.epicList);
-
-        System.out.println(fileBackedTaskManager1.getPrioritizedTasks());
+        Epic epic2 = (Epic) inMemoryTaskManager.findTask(2);
+        inMemoryTaskManager.getEpicSubtasks(2);
+        System.out.println(inMemoryTaskManager.findTask(1));
+        System.out.println(epic2.getSubtasks());
     }
 }
 

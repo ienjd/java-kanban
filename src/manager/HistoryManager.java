@@ -3,9 +3,9 @@ import java.util.List;
 
 public interface HistoryManager<T> {
 
-    List<T> getHistory();
+    public List<T> getHistory();
 
-    void remove(int id);
+    public void remove(int id);
 
-    void add(T task);
+    public void add(T task);
 }

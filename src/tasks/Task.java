@@ -8,12 +8,9 @@ public class Task {
     public String title;
     public String description;
     public int id;
-    Status status;
+    public Status status;
     public Duration duration;
-    LocalDateTime startTime;
-
-    public Task() {
-    }
+    public LocalDateTime startTime;
 
     public Task(
             String title,
@@ -103,8 +100,8 @@ public class Task {
 
     @Override
     public String toString() {
-        return String.format("%s" + ", " + "%s" + ", " + "%s" + ", " + "%s" + ", " + "%s" + ", " + "%s" + ", " + "%s" + ";", id,
-                getClass().getSimpleName(), title, status, description, startTime, duration, startTime, duration);
+        return String.format("%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s", id,
+                getClass().getSimpleName(), title, status, description, startTime, duration.toMinutes());
     }
 }
 

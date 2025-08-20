@@ -1,17 +1,18 @@
+package tasks;
+
 import exceptions.ManagerSaveException;
 import manager.InMemoryTaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import tasks.Task;
 
 import java.time.LocalDateTime;
 
-class TaskTest {
-    InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
+public class TaskTest {
+    private InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
     @Test
 //экземпляры Task равны друг другу, если равны их id
-    void taskEqualsTask() {
+    public void taskEqualsTask() {
         Task firstTask = inMemoryTaskManager.createTask("Первая задача", "Описание первой задачи");
         Task secondTask = firstTask;
 
@@ -20,7 +21,7 @@ class TaskTest {
     }
 
     @Test
-    void taskDurationAndStartTimeNotChangedAfterAddingInTaskList() throws ManagerSaveException {
+    public void taskDurationAndStartTimeNotChangedAfterAddingInTaskList() throws ManagerSaveException {
 
         InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
         Task firstTask = inMemoryTaskManager.createTask("Первая подзадача", "Описание первой подзадачи");

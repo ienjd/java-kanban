@@ -11,27 +11,27 @@ import java.util.List;
 
 public interface TaskManager {
 
-    void addTaskToList(Task task, HashMap hashmap) throws ManagerSaveException;
+    public void addTaskToList(Task task, HashMap hashMap) throws ManagerSaveException;
 
-    Task createTask(String title, String description);
+    public Task createTask(String title, String description);
 
-    Epic createEpic(String title, String description);
+    public Epic createEpic(String title, String description) throws ManagerSaveException;
 
-    Subtask createSubtask(String title, String description, int epicId);
+    public Subtask createSubtask(String title, String description, int epicId);
 
-    <T extends Task> T findTask(int id);
+    public <T extends Task> T findTask(int id);
 
-    void deleteTaskFromList(int id) throws IOException;
+    public void deleteTaskFromList(int id) throws IOException;
 
-    ArrayList<Subtask> getEpicSubtasks(int epicId);
+    public ArrayList<Subtask> getEpicSubtasks(int epicId);
 
-    void updateTask(Task task) throws ManagerSaveException;
+    public void updateTask(Task task) throws ManagerSaveException;
 
-    void updateSubtask(Subtask subtask) throws ManagerSaveException;
+    public void updateSubtask(Subtask subtask) throws ManagerSaveException;
 
-    void updateEpic(Epic epic) throws ManagerSaveException;
+    public void updateEpic(Epic epic) throws ManagerSaveException;
 
-    void deleteEpicSubtasks(int epicId) throws ManagerSaveException;
+    public void deleteEpicSubtasks(int epicId) throws ManagerSaveException;
 
-    List getHistory();
+    public List getHistory();
 }

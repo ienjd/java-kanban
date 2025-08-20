@@ -5,22 +5,11 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Subtask extends Task {
-    private String title;
-    private String description;
-    private int id;
-    private int epicId;
-    private LocalDateTime startTime;
 
-    public Subtask(
-            String title,
-            String description,
-            int id,
-            Status status,
-            int epicId) {
-        this.title = title;
-        this.description = description;
-        this.id = id;
-        this.status = status;
+    private int epicId;
+
+    public Subtask( String title, String description, int id, Status status, int epicId) {
+        super(title, description, id, status);
         this.epicId = epicId;
     }
 
@@ -69,10 +58,6 @@ public class Subtask extends Task {
         }
     }
 
-    public Duration getDuration() {
-        return duration;
-    }
-
     public LocalDateTime getStartTime() {
         return startTime;
     }
@@ -104,7 +89,7 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return String.format("%s" + ", " + "%s" + ", " + "%s" + ", " + "%s" + ", " + "%s" + ", " + "%s" + ", " + "%s" + ", " + "%s" + ";", id,
-                getClass().getSimpleName(), title, status, description, epicId, duration, startTime);
+        return String.format("%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + ";", id,
+                getClass().getSimpleName(), title, status, description, epicId, duration.toMinutes(), startTime);
     }
 }
