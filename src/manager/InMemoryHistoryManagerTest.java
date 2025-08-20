@@ -10,7 +10,7 @@ public class InMemoryHistoryManagerTest extends TaskManagerTest {
     InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
     @BeforeEach
-    public void clearHistory(){
+    public void clearHistory() {
         for (int i = 0; i < inMemoryHistoryManager.getHistory().size(); i++) {
             inMemoryHistoryManager.remove(i);
         }
@@ -18,7 +18,7 @@ public class InMemoryHistoryManagerTest extends TaskManagerTest {
     }
 
     @Test
-    public void historyIsEmpty(){
+    public void historyIsEmpty() {
         Assertions.assertTrue(inMemoryHistoryManager.getHistory().isEmpty());
     }
 
@@ -43,7 +43,7 @@ public class InMemoryHistoryManagerTest extends TaskManagerTest {
     }
 
     @Test
-    public void deletingFromHeadOfList(){
+    public void deletingFromHeadOfList() {
         Task task = inMemoryTaskManager.createTask("Первая таска", "Описание первой таски");
         inMemoryHistoryManager.add(task);
         Task taskTwo = inMemoryTaskManager.createTask("Вторая таска", "Описание второй таски");
@@ -55,7 +55,7 @@ public class InMemoryHistoryManagerTest extends TaskManagerTest {
     }
 
     @Test
-    public void deletingFromEndOfList(){
+    public void deletingFromEndOfList() {
         Task task = inMemoryTaskManager.createTask("Первая таска", "Описание первой таски");
         inMemoryHistoryManager.add(task);
         Task taskTwo = inMemoryTaskManager.createTask("Вторая таска", "Описание второй таски");
@@ -67,7 +67,7 @@ public class InMemoryHistoryManagerTest extends TaskManagerTest {
     }
 
     @Test
-    public void deletingFromMiddleOfList(){
+    public void deletingFromMiddleOfList() {
         Task task = inMemoryTaskManager.createTask("Первая таска", "Описание первой таски");
         inMemoryHistoryManager.add(task);
         Task taskTwo = inMemoryTaskManager.createTask("Вторая таска", "Описание второй таски");
