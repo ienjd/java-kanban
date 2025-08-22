@@ -8,6 +8,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -31,16 +32,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public void save() throws ManagerSaveException {
         try (Writer fileWriter = new FileWriter(file, Charset.forName("Windows-1251"));
              BufferedWriter bw = new BufferedWriter(fileWriter)) {
-            bw.write(String.format("%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "\n", "id",
-                    "Class", "title", "status", "description", "epicId"));
-
-            for (Task item : taskList.values()) {
-                bw.write(item + "\n");
-            }
-            for (Epic item : epicList.values()) {
-                bw.write(item + "\n");
-            }
-            for (Subtask item : subtaskList.values()) {
+            bw.write(String.format("%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" +
+                            "," + "%s" + "\n", "id",
+                    "class", "title", "status", "description", "epicId", "timeStart", "duration"));
+            for (Object item : getPrioritizedTasks()) {
                 bw.write(item + "\n");
             }
         } catch (IOException e) {
@@ -67,7 +62,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return fileBackedTaskManager;
     }
 
-
     public void loadingFile(File file) {
         try (FileReader fr = new FileReader(file, Charset.forName("Windows-1251"));
              BufferedReader br = new BufferedReader(fr)) {
@@ -83,20 +77,26 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    <T extends Task> void fromString(String value) throws ManagerSaveException {
+    private <T extends Task> void fromString(String value) throws ManagerSaveException {
         String[] attributes = value.split(",");
         T object;
         if (attributes[1].equals("Task")) {
             object = (T) new Task(attributes[2], attributes[4], Integer.parseInt(attributes[0]), Status.valueOf(attributes[3]));
+            object.setDuration(Integer.parseInt(attributes[6]));
+            object.setStartTime(LocalDateTime.parse(attributes[5]));
             addTaskToList(object, taskList);
         } else if (attributes[1].equals("Epic")) {
             object = (T) new Epic(attributes[2], attributes[4], Integer.parseInt(attributes[0]), Status.valueOf(attributes[3]));
+            object.setDuration(Integer.parseInt(attributes[6]));
+            object.setStartTime(LocalDateTime.parse(attributes[5]));
             addTaskToList(object, epicList);
         } else if (attributes[1].equals("Subtask")) {
             object = (T) new Subtask(attributes[2], attributes[4], Integer.parseInt(attributes[0]), Status.valueOf(attributes[3]),
                     Integer.parseInt(attributes[5]));
             object.setId(Integer.parseInt(attributes[0]));
             object.setStatus(Status.valueOf(attributes[3]));
+            object.setDuration(Integer.parseInt(attributes[6]));
+            object.setStartTime(LocalDateTime.parse(attributes[7]));
             addTaskToList(object, subtaskList);
         }
     }

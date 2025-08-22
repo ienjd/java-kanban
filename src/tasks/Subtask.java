@@ -1,24 +1,30 @@
 package tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Subtask extends Task {
-    private String title;
-    private String description;
-    private int id;
-    private Status status;
+
     private int epicId;
 
     public Subtask(String title, String description, int id, Status status, int epicId) {
-        this.title = title;
-        this.description = description;
-        this.id = id;
-        this.status = status;
+        super(title, description, id, status);
         this.epicId = epicId;
+    }
+
+    @Override
+    public void setDuration(int duration) {
+        this.duration = Duration.ofMinutes(duration);
     }
 
     public int getId() {
         return id;
+    }
+
+    @Override
+    public void setStatus(Status status) {
+        super.setStatus(status);
     }
 
     public void setId(int id) {
@@ -52,6 +58,18 @@ public class Subtask extends Task {
         }
     }
 
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
+    }
+
     public String getTitle() {
         return title;
     }
@@ -71,6 +89,7 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return String.format("%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + ";", id, getClass().getSimpleName(), title, status, description, epicId);
+        return String.format("%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + ";", id,
+                getClass().getSimpleName(), title, status, description, epicId, duration.toMinutes(), startTime);
     }
 }

@@ -1,21 +1,49 @@
 package tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
-    private String title;
-    private String description;
-    private int id;
-    private Status status;
+    public String title;
+    public String description;
+    public int id;
+    public Status status;
+    public Duration duration;
+    public LocalDateTime startTime;
 
-    public Task() {
-    }
-
-    public Task(String title, String description, int id, Status status) {
+    public Task(
+            String title,
+            String description,
+            int id,
+            Status status) {
         this.title = title;
         this.description = description;
         this.id = id;
         this.status = status;
+    }
+
+    public Task(
+            String title,
+            String description,
+            int id,
+            Status status,
+            Duration duration,
+            LocalDateTime startTime) {
+        this.title = title;
+        this.description = description;
+        this.id = id;
+        this.status = status;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = Duration.ofMinutes(duration);
+    }
+
+    public Duration getDuration() {
+        return duration;
     }
 
     public String getTitle() {
@@ -38,12 +66,24 @@ public class Task {
         this.description = description;
     }
 
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
     public Status getStatus() {
         return status;
     }
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
     }
 
     @Override
@@ -60,7 +100,8 @@ public class Task {
 
     @Override
     public String toString() {
-        return String.format("%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + ";", id, getClass().getSimpleName(), title, status, description);
+        return String.format("%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s" + "," + "%s", id,
+                getClass().getSimpleName(), title, status, description, startTime, duration.toMinutes());
     }
 }
 
