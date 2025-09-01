@@ -31,6 +31,7 @@ public class HttpTaskServer {
         httpServer.createContext("/tasks", new HandlerForTasks());
         httpServer.createContext("/history", new HandlerForHistoryView());
         httpServer.start();
+        System.out.println("взлет");
 
         Task task = inMemoryTaskManager.createTask("er", "er");
         task.setDuration(15);
@@ -41,10 +42,6 @@ public class HttpTaskServer {
         task2.setDuration(15);
         task2.setStartTime(LocalDateTime.of(2025, 11, 20, 15, 0));
         inMemoryTaskManager.addTaskToList(task2, inMemoryTaskManager.taskList);
-
-        String array = gson.toJson(inMemoryTaskManager.taskList.values());
-        System.out.println(array);
-        inMemoryTaskManager.findTask(2);
 
     }
 }

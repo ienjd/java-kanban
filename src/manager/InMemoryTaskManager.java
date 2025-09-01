@@ -36,6 +36,8 @@ public class InMemoryTaskManager<T> implements TaskManager {
 
         if (!isOverLapping(task)) {
             hashMap.put(task.getId(), task);
+        } else {
+
         }
         sortingTasks();
     }
@@ -264,7 +266,7 @@ public class InMemoryTaskManager<T> implements TaskManager {
         return sortedTasks;
     }
 
-    private <T extends Task> boolean isOverLapping(T nonSortedTask) throws ManagerSaveException {
+    public <T extends Task> boolean isOverLapping(T nonSortedTask) throws ManagerSaveException {
         sortingTasks();
         return sortedTasks.stream()
                 .filter(sortedTask -> (sortedTask.getStartTime().isEqual(nonSortedTask.getStartTime()) &&

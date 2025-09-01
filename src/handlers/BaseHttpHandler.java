@@ -23,7 +23,7 @@ public class BaseHttpHandler {
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .create();
 
-    protected void sendText(HttpExchange h, String text) throws IOException {
+    protected void sendText(HttpExchange h, String text, int rCode) throws IOException {
         byte[] resp = text.getBytes(StandardCharsets.UTF_8);
         h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
         h.sendResponseHeaders(200, resp.length);
@@ -38,6 +38,7 @@ public class BaseHttpHandler {
         h.getResponseBody().write(resp);
         h.close();
     }
+
 
 }
 

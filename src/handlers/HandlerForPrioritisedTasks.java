@@ -10,6 +10,6 @@ import static main.HttpTaskServer.inMemoryTaskManager;
 public class HandlerForPrioritisedTasks extends BaseHttpHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        sendText(exchange, gson.toJson(inMemoryTaskManager.getPrioritizedTasks()));
+        sendText(exchange, gson.toJson(inMemoryTaskManager.getPrioritizedTasks()), 200);
     }
 }

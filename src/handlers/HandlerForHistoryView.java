@@ -10,6 +10,6 @@ import static main.HttpTaskServer.inMemoryTaskManager;
 public class HandlerForHistoryView extends BaseHttpHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        sendText(exchange, gson.toJson(inMemoryTaskManager.getHistory()));
+        sendText(exchange, gson.toJson(inMemoryTaskManager.getHistory()), 200);
     }
 }
