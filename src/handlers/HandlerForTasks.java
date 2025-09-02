@@ -28,7 +28,7 @@ public class HandlerForTasks extends BaseHttpHandler implements HttpHandler {
                 sendText(exchange, gson.toJson(inMemoryTaskManager.findTask(Integer.parseInt(Arrays.stream(splitReq)
                         .toList().getLast()))), 201);
             } else {
-                sendNotFound(exchange, "Задачи с таким id нет в списке!");
+                sendNotFound(exchange, "Задачи с таким id нет в списке!", 404);
             }
 
         } else if (reqMethod.equals("POST")) {
@@ -55,7 +55,7 @@ public class HandlerForTasks extends BaseHttpHandler implements HttpHandler {
                 inMemoryTaskManager.sortingTasks();
 
                 if (inMemoryTaskManager.isOverLapping(newTask)) {
-                    sendNotFound(exchange, "Добавляемая задача пересекается по времени выполнения с уже существующими");
+                    sendNotFound(exchange, "Добавляемая задача пересекается по времени выполнения с уже существующими", 406);
                     inMemoryTaskManager.idCount--;
                 }
 

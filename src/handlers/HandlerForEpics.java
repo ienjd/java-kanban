@@ -3,6 +3,8 @@ package handlers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import tasks.Epic;
+import tasks.Status;
+
 import java.io.IOException;
 
 import java.util.Arrays;
@@ -25,18 +27,23 @@ public class HandlerForEpics extends BaseHttpHandler implements HttpHandler {
             }
 
             if (Arrays.stream(splitReq).toList().getLast().equals("subtasks")) {
-                String [] params = exchange.getRequestURI().getPath().split("/");
-                Epic epic = (Epic) inMemoryTaskManager.findTask(Integer.parseInt(Arrays.stream(splitReq)
-                        .toList().get(splitReq.length - 2)));
+                String[] params = exchange.getRequestURI().getPath().split("/");
 
-                sendText(exchange, gson.toJson(epic.getSubtasks()), 200);
+                if (inMemoryTaskManager.epicList.containsKey(Integer.parseInt(Arrays.stream(splitReq).toList().get(splitReq.length - 2)))) {
+                    Epic epic = (Epic) inMemoryTaskManager.findTask(Integer.parseInt(Arrays.stream(splitReq)
+                            .toList().get(splitReq.length - 2)));
+
+                    sendText(exchange, gson.toJson(epic.getSubtasks()), 200);
+                } else {
+                    sendNotFound(exchange, "Эпика с таким id нет в списке!", 404);
+                }
             }
 
             if (inMemoryTaskManager.epicList.containsKey(Integer.parseInt(Arrays.stream(splitReq).toList().getLast()))) {
                 sendText(exchange, gson.toJson(inMemoryTaskManager.findTask(Integer.parseInt(Arrays.stream(splitReq)
                         .toList().getLast()))), 200);
             } else {
-                sendNotFound(exchange, "Эпика с таким id нет в списке!");
+                sendNotFound(exchange, "Эпика с таким id нет в списке!", 404);
             }
 
         } else if (reqMethod.equals("POST")) {
@@ -46,22 +53,23 @@ public class HandlerForEpics extends BaseHttpHandler implements HttpHandler {
             String title = ((params.split("&"))[0]).split("=")[1];
             String descr = ((params.split("&"))[1]).split("=")[1];
 
-            Epic newEpic = inMemoryTaskManager.createEpic(title, descr);
-            inMemoryTaskManager.setEpicDuration(newEpic.getId());
-            inMemoryTaskManager.setEpicStartTime(newEpic.getId());
-            newEpic.fillSubtasks(inMemoryTaskManager.getEpicSubtasks(newEpic.getId()));
-
-            if (!newEpic.getSubtasks().isEmpty()) {
-                inMemoryTaskManager.addTaskToList(newEpic, inMemoryTaskManager.epicList);
-                sendText(exchange, gson.toJson(newEpic), 201);
+            Epic newEpic;
+            if (inMemoryTaskManager.getEpicSubtasks(inMemoryTaskManager.getIdCount()).isEmpty()) {
+                newEpic = new Epic(title, descr, ++inMemoryTaskManager.idCount, Status.NEW);
+            } else {
+                newEpic = inMemoryTaskManager.createEpic(title, descr);
+                inMemoryTaskManager.setEpicDuration(newEpic.getId());
+                inMemoryTaskManager.setEpicStartTime(newEpic.getId());
             }
+
+            inMemoryTaskManager.addTaskToList(newEpic, inMemoryTaskManager.epicList);
+            sendText(exchange, gson.toJson(newEpic), 201);
 
         } else if (reqMethod.equals("DELETE")) {
 
-            inMemoryTaskManager.deleteTaskFromList(Integer.parseInt(Arrays.stream(splitReq).toList().getLast()));
+            inMemoryTaskManager.epicList.remove(Integer.parseInt(Arrays.stream(splitReq).toList().getLast()));
 
             sendText(exchange, "Задача удалена", 200);
         }
     }
 }
-

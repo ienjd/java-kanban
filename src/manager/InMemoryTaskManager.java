@@ -36,6 +36,13 @@ public class InMemoryTaskManager<T> implements TaskManager {
     @Override
     public void addTaskToList(Task task, HashMap hashMap) throws ManagerSaveException {
 
+        if (task instanceof Subtask ) {
+            Subtask subtask = (Subtask) task;
+            fillSubtasks(epicList.get(subtask.getEpicId()), subtask);
+            setEpicStartTime(subtask.getEpicId());
+            setEpicDuration(subtask.getEpicId());
+        }
+
         if (!isOverLapping(task)) {
             hashMap.put(task.getId(), task);
         } else {
@@ -107,7 +114,6 @@ public class InMemoryTaskManager<T> implements TaskManager {
         ArrayList<Subtask> subtasksThisEpic = (ArrayList<Subtask>) subtaskList.values().stream()
                 .filter(subtask -> (subtask.getEpicId() == epicId))
                 .collect(Collectors.toList());
-        epicList.get(epicId);
         return subtasksThisEpic;
     }
 
@@ -145,6 +151,10 @@ public class InMemoryTaskManager<T> implements TaskManager {
         }
         subtaskList.put(newSubtask.getId(), newSubtask);
         updateEpic(epicList.get(newSubtask.getEpicId()));
+    }
+
+    public void fillSubtasks(Epic epic, Subtask subtask) {
+        epic.setSubtasks(subtask);
     }
 
     @Override
@@ -187,6 +197,7 @@ public class InMemoryTaskManager<T> implements TaskManager {
                 .forEach(id -> forgetTask(id));
         subtaskList.values().removeAll(getEpicSubtasks(epicId));
         epicList.get(epicId).setStatus(Status.DONE);
+        epicList.get(epicId).clearSubtasksList();
         updateEpic(epicList.get(epicId));
     }
 
@@ -239,7 +250,6 @@ public class InMemoryTaskManager<T> implements TaskManager {
         List<Task> allTasks = new ArrayList<>();
         allTasks.addAll(taskList.values());
         allTasks.addAll(epicList.values());
-        allTasks.addAll(subtaskList.values());
 
         Comparator<Task> comparator = (a, b) -> {
             LocalDateTime timeA = a.getStartTime();
