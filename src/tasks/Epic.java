@@ -16,7 +16,7 @@ public class Epic extends Task {
         this.startTime = LocalDateTime.of(2021, 1, 1, 1, 1);
     }
 
-    public void fillSubtasks(ArrayList listOfSubtasks) {
+    public void fillSubtasks(List listOfSubtasks) {
         subtasks.addAll(listOfSubtasks);
     }
 

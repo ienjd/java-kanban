@@ -14,12 +14,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static adapters.LocalDateTimeAdapter.dtf;
+
 public class InMemoryTaskManager<T> implements TaskManager {
     public static int idCount = 0;
     public final HashMap<Integer, Task> taskList = new HashMap<>();
     public final HashMap<Integer, Epic> epicList = new HashMap<>();
     public final HashMap<Integer, Subtask> subtaskList = new HashMap<>();
-    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
     HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
     public TreeSet<Task> sortedTasks = new TreeSet<>();
 
@@ -105,7 +107,7 @@ public class InMemoryTaskManager<T> implements TaskManager {
         ArrayList<Subtask> subtasksThisEpic = (ArrayList<Subtask>) subtaskList.values().stream()
                 .filter(subtask -> (subtask.getEpicId() == epicId))
                 .collect(Collectors.toList());
-        epicList.get(epicId).fillSubtasks(subtasksThisEpic);
+        epicList.get(epicId);
         return subtasksThisEpic;
     }
 
@@ -215,7 +217,7 @@ public class InMemoryTaskManager<T> implements TaskManager {
                 .map(Subtask::getStartTime)
                 .filter(Objects::nonNull)
                 .min(LocalDateTime::compareTo);
-        epicList.get(epicId).setStartTime(minStart.orElse(LocalDateTime.of(LocalDate.now(), LocalTime.now())));
+        epicList.get(epicId).setStartTime(minStart.orElse(LocalDateTime.now()));
     }
 
     public void sortingTasks() throws ManagerSaveException {

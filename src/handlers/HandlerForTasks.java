@@ -1,33 +1,14 @@
 package handlers;
 
-import adapters.DurationAdapter;
-import adapters.LocalDateTimeAdapter;
-import com.google.gson.GsonBuilder;
-import com.sun.jdi.Value;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-
-import com.google.gson.Gson;
-import adapters.LocalDateTimeAdapter;
-import adapters.DurationAdapter;
-import manager.InMemoryTaskManager;
 import tasks.Task;
-
 import static main.HttpTaskServer.inMemoryTaskManager;
 
 public class HandlerForTasks extends BaseHttpHandler implements HttpHandler {
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd--MM--yyyy HH:mm:ss");
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -54,9 +35,9 @@ public class HandlerForTasks extends BaseHttpHandler implements HttpHandler {
 
             String params = exchange.getRequestURI().getQuery();
 
-            if (!(exchange.getRequestURI().getQuery().split("&"))[0].contains("id")) {
+            if (!exchange.getRequestURI().getQuery().substring(0,2).equals("id")) {
 
-
+                System.out.println(exchange.getRequestURI().getQuery().substring(0,2));
                 String title = ((params.split("&"))[0]).split("=")[1];
                 String descr = ((params.split("&"))[1]).split("=")[1];
                 String duration = ((params.split("&"))[2]).split("=")[1];
@@ -81,28 +62,15 @@ public class HandlerForTasks extends BaseHttpHandler implements HttpHandler {
                 inMemoryTaskManager.addTaskToList(newTask, inMemoryTaskManager.taskList);
                 sendText(exchange, gson.toJson(newTask), 201);
 
-            } else if ((exchange.getRequestURI().getQuery().split("&"))[0].contains("id")) {
+            } else {
 
-                String id = ((params.split("&"))[0]).split("=")[1];
-                String title = ((params.split("&"))[1]).split("=")[1];
-                String descr = ((params.split("&"))[2]).split("=")[1];
-                String duration = ((params.split("&"))[3]).split("=")[1];
-                String startTime = ((params.split("&"))[4]).split("=")[1];
+                String id = params.split("=")[1];
 
-                Task updatedTask = inMemoryTaskManager.createTask(title, descr);
-                updatedTask.setId(Integer.parseInt(id));
-                updatedTask.setDuration(Integer.parseInt(duration));
-                updatedTask.setStartTime(LocalDateTime.of(
-                        Integer.parseInt(startTime.substring(6, 10)),
-                        Integer.parseInt(startTime.substring(3, 5)),
-                        Integer.parseInt(startTime.substring(0, 2)),
-                        Integer.parseInt(startTime.substring(11, 13)),
-                        Integer.parseInt(startTime.substring(14, 16))));
+                inMemoryTaskManager.updateTask((Task) inMemoryTaskManager.taskList.get(Integer.parseInt(id)));
 
-                inMemoryTaskManager.taskList.put(updatedTask.getId(), updatedTask);
-
-                sendText(exchange, gson.toJson(updatedTask), 201);
+                sendText(exchange, "Задача обновлена", 201);
             }
+
         } else if (reqMethod.equals("DELETE")) {
 
             inMemoryTaskManager.deleteTaskFromList(Integer.parseInt(Arrays.stream(splitReq).toList().getLast()));
