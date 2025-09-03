@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class HttpTaskServer {
 
@@ -78,10 +76,6 @@ public class HttpTaskServer {
         inMemoryTaskManager.setEpicStartTime(epic1.getId());
         inMemoryTaskManager.setEpicDuration(epic1.getId());
 
-        /*System.out.println(task);
-        System.out.println(epic1);
-        //System.out.println(gson.toJson(subtask1));
-        System.out.println(gson.toJson(epic1));*/
     }
 }
 
