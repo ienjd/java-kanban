@@ -1,14 +1,9 @@
 package handlers;
-
 import adapters.DurationAdapter;
 import adapters.LocalDateTimeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import manager.InMemoryTaskManager;
-import tasks.Task;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -38,7 +33,5 @@ public class BaseHttpHandler {
         h.getResponseBody().write(resp);
         h.close();
     }
-
-
 }
 

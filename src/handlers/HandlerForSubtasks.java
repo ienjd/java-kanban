@@ -36,9 +36,9 @@ public class HandlerForSubtasks extends BaseHttpHandler implements HttpHandler {
 
             String params = exchange.getRequestURI().getQuery();
 
-            if (!exchange.getRequestURI().getQuery().substring(0,2).equals("id")) {
+            if (!exchange.getRequestURI().getQuery().substring(0, 2).equals("id")) {
 
-                System.out.println(exchange.getRequestURI().getQuery().substring(0,2));
+                System.out.println(exchange.getRequestURI().getQuery().substring(0, 2));
                 String title = ((params.split("&"))[0]).split("=")[1];
                 String descr = ((params.split("&"))[1]).split("=")[1];
                 String duration = ((params.split("&"))[2]).split("=")[1];

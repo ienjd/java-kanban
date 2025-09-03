@@ -36,7 +36,7 @@ public class HandlerForTasks extends BaseHttpHandler implements HttpHandler {
 
             String params = exchange.getRequestURI().getQuery();
 
-            if (!exchange.getRequestURI().getQuery().substring(0,2).equals("id")) {
+            if (!exchange.getRequestURI().getQuery().substring(0, 2).equals("id")) {
 
                 String title = ((params.split("&"))[0]).split("=")[1];
                 String descr = ((params.split("&"))[1]).split("=")[1];
