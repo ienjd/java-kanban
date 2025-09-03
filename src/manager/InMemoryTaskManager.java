@@ -7,21 +7,17 @@ import tasks.Subtask;
 import tasks.Task;
 import java.io.IOException;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static adapters.LocalDateTimeAdapter.dtf;
 
 public class InMemoryTaskManager<T> implements TaskManager {
     public static int idCount = 0;
     public final HashMap<Integer, Task> taskList = new HashMap<>();
     public final HashMap<Integer, Epic> epicList = new HashMap<>();
     public final HashMap<Integer, Subtask> subtaskList = new HashMap<>();
-    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
     HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
     public TreeSet<Task> sortedTasks = new TreeSet<>();
 
@@ -36,7 +32,7 @@ public class InMemoryTaskManager<T> implements TaskManager {
     @Override
     public void addTaskToList(Task task, HashMap hashMap) throws ManagerSaveException {
 
-        if (task instanceof Subtask ) {
+        if (task instanceof Subtask) {
             Subtask subtask = (Subtask) task;
             fillSubtasks(epicList.get(subtask.getEpicId()), subtask);
             setEpicStartTime(subtask.getEpicId());
@@ -45,8 +41,6 @@ public class InMemoryTaskManager<T> implements TaskManager {
 
         if (!isOverLapping(task)) {
             hashMap.put(task.getId(), task);
-        } else {
-
         }
         sortingTasks();
     }
