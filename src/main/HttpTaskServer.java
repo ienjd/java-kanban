@@ -18,16 +18,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HttpTaskServer {
-    private static final int PORT = 8080;
+
+    public static final int PORT = 8080;
+
     public static InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
-    static Gson gson = new GsonBuilder()
+
+    public static HttpServer httpServer;
+
+    static {
+        try {
+            httpServer = HttpServer.create();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .create();
 
     public static void main(String[] args) throws IOException {
-        HttpServer httpServer = HttpServer.create();
+
         httpServer.bind(new InetSocketAddress(PORT), 5);
         httpServer.createContext("/prioritized", new HandlerForPrioritisedTasks());
         httpServer.createContext("/tasks", new HandlerForTasks());

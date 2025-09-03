@@ -64,7 +64,6 @@ public class HandlerForSubtasks extends BaseHttpHandler implements HttpHandler {
 
                 inMemoryTaskManager.addTaskToList(newSubtask, inMemoryTaskManager.subtaskList);
 
-                System.out.println( inMemoryTaskManager.subtaskList);
                 sendText(exchange, gson.toJson(newSubtask), 201);
 
             } else {
