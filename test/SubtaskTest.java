@@ -1,6 +1,7 @@
 import exceptions.ManagerSaveException;
 import manager.InMemoryTaskManager;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Subtask;
@@ -8,7 +9,15 @@ import tasks.Subtask;
 import java.time.LocalDateTime;
 
 public class SubtaskTest {
-    InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
+    public InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
+
+    @BeforeEach
+    public void cleanAll() {
+        inMemoryTaskManager.subtaskList.clear();
+        inMemoryTaskManager.taskList.clear();
+        inMemoryTaskManager.epicList.clear();
+        inMemoryTaskManager.idCount = 0;
+    }
 
     @Test
 //экземпляры Subtask равны друг другу, если равны их id
@@ -24,6 +33,9 @@ public class SubtaskTest {
     @Test
     public void subtaskDurationAndStartTimeNotChangedAfterAddingInTaskList() throws ManagerSaveException {
 
+        Epic epic1 = inMemoryTaskManager.createEpic("epic1", "epic1");
+        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.epicList);
+
         Subtask firstSubtask = inMemoryTaskManager.createSubtask("Первая подзадача", "Описание первой подзадачи", 1);
         firstSubtask.setDuration(15);
         firstSubtask.setStartTime(LocalDateTime.of(2025, 1, 1, 1, 1));
@@ -37,20 +49,20 @@ public class SubtaskTest {
     @Test
     public void subtasksHasEpicIdToExistingEpic() throws ManagerSaveException {
 
-        Subtask subtask2 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 3);
+        Epic epic1 = inMemoryTaskManager.createEpic("epic1", "epic1");
+        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.epicList);
+
+        Subtask subtask2 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 1);
         subtask2.setDuration(15);
         subtask2.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 20));
         inMemoryTaskManager.addTaskToList(subtask2, inMemoryTaskManager.subtaskList);
 
 
-        Subtask subtask3 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 3);
+        Subtask subtask3 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 1);
         subtask3.setDuration(15);
         subtask3.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 40));
         inMemoryTaskManager.addTaskToList(subtask3, inMemoryTaskManager.subtaskList);
 
-
-        Epic epic1 = inMemoryTaskManager.createEpic("epic1", "epic1");
-        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.epicList);
 
         Assertions.assertTrue(inMemoryTaskManager.getPrioritizedTasks().contains(inMemoryTaskManager.findTask(subtask2.getEpicId())));
         Assertions.assertTrue(inMemoryTaskManager.getPrioritizedTasks().contains(inMemoryTaskManager.findTask(subtask3.getEpicId())));
