@@ -3,6 +3,8 @@ package handlers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import tasks.Task;
@@ -34,44 +36,21 @@ public class HandlerForTasks extends BaseHttpHandler implements HttpHandler {
 
         } else if (reqMethod.equals("POST")) {
 
-            String params = exchange.getRequestURI().getQuery();
+            InputStream is = exchange.getRequestBody();
+            String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            Task newTask = gson.fromJson(body, Task.class);
 
-            if (!exchange.getRequestURI().getQuery().substring(0, 2).equals("id")) {
-
-                String title = ((params.split("&"))[0]).split("=")[1];
-                String descr = ((params.split("&"))[1]).split("=")[1];
-                String duration = ((params.split("&"))[2]).split("=")[1];
-                String startTime = ((params.split("&"))[3]).split("=")[1];
-
-                Task newTask = inMemoryTaskManager.createTask(title, descr);
-                newTask.setDuration(Integer.parseInt(duration));
-                newTask.setStartTime(LocalDateTime.of(
-                        Integer.parseInt(startTime.substring(6, 10)),
-                        Integer.parseInt(startTime.substring(3, 5)),
-                        Integer.parseInt(startTime.substring(0, 2)),
-                        Integer.parseInt(startTime.substring(11, 13)),
-                        Integer.parseInt(startTime.substring(14, 16))));
-
-                inMemoryTaskManager.sortingTasks();
-
+            if (inMemoryTaskManager.taskList.containsKey(newTask.getId())) {
+                inMemoryTaskManager.updateTask(inMemoryTaskManager.findTask(newTask.getId()));
+                sendText(exchange, gson.toJson(newTask), 201);
+            } else if (!inMemoryTaskManager.taskList.containsKey(newTask.getId())) {
                 if (inMemoryTaskManager.isOverLapping(newTask)) {
                     sendNotFound(exchange, "Добавляемая задача пересекается по времени выполнения с уже существующими", 406);
-                    inMemoryTaskManager.idCount--;
-
+                } else {
+                    inMemoryTaskManager.addTaskToList(newTask, inMemoryTaskManager.taskList);
+                    sendText(exchange, gson.toJson(newTask), 201);
                 }
-
-                inMemoryTaskManager.addTaskToList(newTask, inMemoryTaskManager.taskList);
-                sendText(exchange, gson.toJson(newTask), 201);
-
-            } else {
-
-                String id = params.split("=")[1];
-
-                inMemoryTaskManager.updateTask((Task) inMemoryTaskManager.taskList.get(Integer.parseInt(id)));
-
-                sendText(exchange, "Задача обновлена", 201);
             }
-
         } else if (reqMethod.equals("DELETE")) {
 
             inMemoryTaskManager.deleteTaskFromList(Integer.parseInt(Arrays.stream(splitReq).toList().getLast()));

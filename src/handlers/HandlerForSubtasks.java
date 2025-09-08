@@ -3,13 +3,18 @@ package handlers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import tasks.Subtask;
+import tasks.Task;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import static main.HttpTaskServer.inMemoryTaskManager;
 
 public class HandlerForSubtasks extends BaseHttpHandler implements HttpHandler {
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String[] splitReq = exchange.getRequestURI().getPath().split("/");
@@ -31,47 +36,21 @@ public class HandlerForSubtasks extends BaseHttpHandler implements HttpHandler {
 
         } else if (reqMethod.equals("POST")) {
 
-            String params = exchange.getRequestURI().getQuery();
+            InputStream is = exchange.getRequestBody();
+            String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            Subtask newTask = gson.fromJson(body, Subtask.class);
 
-            if (!exchange.getRequestURI().getQuery().substring(0, 2).equals("id")) {
-
-                System.out.println(exchange.getRequestURI().getQuery().substring(0, 2));
-                String title = ((params.split("&"))[0]).split("=")[1];
-                String descr = ((params.split("&"))[1]).split("=")[1];
-                String duration = ((params.split("&"))[2]).split("=")[1];
-                String startTime = ((params.split("&"))[3]).split("=")[1];
-                String epicId = ((params.split("&"))[4]).split("=")[1];
-
-                Subtask newSubtask = inMemoryTaskManager.createSubtask(title, descr, Integer.parseInt(epicId));
-                newSubtask.setDuration(Integer.parseInt(duration));
-                newSubtask.setStartTime(LocalDateTime.of(
-                        Integer.parseInt(startTime.substring(6, 10)),
-                        Integer.parseInt(startTime.substring(3, 5)),
-                        Integer.parseInt(startTime.substring(0, 2)),
-                        Integer.parseInt(startTime.substring(11, 13)),
-                        Integer.parseInt(startTime.substring(14, 16))));
-
-                inMemoryTaskManager.sortingTasks();
-
-                if (inMemoryTaskManager.isOverLapping(newSubtask)) {
-                    sendNotFound(exchange,
-                            "Добавляемая задача пересекается по времени выполнения с уже существующими", 406);
-                    inMemoryTaskManager.idCount--;
+            if (inMemoryTaskManager.subtaskList.containsKey(newTask.getId())) {
+                inMemoryTaskManager.updateSubtask((Subtask) inMemoryTaskManager.findTask(newTask.getId()));
+                sendText(exchange, gson.toJson(newTask), 201);
+            } else if (!inMemoryTaskManager.taskList.containsKey(newTask.getId())) {
+                if (inMemoryTaskManager.isOverLapping(newTask)) {
+                    sendNotFound(exchange, "Добавляемая задача пересекается по времени выполнения с уже существующими", 406);
+                } else {
+                    inMemoryTaskManager.addTaskToList(newTask, inMemoryTaskManager.subtaskList);
+                    sendText(exchange, gson.toJson(newTask), 201);
                 }
-
-                inMemoryTaskManager.addTaskToList(newSubtask, inMemoryTaskManager.subtaskList);
-
-                sendText(exchange, gson.toJson(newSubtask), 201);
-
-            } else {
-
-                String id = params.split("=")[1];
-
-                inMemoryTaskManager.updateSubtask((Subtask) inMemoryTaskManager.subtaskList.get(Integer.parseInt(id)));
-
-                sendText(exchange, "Задача обновлена", 201);
             }
-
         } else if (reqMethod.equals("DELETE")) {
 
             inMemoryTaskManager.deleteTaskFromList(Integer.parseInt(Arrays.stream(splitReq).toList().getLast()));
