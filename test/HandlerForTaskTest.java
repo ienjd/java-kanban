@@ -39,7 +39,7 @@ class HandlerForTaskTest {
     }
 
     @Test
-    public void HandlerReturnCode200() throws IOException, InterruptedException {
+    public void handlerReturnCode200() throws IOException, InterruptedException {
 
         URI uri = URI.create("http://localhost:8080/tasks");
 
@@ -63,7 +63,7 @@ class HandlerForTaskTest {
     }
 
     @Test
-    public void HandlerReturnTask() throws IOException, InterruptedException {
+    public void handlerReturnTask() throws IOException, InterruptedException {
 
         URI uri = URI.create("http://localhost:8080/tasks");
 
@@ -88,12 +88,12 @@ class HandlerForTaskTest {
         HttpResponse<String> response = client.send(request, handler);
 
         int code = response.statusCode();
-        System.out.println(inMemoryTaskManager.findTask(10));
+
         assertEquals(201, code);
     }
 
     @Test
-    public void HandlerReturnCorrectTask() throws IOException, InterruptedException {
+    public void handlerReturnCorrectTask() throws IOException, InterruptedException {
 
         Task task = inMemoryTaskManager.createTask("er", "er");
         task.setDuration(15);
@@ -130,7 +130,7 @@ class HandlerForTaskTest {
 
 
     @Test
-    public void HandlerDeleteCorrectTask() throws IOException, InterruptedException {
+    public void handlerDeleteCorrectTask() throws IOException, InterruptedException {
 
         Task task = inMemoryTaskManager.createTask("er", "er");
         task.setDuration(15);
@@ -157,5 +157,4 @@ class HandlerForTaskTest {
 
         assertFalse(inMemoryTaskManager.taskList.containsValue(task));
     }
-
 }
