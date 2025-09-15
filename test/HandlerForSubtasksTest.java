@@ -133,7 +133,8 @@ class HandlerForSubtaskTest {
         String subtask = response.body();
         int code = response.statusCode();
 
-        assertEquals( httpTaskServer.gson.toJson(subtask2), subtask);
+        assertNotNull(epic1);
+        assertEquals(httpTaskServer.gson.toJson(subtask2), subtask);
         assertEquals(subtask2,  httpTaskServer.gson.fromJson(response.body(), Subtask.class));
         assertEquals(201, code);
     }
