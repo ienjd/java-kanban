@@ -42,10 +42,18 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void creatingSubtask() {
-        Subtask subtask = inMemoryTaskManager.createSubtask("ER", "ER", 1);
+    public void creatingSubtask() throws ManagerSaveException {
+        Epic epic1 =  inMemoryTaskManager.createEpic("er", "er");
+        inMemoryTaskManager.setEpicStartTime(epic1.getId());
+        inMemoryTaskManager.setEpicDuration(epic1.getId());
+        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.epicList);
 
-        Assertions.assertNotEquals(null, subtask);
+        Subtask subtask1 =  inMemoryTaskManager.createSubtask("er", "er", 1);
+        subtask1.setDuration(15);
+        subtask1.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
+        inMemoryTaskManager.addTaskToList(subtask1,  inMemoryTaskManager.subtaskList);
+
+        Assertions.assertNotEquals(null, subtask1);
     }
 
     @Test

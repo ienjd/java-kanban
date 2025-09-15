@@ -21,13 +21,20 @@ public class SubtaskTest {
 
     @Test
 //экземпляры Subtask равны друг другу, если равны их id
-    public void subtaskEqualsSubtask() {
-        InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
-        Subtask firstSubtask = inMemoryTaskManager.createSubtask("Первая подзадача", "Описание первой подзадачи", 1);
-        Subtask secondSubtask = firstSubtask;
+    public void subtaskEqualsSubtask() throws ManagerSaveException {
+        Epic epic1 =  inMemoryTaskManager.createEpic("er", "er");
+        inMemoryTaskManager.setEpicStartTime(epic1.getId());
+        inMemoryTaskManager.setEpicDuration(epic1.getId());
+        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.epicList);
 
-        Assertions.assertEquals(firstSubtask.getId(), secondSubtask.getId());
-        Assertions.assertEquals(firstSubtask, secondSubtask);
+        Subtask subtask1 = inMemoryTaskManager.createSubtask("er", "er", 1);
+        subtask1.setDuration(15);
+        subtask1.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
+        inMemoryTaskManager.addTaskToList(subtask1,  inMemoryTaskManager.subtaskList);
+        Subtask secondSubtask = subtask1;
+
+        Assertions.assertEquals(subtask1.getId(), secondSubtask.getId());
+        Assertions.assertEquals(subtask1, secondSubtask);
     }
 
     @Test
