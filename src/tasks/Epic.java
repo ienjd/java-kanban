@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class Epic extends Task {
     private LocalDateTime endTime;
-    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();;
+    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
 
     public Epic(String title, String description, int id, Status status) {
         super(title, description, id, status);
