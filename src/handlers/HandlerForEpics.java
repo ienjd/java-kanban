@@ -29,7 +29,7 @@ public class HandlerForEpics<T extends InMemoryTaskManager> extends BaseHttpHand
             if (Arrays.stream(splitReq).toList().getLast().equals("epics")) {
                 sendText(exchange, gson.toJson(taskManager.epicList.values()), 200);
 
-            } else if (Arrays.stream(splitReq).toList().getLast().equals("subtasks")){
+            } else if (Arrays.stream(splitReq).toList().getLast().equals("subtasks")) {
                 sendText(exchange, gson.toJson(taskManager.getEpicSubtasks(Integer.parseInt(splitReq[splitReq.length - 2]))), 200);
             }
 
@@ -49,7 +49,7 @@ public class HandlerForEpics<T extends InMemoryTaskManager> extends BaseHttpHand
             if (taskManager.isOverLapping(newTask)) {
                 sendNotFound(exchange, "Добавляемая задача пересекается по времени выполнения с уже существующими", 406);
             } else {
-                if (!taskManager.epicList.containsKey(newTask.getId())){
+                if (!taskManager.epicList.containsKey(newTask.getId())) {
                     taskManager.addTaskToList(newTask, taskManager.epicList);
                     sendText(exchange, gson.toJson(newTask), 201);
                 } else {
