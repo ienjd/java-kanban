@@ -104,6 +104,7 @@ class HandlerForSubtaskTest {
         httpTaskServer.taskManager.setEpicStartTime(epic1.getId());
         httpTaskServer.taskManager.setEpicDuration(epic1.getId());
         httpTaskServer.taskManager.addTaskToList(epic1, httpTaskServer.taskManager.epicList);
+        Epic epic2 = epic1;
 
         Subtask subtask1 =  httpTaskServer.taskManager.createSubtask("er", "er", 1);
         subtask1.setDuration(15);
@@ -135,6 +136,7 @@ class HandlerForSubtaskTest {
 
         assertNotNull(epic1);
         assertEquals(httpTaskServer.gson.toJson(subtask2), subtask);
+        assertEquals(epic1, epic2);
         assertEquals(subtask2,  httpTaskServer.gson.fromJson(response.body(), Subtask.class));
         assertEquals(201, code);
     }
@@ -153,7 +155,7 @@ class HandlerForSubtaskTest {
         task.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
         httpTaskServer.taskManager.addTaskToList(task,  httpTaskServer.taskManager.subtaskList);
 
-        assertTrue( httpTaskServer.taskManager.subtaskList.containsValue(task));
+        assertTrue(httpTaskServer.taskManager.subtaskList.containsValue(task));
 
         URI uri = URI.create("http://localhost:8080/subtasks/1");
 
@@ -171,6 +173,6 @@ class HandlerForSubtaskTest {
 
         HttpResponse<String> response = client.send(request, handler);
 
-        assertFalse( httpTaskServer.taskManager.taskList.containsValue(task));
+        assertFalse(httpTaskServer.taskManager.taskList.containsValue(task));
     }
 }
