@@ -27,7 +27,7 @@ public class HttpTaskServer<T extends InMemoryTaskManager> {
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .create();
 
-    public HttpTaskServer(T taskManager){
+    public HttpTaskServer(T taskManager) {
 
         this.taskManager = taskManager;
 
@@ -48,9 +48,13 @@ public class HttpTaskServer<T extends InMemoryTaskManager> {
         httpServer.createContext("/prioritized", new HandlerForPrioritisedTasks(taskManager));
     }
 
-    public void start() { httpServer.start(); }
+    public void start() {
+        httpServer.start();
+    }
 
-    public void stop() { httpServer.stop(0); }
+    public void stop() {
+        httpServer.stop(0);
+    }
 
     public static void main(String[] args) throws IOException {
 
