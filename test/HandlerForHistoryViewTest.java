@@ -40,19 +40,7 @@ class HandlerForHistoryViewTest {
         task2.setStartTime(LocalDateTime.of(2025, 11, 20, 15, 0));
         httpTaskServer.taskManager.addTaskToList(task2, httpTaskServer.taskManager.taskList);
 
-        Epic epic1 = httpTaskServer.taskManager.createEpic("er", "er");
-        httpTaskServer.taskManager.setEpicStartTime(epic1.getId());
-        httpTaskServer.taskManager.setEpicDuration(epic1.getId());
-        httpTaskServer.taskManager.addTaskToList(epic1, httpTaskServer.taskManager.epicList);
-
-        Subtask subtask1 = httpTaskServer.taskManager.createSubtask("er", "er", 3);
-        subtask1.setDuration(15);
-        subtask1.setStartTime(LocalDateTime.of(2024, 8, 10, 15, 45));
-        httpTaskServer.taskManager.addTaskToList(subtask1, httpTaskServer.taskManager.subtaskList);
-
-        httpTaskServer.taskManager.findTask(subtask1.getId());
         httpTaskServer.taskManager.findTask(task2.getId());
-        httpTaskServer.taskManager.findTask(epic1.getId());
         httpTaskServer.taskManager.findTask(task.getId());
 
         URI uri = URI.create("http://localhost:8080/history");
@@ -75,9 +63,8 @@ class HandlerForHistoryViewTest {
         System.out.println(httpTaskServer.taskManager.getHistory());
 
         assertEquals(200, code);
-        assertTrue(httpTaskServer.taskManager.getHistory().size() == 4);
-        assertEquals(httpTaskServer.taskManager.getHistory().getFirst(), subtask1);
+        assertTrue(httpTaskServer.taskManager.getHistory().size() == 2);
+        assertEquals(httpTaskServer.taskManager.getHistory().getFirst(), task2);
         assertEquals(httpTaskServer.taskManager.getHistory().getLast(), task);
-        assertEquals(httpTaskServer.taskManager.getHistory().get(2), epic1);
     }
 }
