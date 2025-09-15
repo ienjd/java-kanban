@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 public class BaseHttpHandler {
 
-    static Gson gson = new GsonBuilder()
+    Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationAdapter())

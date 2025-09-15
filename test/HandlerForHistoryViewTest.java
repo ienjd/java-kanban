@@ -1,57 +1,59 @@
-import com.sun.net.httpserver.HttpServer;
-import handlers.HandlerForHistoryView;
+import main.HttpTaskServer;
+import manager.InMemoryTaskManager;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
-
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
-
-import static main.HttpTaskServer.*;
-import static main.HttpTaskServer.httpServer;
-import static main.HttpTaskServer.inMemoryTaskManager;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HandlerForHistoryViewTest {
+    HttpTaskServer<InMemoryTaskManager> httpTaskServer = new HttpTaskServer<>(new InMemoryTaskManager());
+
+    @BeforeEach
+    public void startServer() throws IOException {
+        httpTaskServer.start();
+    }
+
+    @AfterEach
+    public void stopServer() {
+        httpTaskServer.taskManager.idCount = 0;
+        httpTaskServer.stop();
+    }
     @Test
     public void handlerReturnHistoryList() throws IOException, InterruptedException {
 
-        Task task = inMemoryTaskManager.createTask("er", "er");
+        Task task = httpTaskServer.taskManager.createTask("er", "er");
         task.setDuration(15);
         task.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
-        inMemoryTaskManager.addTaskToList(task, inMemoryTaskManager.taskList);
+        httpTaskServer.taskManager.addTaskToList(task, httpTaskServer.taskManager.taskList);
 
-        Task task2 = inMemoryTaskManager.createTask("er", "er");
+        Task task2 = httpTaskServer.taskManager.createTask("er", "er");
         task2.setDuration(15);
         task2.setStartTime(LocalDateTime.of(2025, 11, 20, 15, 0));
-        inMemoryTaskManager.addTaskToList(task2, inMemoryTaskManager.taskList);
+        httpTaskServer.taskManager.addTaskToList(task2, httpTaskServer.taskManager.taskList);
 
-        Epic epic1 = inMemoryTaskManager.createEpic("er", "er");
-        inMemoryTaskManager.setEpicStartTime(epic1.getId());
-        inMemoryTaskManager.setEpicDuration(epic1.getId());
-        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.epicList);
+        Epic epic1 = httpTaskServer.taskManager.createEpic("er", "er");
+        httpTaskServer.taskManager.setEpicStartTime(epic1.getId());
+        httpTaskServer.taskManager.setEpicDuration(epic1.getId());
+        httpTaskServer.taskManager.addTaskToList(epic1, httpTaskServer.taskManager.epicList);
 
-        Subtask subtask1 = inMemoryTaskManager.createSubtask("er", "er", 3);
+        Subtask subtask1 = httpTaskServer.taskManager.createSubtask("er", "er", 3);
         subtask1.setDuration(15);
         subtask1.setStartTime(LocalDateTime.of(2024, 8, 10, 15, 45));
-        inMemoryTaskManager.addTaskToList(subtask1, inMemoryTaskManager.subtaskList);
+        httpTaskServer.taskManager.addTaskToList(subtask1, httpTaskServer.taskManager.subtaskList);
 
-        inMemoryTaskManager.findTask(subtask1.getId());
-        inMemoryTaskManager.findTask(task2.getId());
-        inMemoryTaskManager.findTask(epic1.getId());
-        inMemoryTaskManager.findTask(task.getId());
-
-        httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
-
-        httpServer.createContext("/history", new HandlerForHistoryView());
-
-        httpServer.start();
+        httpTaskServer.taskManager.findTask(subtask1.getId());
+        httpTaskServer.taskManager.findTask(task2.getId());
+        httpTaskServer.taskManager.findTask(epic1.getId());
+        httpTaskServer.taskManager.findTask(task.getId());
 
         URI uri = URI.create("http://localhost:8080/history");
 
@@ -70,11 +72,11 @@ class HandlerForHistoryViewTest {
         HttpResponse<String> response = client.send(request, handler);
 
         int code = response.statusCode();
-        System.out.println(inMemoryTaskManager.getHistory());
+        System.out.println(httpTaskServer.taskManager.getHistory());
 
         assertEquals(200, code);
-        assertTrue(inMemoryTaskManager.getHistory().size() == 4);
-        assertEquals(inMemoryTaskManager.getHistory().getFirst(), subtask1);
-        assertEquals(inMemoryTaskManager.getHistory().getLast(), task);
+        assertTrue(httpTaskServer.taskManager.getHistory().size() == 4);
+        assertEquals(httpTaskServer.taskManager.getHistory().getFirst(), subtask1);
+        assertEquals(httpTaskServer.taskManager.getHistory().getLast(), task);
     }
 }

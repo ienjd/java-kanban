@@ -1,47 +1,46 @@
 import com.sun.net.httpserver.HttpServer;
 import handlers.HandlerForSubtasks;
+import main.HttpTaskServer;
 import manager.InMemoryTaskManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Subtask;
-import tasks.Task;
-
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
-
-import static main.HttpTaskServer.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HandlerForSubtaskTest {
+    HttpTaskServer<InMemoryTaskManager> httpTaskServer = new HttpTaskServer<>(new InMemoryTaskManager());
 
     @BeforeEach
     public void startServer() throws IOException {
-        httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
-
-        httpServer.createContext("/subtasks", new HandlerForSubtasks());
-
-        httpServer.start();
-
-        inMemoryTaskManager.taskList.clear();
-        inMemoryTaskManager.subtaskList.clear();
-        inMemoryTaskManager.epicList.clear();
-        InMemoryTaskManager.idCount = 0;
+        httpTaskServer.start();
     }
 
     @AfterEach
-    public void stopServer() {
-        httpServer.stop(0);
+    public void stopServer(){
+        httpTaskServer.taskManager.idCount = 0;
+        httpTaskServer.stop();
     }
 
     @Test
     public void handlerReturnCode200() throws IOException, InterruptedException {
+
+        Epic task = httpTaskServer.taskManager.createEpic("er", "er");
+        task.setDuration(15);
+        task.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
+        httpTaskServer.taskManager.addTaskToList(task, httpTaskServer.taskManager.epicList);
+
+        Subtask subtask = httpTaskServer.taskManager.createSubtask("er", "er", 1);
+        subtask.setDuration(15);
+        subtask.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
+        httpTaskServer.taskManager.addTaskToList(subtask, httpTaskServer.taskManager.subtaskList);
 
         URI uri = URI.create("http://localhost:8080/subtasks");
 
@@ -65,10 +64,10 @@ class HandlerForSubtaskTest {
 
     @Test
     public void handlerReturnSubtask() throws IOException, InterruptedException {
-        Epic epic1 = inMemoryTaskManager.createEpic("er", "er");
-        inMemoryTaskManager.setEpicStartTime(epic1.getId());
-        inMemoryTaskManager.setEpicDuration(epic1.getId());
-        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.epicList);
+        Epic epic1 = httpTaskServer.taskManager.createEpic("er", "er");
+        httpTaskServer.taskManager.setEpicStartTime(epic1.getId());
+        httpTaskServer.taskManager.setEpicDuration(epic1.getId());
+        httpTaskServer.taskManager.addTaskToList(epic1,  httpTaskServer.taskManager.epicList);
 
         URI uri = URI.create("http://localhost:8080/subtasks");
 
@@ -101,20 +100,20 @@ class HandlerForSubtaskTest {
 
     @Test
     public void handlerReturnCorrectTask() throws IOException, InterruptedException {
-        Epic epic1 = inMemoryTaskManager.createEpic("er", "er");
-        inMemoryTaskManager.setEpicStartTime(epic1.getId());
-        inMemoryTaskManager.setEpicDuration(epic1.getId());
-        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.epicList);
+        Epic epic1 =  httpTaskServer.taskManager.createEpic("er", "er");
+        httpTaskServer.taskManager.setEpicStartTime(epic1.getId());
+        httpTaskServer.taskManager.setEpicDuration(epic1.getId());
+        httpTaskServer.taskManager.addTaskToList(epic1, httpTaskServer.taskManager.epicList);
 
-        Subtask subtask1 = inMemoryTaskManager.createSubtask("er", "er", 1);
+        Subtask subtask1 =  httpTaskServer.taskManager.createSubtask("er", "er", 1);
         subtask1.setDuration(15);
         subtask1.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
-        inMemoryTaskManager.addTaskToList(subtask1, inMemoryTaskManager.subtaskList);
+        httpTaskServer.taskManager.addTaskToList(subtask1,  httpTaskServer.taskManager.subtaskList);
 
-        Subtask subtask2 = inMemoryTaskManager.createSubtask("er", "er", 1);
+        Subtask subtask2 =  httpTaskServer.taskManager.createSubtask("er", "er", 1);
         subtask2.setDuration(15);
         subtask2.setStartTime(LocalDateTime.of(2025, 10, 20, 17, 0));
-        inMemoryTaskManager.addTaskToList(subtask2, inMemoryTaskManager.subtaskList);
+        httpTaskServer.taskManager.addTaskToList(subtask2,  httpTaskServer.taskManager.subtaskList);
 
         URI uri = URI.create("http://localhost:8080/subtasks/3");
 
@@ -134,8 +133,8 @@ class HandlerForSubtaskTest {
         String subtask = response.body();
         int code = response.statusCode();
 
-        assertEquals(gson.toJson(subtask2), subtask);
-        assertEquals(subtask2, gson.fromJson(response.body(), Subtask.class));
+        assertEquals( httpTaskServer.gson.toJson(subtask2), subtask);
+        assertEquals(subtask2,  httpTaskServer.gson.fromJson(response.body(), Subtask.class));
         assertEquals(201, code);
     }
 
@@ -143,17 +142,17 @@ class HandlerForSubtaskTest {
     @Test
     public void handlerDeleteCorrectTask() throws IOException, InterruptedException {
 
-        Epic epic = inMemoryTaskManager.createEpic("er", "er");
+        Epic epic = httpTaskServer.taskManager.createEpic("er", "er");
         epic.setDuration(15);
         epic.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
-        inMemoryTaskManager.addTaskToList(epic, inMemoryTaskManager.epicList);
+        httpTaskServer.taskManager.addTaskToList(epic,  httpTaskServer.taskManager.epicList);
 
-        Subtask task = inMemoryTaskManager.createSubtask("er", "er", 1);
+        Subtask task =  httpTaskServer.taskManager.createSubtask("er", "er", 1);
         task.setDuration(15);
         task.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
-        inMemoryTaskManager.addTaskToList(task, inMemoryTaskManager.subtaskList);
+        httpTaskServer.taskManager.addTaskToList(task,  httpTaskServer.taskManager.subtaskList);
 
-        assertTrue(inMemoryTaskManager.subtaskList.containsValue(task));
+        assertTrue( httpTaskServer.taskManager.subtaskList.containsValue(task));
 
         URI uri = URI.create("http://localhost:8080/subtasks/1");
 
@@ -171,6 +170,6 @@ class HandlerForSubtaskTest {
 
         HttpResponse<String> response = client.send(request, handler);
 
-        assertFalse(inMemoryTaskManager.taskList.containsValue(task));
+        assertFalse( httpTaskServer.taskManager.taskList.containsValue(task));
     }
 }

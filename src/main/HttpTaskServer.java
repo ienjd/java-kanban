@@ -6,76 +6,57 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpServer;
 import handlers.*;
+import handlers.*;
 import manager.InMemoryTaskManager;
-import tasks.Epic;
-import tasks.Subtask;
-import tasks.Task;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class HttpTaskServer {
+public class HttpTaskServer<T extends InMemoryTaskManager> {
 
     public static final int PORT = 8080;
 
-    public static InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
+    public final T taskManager;
 
-    public static HttpServer httpServer;
+    public HttpServer httpServer;
 
-    static {
-        try {
-            httpServer = HttpServer.create();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static Gson gson = new GsonBuilder()
+    public Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .create();
 
+    public HttpTaskServer(T taskManager){
+
+        this.taskManager = taskManager;
+
+        try {
+            this.httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        registerContexts();
+    }
+
+    private void registerContexts() {
+
+        httpServer.createContext("/tasks", new HandlerForTasks(taskManager));
+        httpServer.createContext("/epics", new HandlerForEpics(taskManager));
+        httpServer.createContext("/subtasks", new HandlerForSubtasks(taskManager));
+        httpServer.createContext("/history", new HandlerForHistoryView(taskManager));
+        httpServer.createContext("/prioritized", new HandlerForPrioritisedTasks(taskManager));
+    }
+
+    public void start() { httpServer.start(); }
+
+    public void stop() { httpServer.stop(0); }
+
     public static void main(String[] args) throws IOException {
 
-        httpServer.bind(new InetSocketAddress(PORT), 5);
-        httpServer.createContext("/prioritized", new HandlerForPrioritisedTasks());
-        httpServer.createContext("/tasks", new HandlerForTasks());
-        httpServer.createContext("/epics", new HandlerForEpics());
-        httpServer.createContext("/subtasks", new HandlerForSubtasks());
-        httpServer.createContext("/history", new HandlerForHistoryView());
-        httpServer.start();
-        System.out.println("взлет");
-
-        Task task = inMemoryTaskManager.createTask("er", "er");
-        task.setDuration(15);
-        task.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
-        inMemoryTaskManager.addTaskToList(task, inMemoryTaskManager.taskList);
-
-        Task task2 = inMemoryTaskManager.createTask("er", "er");
-        task2.setDuration(15);
-        task2.setStartTime(LocalDateTime.of(2025, 11, 20, 15, 0));
-        inMemoryTaskManager.addTaskToList(task2, inMemoryTaskManager.taskList);
-
-        Epic epic1 = inMemoryTaskManager.createEpic("er", "er");
-        inMemoryTaskManager.setEpicStartTime(epic1.getId());
-        inMemoryTaskManager.setEpicDuration(epic1.getId());
-        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.epicList);
-
-        Subtask subtask1 = inMemoryTaskManager.createSubtask("er", "er", 3);
-        subtask1.setDuration(15);
-        subtask1.setStartTime(LocalDateTime.of(2024, 8, 10, 15, 45));
-        inMemoryTaskManager.addTaskToList(subtask1, inMemoryTaskManager.subtaskList);
-
-        Subtask subtask2 = inMemoryTaskManager.createSubtask("er", "er", 3);
-        subtask2.setDuration(15);
-        subtask2.setStartTime(LocalDateTime.of(2024, 8, 10, 16, 15));
-        inMemoryTaskManager.addTaskToList(subtask2, inMemoryTaskManager.subtaskList);
-
-        inMemoryTaskManager.setEpicStartTime(epic1.getId());
-        inMemoryTaskManager.setEpicDuration(epic1.getId());
-
+        HttpTaskServer http = new HttpTaskServer(new InMemoryTaskManager());
+        http.start();
+        System.out.println("Server started on 8080");
     }
 }
 

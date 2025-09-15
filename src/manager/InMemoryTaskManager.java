@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class InMemoryTaskManager<T> implements TaskManager {
+public class InMemoryTaskManager implements TaskManager {
     public static int idCount = 0;
     public final HashMap<Integer, Task> taskList = new HashMap<>();
     public final HashMap<Integer, Epic> epicList = new HashMap<>();
@@ -28,14 +28,22 @@ public class InMemoryTaskManager<T> implements TaskManager {
         idCount++;
     }
 
+    public HashMap<Integer, Task> getTaskList() {
+        return taskList;
+    }
+
     @Override
     public void addTaskToList(Task task, HashMap hashMap) throws ManagerSaveException {
 
         if (task instanceof Subtask) {
-            Subtask subtask = (Subtask) task;
-            fillSubtasks(epicList.get(subtask.getEpicId()), subtask);
-            setEpicStartTime(subtask.getEpicId());
-            setEpicDuration(subtask.getEpicId());
+            Subtask st = (Subtask) task;
+            Epic epic = epicList.get(st.getEpicId());
+            if (epic == null) {
+                throw new IllegalStateException("Epic " + st.getEpicId() + " not found for subtask " + st.getId());
+            }
+            fillSubtasks(epic, st);
+            setEpicStartTime(st.getEpicId());
+            setEpicDuration(st.getEpicId());
         }
 
         if (!isOverLapping(task)) {
@@ -64,8 +72,11 @@ public class InMemoryTaskManager<T> implements TaskManager {
     @Override
     public Subtask createSubtask(String title, String description, int epicId) {
         addIdCount();
-        Subtask subtask = new Subtask(title, description, getIdCount(), Status.NEW, epicId = epicId == getIdCount() ?
-                0 : epicId);
+        int newId = getIdCount();
+        if (!epicList.containsKey(epicId)) {
+            throw new IllegalArgumentException("Epic " + epicId + " not found");
+        }
+        Subtask subtask = new Subtask(title, description, newId, Status.NEW, epicId);
         return subtask;
     }
 
@@ -91,12 +102,14 @@ public class InMemoryTaskManager<T> implements TaskManager {
         } else if (epicList.containsKey(id)) {
             forgetTask(id);
             deleteEpicSubtasks(id);
+            epicList.get(id).clearSubtasksList();
             epicList.remove(id);
         } else if (subtaskList.containsKey(id)) {
             int epicIdRemovedSubtask = subtaskList.get(id).getEpicId();
+            epicList.get(epicIdRemovedSubtask).deleteSubtasks(id);
             forgetTask(id);
             subtaskList.remove(id);
-            updateEpic(epicList.get(epicIdRemovedSubtask));
+            updateEpicStatus(epicList.get(epicIdRemovedSubtask));
         } else {
             System.out.println("Данного элемента уже нет в списке");
         }
@@ -143,10 +156,16 @@ public class InMemoryTaskManager<T> implements TaskManager {
             case IN_PROGRESS, DONE -> newSubtask.setSubtaskStatus(Status.DONE);
         }
         subtaskList.put(newSubtask.getId(), newSubtask);
-        updateEpic(epicList.get(newSubtask.getEpicId()));
+        fillSubtasks(epicList.get(newSubtask.getEpicId()), newSubtask);
+        setEpicDuration(newSubtask.getEpicId());
+
+        setEpicStartTime(newSubtask.getEpicId());
+        updateEpicStatus(epicList.get(newSubtask.getEpicId()));
     }
 
     public void fillSubtasks(Epic epic, Subtask subtask) {
+        Objects.requireNonNull(epic, "epic is null");
+        Objects.requireNonNull(subtask, "subtask is null");
         epic.setSubtasks(subtask);
     }
 

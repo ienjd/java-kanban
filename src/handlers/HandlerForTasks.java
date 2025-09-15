@@ -5,12 +5,17 @@ import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.Arrays;
+import manager.InMemoryTaskManager;
 import tasks.Task;
-import static main.HttpTaskServer.inMemoryTaskManager;
 
-public class HandlerForTasks extends BaseHttpHandler implements HttpHandler {
+public class HandlerForTasks<T extends InMemoryTaskManager> extends BaseHttpHandler implements HttpHandler {
+
+    private final T taskManager;
+
+    public HandlerForTasks(T taskManager) {
+        this.taskManager = taskManager;
+    }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -19,16 +24,15 @@ public class HandlerForTasks extends BaseHttpHandler implements HttpHandler {
 
         String reqMethod = exchange.getRequestMethod();
 
-
         if (reqMethod.equals("GET")) {
 
             if (Arrays.stream(splitReq).toList().getLast().equals("tasks")) {
-                sendText(exchange, gson.toJson(inMemoryTaskManager.taskList.values()), 200);
+                sendText(exchange, gson.toJson(taskManager.taskList.values()), 200);
                 return;
             }
 
-            if (inMemoryTaskManager.taskList.containsKey(Integer.parseInt(Arrays.stream(splitReq).toList().getLast()))) {
-                sendText(exchange, gson.toJson(inMemoryTaskManager.findTask(Integer.parseInt(Arrays.stream(splitReq)
+            if (taskManager.taskList.containsKey(Integer.parseInt(Arrays.stream(splitReq).toList().getLast()))) {
+                sendText(exchange, gson.toJson(taskManager.findTask(Integer.parseInt(Arrays.stream(splitReq)
                         .toList().getLast()))), 201);
             } else {
                 sendNotFound(exchange, "Задачи с таким id нет в списке!", 404);
@@ -40,20 +44,20 @@ public class HandlerForTasks extends BaseHttpHandler implements HttpHandler {
             String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             Task newTask = gson.fromJson(body, Task.class);
 
-            if (inMemoryTaskManager.taskList.containsKey(newTask.getId())) {
-                inMemoryTaskManager.updateTask(inMemoryTaskManager.findTask(newTask.getId()));
+            if (taskManager.taskList.containsKey(newTask.getId())) {
+                taskManager.updateTask(taskManager.findTask(newTask.getId()));
                 sendText(exchange, gson.toJson(newTask), 201);
-            } else if (!inMemoryTaskManager.taskList.containsKey(newTask.getId())) {
-                if (inMemoryTaskManager.isOverLapping(newTask)) {
+            } else if (!taskManager.taskList.containsKey(newTask.getId())) {
+                if (taskManager.isOverLapping(newTask)) {
                     sendNotFound(exchange, "Добавляемая задача пересекается по времени выполнения с уже существующими", 406);
                 } else {
-                    inMemoryTaskManager.addTaskToList(newTask, inMemoryTaskManager.taskList);
+                    taskManager.addTaskToList(newTask, taskManager.taskList);
                     sendText(exchange, gson.toJson(newTask), 201);
                 }
             }
         } else if (reqMethod.equals("DELETE")) {
 
-            inMemoryTaskManager.deleteTaskFromList(Integer.parseInt(Arrays.stream(splitReq).toList().getLast()));
+            taskManager.deleteTaskFromList(Integer.parseInt(Arrays.stream(splitReq).toList().getLast()));
 
             sendText(exchange, "Задача удалена", 200);
         }

@@ -1,48 +1,35 @@
-import com.sun.net.httpserver.HttpServer;
-import handlers.HandlerForEpics;
+import main.HttpTaskServer;
 import manager.InMemoryTaskManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
-
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
-
-import static main.HttpTaskServer.*;
-import static main.HttpTaskServer.gson;
-import static main.HttpTaskServer.httpServer;
-import static main.HttpTaskServer.inMemoryTaskManager;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HandlerForEpicsTest {
 
-    @BeforeEach
+    HttpTaskServer<InMemoryTaskManager> httpTaskServer = new HttpTaskServer<>(new InMemoryTaskManager());
+
+@BeforeEach
     public void startServer() throws IOException {
-        httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
-
-        httpServer.createContext("/epics", new HandlerForEpics());
-
-        httpServer.start();
-
-        inMemoryTaskManager.taskList.clear();
-        inMemoryTaskManager.subtaskList.clear();
-        inMemoryTaskManager.epicList.clear();
-        InMemoryTaskManager.idCount = 0;
+        httpTaskServer.httpServer.start();
     }
+
 
     @AfterEach
     public void stopServer(){
-        httpServer.stop(0);
+        httpTaskServer.taskManager.idCount = 0;
+        httpTaskServer.stop();
     }
 
     @Test
-    public void handlerReturnCode200() throws IOException, InterruptedException {
+    public void handlerReturnCode200AndEpicList() throws IOException, InterruptedException {
 
         URI uri = URI.create("http://localhost:8080/epics");
 
@@ -61,6 +48,8 @@ class HandlerForEpicsTest {
         HttpResponse<String> response = client.send(request, handler);
 
         int code = response.statusCode();
+        System.out.println(response.body());
+        System.out.println(httpTaskServer.taskManager.epicList);
 
         assertEquals(200, code);
     }
@@ -98,15 +87,15 @@ class HandlerForEpicsTest {
     @Test
     public void handlerReturnCorrectEpic() throws IOException, InterruptedException {
 
-        Epic task = inMemoryTaskManager.createEpic("er", "er");
+        Epic task = httpTaskServer.taskManager.createEpic("er", "er");
         task.setDuration(15);
         task.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
-        inMemoryTaskManager.addTaskToList(task, inMemoryTaskManager.epicList);
+        httpTaskServer.taskManager.addTaskToList(task, httpTaskServer.taskManager.epicList);
 
-        Epic task2 = inMemoryTaskManager.createEpic("er", "er");
+        Epic task2 = httpTaskServer.taskManager.createEpic("er", "er");
         task2.setDuration(15);
         task2.setStartTime(LocalDateTime.of(2025, 10, 20, 17, 0));
-        inMemoryTaskManager.addTaskToList(task2, inMemoryTaskManager.epicList);
+        httpTaskServer.taskManager.addTaskToList(task2, httpTaskServer.taskManager.epicList);
 
         URI uri = URI.create("http://localhost:8080/epics/1");
 
@@ -126,8 +115,11 @@ class HandlerForEpicsTest {
         String task1 = response.body();
         int code = response.statusCode();
 
-        assertEquals(gson.toJson(task), task1);
-        assertEquals(task, gson.fromJson(response.body(), Epic.class));
+        System.out.println(httpTaskServer.gson.toJson(task));
+        System.out.println(task1);
+
+        assertEquals(httpTaskServer.gson.toJson(task), task1);
+        assertEquals(task, httpTaskServer.gson.fromJson(response.body(), Epic.class));
         assertEquals(201, code);
     }
 
@@ -135,12 +127,12 @@ class HandlerForEpicsTest {
     @Test
     public void handlerDeleteCorrectTask() throws IOException, InterruptedException {
 
-        Epic task = inMemoryTaskManager.createEpic("er", "er");
+        Epic task = httpTaskServer.taskManager.createEpic("er", "er");
         task.setDuration(15);
         task.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
-        inMemoryTaskManager.addTaskToList(task, inMemoryTaskManager.epicList);
+        httpTaskServer.taskManager.addTaskToList(task, httpTaskServer.taskManager.epicList);
 
-        assertTrue(inMemoryTaskManager.epicList.containsValue(task));
+        assertTrue(httpTaskServer.taskManager.epicList.containsValue(task));
 
         URI uri = URI.create("http://localhost:8080/epics/1");
 
@@ -158,6 +150,6 @@ class HandlerForEpicsTest {
 
         HttpResponse<String> response = client.send(request, handler);
 
-        assertFalse(inMemoryTaskManager.epicList.containsValue(task));
+        assertFalse(httpTaskServer.taskManager.epicList.containsValue(task));
     }
 }

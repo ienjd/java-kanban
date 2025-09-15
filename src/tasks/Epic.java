@@ -2,13 +2,13 @@ package tasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
     private LocalDateTime endTime;
-    private final List<Subtask> subtasks = new ArrayList<>();
+    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();;
 
     public Epic(String title, String description, int id, Status status) {
         super(title, description, id, status);
@@ -20,13 +20,21 @@ public class Epic extends Task {
         subtasks.clear();
     }
 
+    public void deleteSubtasks(int id) {
+        subtasks.remove(id);
+    }
+
+
     public void setSubtasks(Subtask subtask) {
-        subtasks.add(subtask);
+        if (subtask == null) {
+            throw new IllegalArgumentException("subtask is null");
+        }
+        subtasks.put(subtask.getId(), subtask);
     }
 
 
     public List<Subtask> getSubtasks() {
-        return subtasks;
+        return ((List<Subtask>) subtasks.values());
     }
 
     @Override
