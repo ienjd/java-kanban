@@ -78,5 +78,6 @@ class HandlerForHistoryViewTest {
         assertTrue(httpTaskServer.taskManager.getHistory().size() == 4);
         assertEquals(httpTaskServer.taskManager.getHistory().getFirst(), subtask1);
         assertEquals(httpTaskServer.taskManager.getHistory().getLast(), task);
+        assertEquals(httpTaskServer.taskManager.getHistory().get(2), epic1);
     }
 }
