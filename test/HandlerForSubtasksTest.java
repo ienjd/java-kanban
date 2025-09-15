@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Subtask;
+import tasks.Task;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -98,22 +100,18 @@ class HandlerForSubtaskTest {
 
     @Test
     public void handlerReturnCorrectTask() throws IOException, InterruptedException {
-        Epic epic1 =  httpTaskServer.taskManager.createEpic("er", "er");
-        httpTaskServer.taskManager.setEpicStartTime(epic1.getId());
-        httpTaskServer.taskManager.setEpicDuration(epic1.getId());
-        httpTaskServer.taskManager.addTaskToList(epic1, httpTaskServer.taskManager.epicList);
 
-        Subtask subtask1 =  httpTaskServer.taskManager.createSubtask("er", "er", 1);
-        subtask1.setDuration(15);
-        subtask1.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
-        httpTaskServer.taskManager.addTaskToList(subtask1,  httpTaskServer.taskManager.subtaskList);
+        Task task = httpTaskServer.taskManager.createTask("er", "er");
+        task.setDuration(15);
+        task.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
+        httpTaskServer.taskManager.addTaskToList(task, httpTaskServer.taskManager.taskList);
 
-        Subtask subtask2 =  httpTaskServer.taskManager.createSubtask("er", "er", 1);
-        subtask2.setDuration(15);
-        subtask2.setStartTime(LocalDateTime.of(2025, 10, 20, 17, 0));
-        httpTaskServer.taskManager.addTaskToList(subtask2,  httpTaskServer.taskManager.subtaskList);
+        Task task2 = httpTaskServer.taskManager.createTask("er", "er");
+        task2.setDuration(15);
+        task2.setStartTime(LocalDateTime.of(2025, 10, 20, 17, 0));
+        httpTaskServer.taskManager.addTaskToList(task2, httpTaskServer.taskManager.taskList);
 
-        URI uri = URI.create("http://localhost:8080/subtasks/3");
+        URI uri = URI.create("http://localhost:8080/tasks/1");
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -128,12 +126,11 @@ class HandlerForSubtaskTest {
 
         HttpResponse<String> response = client.send(request, handler);
 
-        String subtask = response.body();
+        String task1 = response.body();
         int code = response.statusCode();
 
-        assertNotNull(epic1);
-        assertEquals(httpTaskServer.gson.toJson(subtask2), subtask);
-        assertEquals(subtask2,  httpTaskServer.gson.fromJson(response.body(), Subtask.class));
+        assertEquals(httpTaskServer.gson.toJson(task), task1);
+        assertEquals(task, httpTaskServer.gson.fromJson(response.body(), Task.class));
         assertEquals(201, code);
     }
 
