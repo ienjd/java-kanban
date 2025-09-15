@@ -42,7 +42,6 @@ public class HandlerForSubtasks<T extends InMemoryTaskManager> extends BaseHttpH
             InputStream is = exchange.getRequestBody();
             String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             Subtask newTask = gson.fromJson(body, Subtask.class);
-            System.out.println(newTask);
 
             if (taskManager.subtaskList.containsKey(newTask.getId())) {
                 taskManager.updateSubtask(taskManager.findTask(newTask.getId()));
