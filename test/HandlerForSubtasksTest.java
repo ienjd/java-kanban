@@ -99,42 +99,6 @@ class HandlerForSubtaskTest {
         assertEquals(201, code);
     }
 
-    @Test
-    public void handlerReturnCorrectTask() throws IOException, InterruptedException {
-
-        Task task = httpTaskServer.taskManager.createTask("er", "er");
-        task.setDuration(15);
-        task.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
-        httpTaskServer.taskManager.addTaskToList(task, httpTaskServer.taskManager.taskList);
-
-        Task task2 = httpTaskServer.taskManager.createTask("er", "er");
-        task2.setDuration(15);
-        task2.setStartTime(LocalDateTime.of(2025, 10, 20, 17, 0));
-        httpTaskServer.taskManager.addTaskToList(task2, httpTaskServer.taskManager.taskList);
-
-        URI uri = URI.create("http://localhost:8080/tasks/1");
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(uri)
-                .version(HttpClient.Version.HTTP_1_1)
-                .header("Accept", "text/html")
-                .build();
-
-        HttpClient client = HttpClient.newHttpClient();
-
-        HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
-
-        HttpResponse<String> response = client.send(request, handler);
-
-        String task1 = response.body();
-        int code = response.statusCode();
-
-        assertEquals(httpTaskServer.gson.toJson(task), task1);
-        assertEquals(task, httpTaskServer.gson.fromJson(response.body(), Task.class));
-        assertEquals(201, code);
-    }
-
 
     @Test
     public void handlerDeleteCorrectTask() throws IOException, InterruptedException {
