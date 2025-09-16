@@ -21,7 +21,6 @@ class HandlerForEpicsTest {
         httpTaskServer.httpServer.start();
     }
 
-
     @AfterEach
     public void stopServer(){
         httpTaskServer.taskManager.idCount = 0;
@@ -114,9 +113,6 @@ class HandlerForEpicsTest {
 
         String task1 = response.body();
         int code = response.statusCode();
-
-        System.out.println(httpTaskServer.gson.toJson(task));
-        System.out.println(task1);
 
         assertEquals(httpTaskServer.gson.toJson(task), task1);
         assertEquals(task, httpTaskServer.gson.fromJson(response.body(), Epic.class));
