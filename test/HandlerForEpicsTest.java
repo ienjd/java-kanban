@@ -47,8 +47,6 @@ class HandlerForEpicsTest {
         HttpResponse<String> response = client.send(request, handler);
 
         int code = response.statusCode();
-        System.out.println(response.body());
-        System.out.println(httpTaskServer.taskManager.epicList);
 
         assertEquals(200, code);
     }
