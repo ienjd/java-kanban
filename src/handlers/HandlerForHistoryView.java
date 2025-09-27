@@ -5,7 +5,7 @@ import com.sun.net.httpserver.HttpHandler;
 import manager.InMemoryTaskManager;
 import java.io.IOException;
 
-public class HandlerForHistoryView<T extends InMemoryTaskManager> extends BaseHttpHandler implements HttpHandler {
+public class HandlerForHistoryView<T extends InMemoryTaskManager> extends BaseHttpHandler {
 
     private final T taskManager;
 

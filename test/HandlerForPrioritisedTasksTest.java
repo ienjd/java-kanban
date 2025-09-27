@@ -17,7 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HandlerForPrioritisedTasksTest {
 
-    HttpTaskServer<InMemoryTaskManager> httpTaskServer = new HttpTaskServer<>(new InMemoryTaskManager());
+    InMemoryTaskManager manager = new InMemoryTaskManager();
+    HttpTaskServer<InMemoryTaskManager> httpTaskServer = new HttpTaskServer<>(manager);
 
     @BeforeEach
     public void startServer() throws IOException {
@@ -26,32 +27,32 @@ class HandlerForPrioritisedTasksTest {
 
     @AfterEach
     public void stopServer() {
-        httpTaskServer.taskManager.idCount = 0;
+        manager.setIdCount(0);
         httpTaskServer.stop();
     }
 
     @Test
     public void handlerReturnPrioritizedList() throws IOException, InterruptedException {
 
-        Task task = httpTaskServer.taskManager.createTask("er", "er");
+        Task task = manager.createTask("er", "er");
         task.setDuration(15);
         task.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
-        httpTaskServer.taskManager.addTaskToList(task, httpTaskServer.taskManager.taskList);
+        manager.addTaskToList(task, manager.getTaskList());
 
-        Task task2 = httpTaskServer.taskManager.createTask("er", "er");
+        Task task2 = manager.createTask("er", "er");
         task2.setDuration(15);
         task2.setStartTime(LocalDateTime.of(2025, 11, 20, 15, 0));
-        httpTaskServer.taskManager.addTaskToList(task2, httpTaskServer.taskManager.taskList);
+        manager.addTaskToList(task2, manager.getTaskList());
 
-        Epic epic1 = httpTaskServer.taskManager.createEpic("er", "er");
-        httpTaskServer.taskManager.setEpicStartTime(epic1.getId());
-        httpTaskServer.taskManager.setEpicDuration(epic1.getId());
-        httpTaskServer.taskManager.addTaskToList(epic1, httpTaskServer.taskManager.epicList);
+        Epic epic1 = manager.createEpic("er", "er");
+        manager.setEpicStartTime(epic1.getId());
+        manager.setEpicDuration(epic1.getId());
+        manager.addTaskToList(epic1, manager.getEpicList());
 
-        Subtask subtask1 = httpTaskServer.taskManager.createSubtask("er", "er", 3);
+        Subtask subtask1 = manager.createSubtask("er", "er", 3);
         subtask1.setDuration(15);
         subtask1.setStartTime(LocalDateTime.of(2024, 8, 10, 15, 45));
-        httpTaskServer.taskManager.addTaskToList(subtask1, httpTaskServer.taskManager.subtaskList);
+        manager.addTaskToList(subtask1, manager.getSubtaskList());
 
 
         URI uri = URI.create("http://localhost:8080/prioritized");
@@ -73,9 +74,9 @@ class HandlerForPrioritisedTasksTest {
         int code = response.statusCode();
 
         assertEquals(200, code);
-        assertTrue(httpTaskServer.taskManager.getPrioritizedTasks().size() == 3);
-        assertEquals(httpTaskServer.taskManager.getPrioritizedTasks().getFirst(), epic1);
-        assertEquals(httpTaskServer.taskManager.getPrioritizedTasks().getLast(), task2);
+        assertTrue(manager.getPrioritizedTasks().size() == 3);
+        assertEquals(manager.getPrioritizedTasks().getFirst(), epic1);
+        assertEquals(manager.getPrioritizedTasks().getLast(), task2);
 
         LocalDateTime earlierDate = epic1.getStartTime();
         LocalDateTime laterDate = task2.getStartTime();

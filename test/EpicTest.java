@@ -13,10 +13,8 @@ public class EpicTest {
 
     @BeforeEach
     public void cleanAll() {
-        inMemoryTaskManager.subtaskList.clear();
-        inMemoryTaskManager.taskList.clear();
-        inMemoryTaskManager.epicList.clear();
-        inMemoryTaskManager.idCount = 0;
+        inMemoryTaskManager.deleteAllTasks();
+        inMemoryTaskManager.setIdCount(0);
     }
 
     @Test
@@ -33,26 +31,24 @@ public class EpicTest {
             throws ManagerSaveException {
 
         Epic epic1 = inMemoryTaskManager.createEpic("epic1", "epic1");
-        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.epicList);
+        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.getEpicList());
 
         Subtask subtask1 = inMemoryTaskManager.createSubtask("subtask1", "subtask1", 1);
         subtask1.setDuration(15);
         subtask1.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 1));
-        inMemoryTaskManager.addTaskToList(subtask1, inMemoryTaskManager.subtaskList);
+        inMemoryTaskManager.addTaskToList(subtask1, inMemoryTaskManager.getSubtaskList());
 
 
         Subtask subtask2 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 1);
         subtask2.setDuration(15);
         subtask2.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 20));
-        inMemoryTaskManager.addTaskToList(subtask2, inMemoryTaskManager.subtaskList);
+        inMemoryTaskManager.addTaskToList(subtask2, inMemoryTaskManager.getSubtaskList());
 
 
         Subtask subtask3 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 1);
         subtask3.setDuration(15);
         subtask3.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 20));
-        inMemoryTaskManager.addTaskToList(subtask3, inMemoryTaskManager.subtaskList);
-
-
+        inMemoryTaskManager.addTaskToList(subtask3, inMemoryTaskManager.getSubtaskList());
 
 
         // проверяется равенство продолжительности эпика сумме продолжительностей его эпиков
@@ -67,18 +63,18 @@ public class EpicTest {
     public void prioretizedTaskListNotContainsTaskWithIntersectsTimeLapses() throws ManagerSaveException {
 
         Epic epic1 = inMemoryTaskManager.createEpic("epic1", "epic1");
-        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.epicList);
+        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.getEpicList());
 
         Subtask subtask2 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 1);
         subtask2.setDuration(15);
-        subtask2.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 20));
-        inMemoryTaskManager.addTaskToList(subtask2, inMemoryTaskManager.subtaskList);
+        subtask2.setStartTime(LocalDateTime.of(2001, 1, 1,  1, 20));
+        inMemoryTaskManager.addTaskToList(subtask2, inMemoryTaskManager.getSubtaskList());
 
 
         Subtask subtask3 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 1);
         subtask3.setDuration(15);
-        subtask3.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 20));
-        inMemoryTaskManager.addTaskToList(subtask3, inMemoryTaskManager.subtaskList);
+        subtask3.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 40));
+        inMemoryTaskManager.addTaskToList(subtask3, inMemoryTaskManager.getSubtaskList());
 
 
         Assertions.assertFalse(inMemoryTaskManager.getPrioritizedTasks().contains(subtask3));
@@ -90,19 +86,19 @@ public class EpicTest {
         Epic epic1 = inMemoryTaskManager.createEpic("epic1", "epic1");
         inMemoryTaskManager.setEpicDuration(1);
         inMemoryTaskManager.setEpicStartTime(1);
-        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.epicList);
+        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.getEpicList());
 
         Subtask subtask1 = inMemoryTaskManager.createSubtask("subtask1", "subtask1", 1);
         subtask1.setStatus(Status.IN_PROGRESS);
         subtask1.setDuration(15);
         subtask1.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 20));
-        inMemoryTaskManager.addTaskToList(subtask1, inMemoryTaskManager.subtaskList);
+        inMemoryTaskManager.addTaskToList(subtask1, inMemoryTaskManager.getSubtaskList());
 
         Subtask subtask2 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 1);
         subtask2.setStatus(Status.IN_PROGRESS);
         subtask2.setDuration(15);
-        subtask2.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 20));
-        inMemoryTaskManager.addTaskToList(subtask2, inMemoryTaskManager.subtaskList);
+        subtask2.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 40));
+        inMemoryTaskManager.addTaskToList(subtask2, inMemoryTaskManager.getSubtaskList());
 
         inMemoryTaskManager.updateEpicStatus(epic1);
 
@@ -116,20 +112,20 @@ public class EpicTest {
         Epic epic1 = inMemoryTaskManager.createEpic("epic1", "epic1");
         inMemoryTaskManager.setEpicDuration(1);
         inMemoryTaskManager.setEpicStartTime(1);
-        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.epicList);
+        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.getEpicList());
 
         Subtask subtask1 = inMemoryTaskManager.createSubtask("subtask1", "subtask1", 1);
         subtask1.setStatus(Status.DONE);
         subtask1.setDuration(15);
         subtask1.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 20));
-        inMemoryTaskManager.addTaskToList(subtask1, inMemoryTaskManager.subtaskList);
+        inMemoryTaskManager.addTaskToList(subtask1, inMemoryTaskManager.getSubtaskList());
 
 
         Subtask subtask2 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 1);
         subtask2.setStatus(Status.DONE);
         subtask2.setDuration(15);
         subtask2.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 45));
-        inMemoryTaskManager.addTaskToList(subtask2, inMemoryTaskManager.subtaskList);
+        inMemoryTaskManager.addTaskToList(subtask2, inMemoryTaskManager.getSubtaskList());
 
         inMemoryTaskManager.updateEpicStatus(epic1);
 
@@ -143,20 +139,20 @@ public class EpicTest {
         Epic epic1 = inMemoryTaskManager.createEpic("epic1", "epic1");
         inMemoryTaskManager.setEpicDuration(1);
         inMemoryTaskManager.setEpicStartTime(1);
-        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.epicList);
+        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.getEpicList());
 
         Subtask subtask1 = inMemoryTaskManager.createSubtask("subtask1", "subtask1", 1);
         subtask1.setStatus(Status.DONE);
         subtask1.setDuration(15);
         subtask1.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 20));
-        inMemoryTaskManager.addTaskToList(subtask1, inMemoryTaskManager.subtaskList);
+        inMemoryTaskManager.addTaskToList(subtask1, inMemoryTaskManager.getSubtaskList());
 
 
         Subtask subtask2 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 1);
         subtask2.setStatus(Status.NEW);
         subtask2.setDuration(15);
         subtask2.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 50));
-        inMemoryTaskManager.addTaskToList(subtask2, inMemoryTaskManager.subtaskList);
+        inMemoryTaskManager.addTaskToList(subtask2, inMemoryTaskManager.getSubtaskList());
 
         inMemoryTaskManager.updateEpicStatus(epic1);
 
@@ -170,20 +166,20 @@ public class EpicTest {
         inMemoryTaskManager.setEpicDuration(1);
         inMemoryTaskManager.setEpicStartTime(1);
 
-        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.epicList);
+        inMemoryTaskManager.addTaskToList(epic1, inMemoryTaskManager.getEpicList());
 
         Subtask subtask1 = inMemoryTaskManager.createSubtask("subtask1", "subtask1", 1);
         subtask1.setStatus(Status.NEW);
         subtask1.setDuration(15);
         subtask1.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 20));
-        inMemoryTaskManager.addTaskToList(subtask1, inMemoryTaskManager.subtaskList);
+        inMemoryTaskManager.addTaskToList(subtask1, inMemoryTaskManager.getSubtaskList());
 
 
         Subtask subtask2 = inMemoryTaskManager.createSubtask("subtask2", "subtask2", 1);
         subtask2.setStatus(Status.NEW);
         subtask2.setDuration(15);
-        subtask2.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 20));
-        inMemoryTaskManager.addTaskToList(subtask2, inMemoryTaskManager.subtaskList);
+        subtask2.setStartTime(LocalDateTime.of(2001, 1, 1, 1, 40));
+        inMemoryTaskManager.addTaskToList(subtask2, inMemoryTaskManager.getSubtaskList());
 
         inMemoryTaskManager.updateEpicStatus(epic1);
 

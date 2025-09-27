@@ -14,10 +14,8 @@ public class FileBackedTaskManagerTest extends TaskManagerTest {
 
     @BeforeEach
     public void cleanAll() {
-        fileBackedTaskManager1.subtaskList.clear();
-        fileBackedTaskManager1.taskList.clear();
-        fileBackedTaskManager1.epicList.clear();
-        fileBackedTaskManager1.idCount = 0;
+        fileBackedTaskManager1.deleteAllTasks();
+        fileBackedTaskManager1.setIdCount(0);
         fileBackedTaskManager1.file = null;
     }
 
@@ -44,7 +42,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest {
         Epic epic1 = fileBackedTaskManager1.createEpic("ER", "er");
         fileBackedTaskManager1.setEpicDuration(1);
         fileBackedTaskManager1.setEpicStartTime(1);
-        fileBackedTaskManager1.addTaskToList(epic1, fileBackedTaskManager1.epicList);
+        fileBackedTaskManager1.addTaskToList(epic1, fileBackedTaskManager1.getEpicList());
         fileBackedTaskManager1.save();
 
 
@@ -58,7 +56,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest {
         Epic epic1 = fileBackedTaskManager1.createEpic("ER", "er");
         fileBackedTaskManager1.setEpicDuration(1);
         fileBackedTaskManager1.setEpicStartTime(1);
-        fileBackedTaskManager1.addTaskToList(epic1, fileBackedTaskManager1.epicList);
+        fileBackedTaskManager1.addTaskToList(epic1, fileBackedTaskManager1.getEpicList());
         fileBackedTaskManager1.findTask(epic1.getId());
 
         Assertions.assertTrue(fileBackedTaskManager1.getHistory().contains(epic1));
@@ -70,7 +68,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest {
         Epic epic1 = fileBackedTaskManager1.createEpic("ER", "er");
         fileBackedTaskManager1.setEpicDuration(1);
         fileBackedTaskManager1.setEpicStartTime(1);
-        fileBackedTaskManager1.addTaskToList(epic1, fileBackedTaskManager1.epicList);
+        fileBackedTaskManager1.addTaskToList(epic1, fileBackedTaskManager1.getEpicList());
         fileBackedTaskManager1.findTask(epic1.getId());
         fileBackedTaskManager1.deleteTaskFromList(epic1.getId());
 

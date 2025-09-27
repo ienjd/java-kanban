@@ -1,7 +1,9 @@
 package ui;
 
+import manager.FileBackedTaskManager;
 import manager.InMemoryTaskManager;
 import tasks.Epic;
+import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
 import java.io.IOException;
@@ -13,7 +15,7 @@ public class MainUI {
 
     public static void main(String[] args) throws IOException {
 
-        InMemoryTaskManager fileBackedTaskManager = new InMemoryTaskManager();
+        FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager();
 
         while (true) {
             System.out.println("Добро пожаловать!");
@@ -27,17 +29,17 @@ public class MainUI {
 
                         case "task" -> {
                             Task newTask = fileBackedTaskManager.createTask(getTitle(), getDescription());
-                            fileBackedTaskManager.addTaskToList(newTask, fileBackedTaskManager.taskList);
+                            fileBackedTaskManager.addTaskToList(newTask, fileBackedTaskManager.getTaskList());
                         }
 
                         case "epic" -> {
                             Epic newEpic = fileBackedTaskManager.createEpic(getTitle(), getDescription());
-                            fileBackedTaskManager.addTaskToList(newEpic, fileBackedTaskManager.epicList);
+                            fileBackedTaskManager.addTaskToList(newEpic, fileBackedTaskManager.getEpicList());
                             System.out.println("Введите количество подзадач данного эпика");
                             int quantitySubtasks = Integer.parseInt(getUserInput());
                             for (int i = 0; i < quantitySubtasks; i++) {
                                 fileBackedTaskManager.addTaskToList((fileBackedTaskManager.createSubtask(getTitle(), getDescription(),
-                                        newEpic.getId())), fileBackedTaskManager.subtaskList);
+                                        newEpic.getId())), fileBackedTaskManager.getSubtaskList());
                             }
                             fileBackedTaskManager.updateEpic(newEpic);
                         }
@@ -48,8 +50,8 @@ public class MainUI {
                             int epicId;
                             Subtask newSubtask = fileBackedTaskManager.createSubtask(getTitle(), getDescription(),
                                     epicId = Integer.parseInt(getUserInput()));
-                            fileBackedTaskManager.addTaskToList(newSubtask, fileBackedTaskManager.subtaskList);
-                            fileBackedTaskManager.updateEpic((Epic) fileBackedTaskManager.epicList.get(epicId));
+                            fileBackedTaskManager.addTaskToList(newSubtask, fileBackedTaskManager.getSubtaskList());
+                            fileBackedTaskManager.updateEpic((Epic) fileBackedTaskManager.getEpicList().get(epicId));
                         }
 
                         default ->
@@ -61,9 +63,9 @@ public class MainUI {
                     System.out.println("Вы действительно хотите очистить список задач? да / нет");
                     boolean userAnswer = getUserInput().trim().toLowerCase().equals("да");
                     if (userAnswer) {
-                        fileBackedTaskManager.taskList.clear();
-                        fileBackedTaskManager.epicList.clear();
-                        fileBackedTaskManager.subtaskList.clear();
+                        fileBackedTaskManager.getTaskList().clear();
+                        fileBackedTaskManager.getEpicList().clear();
+                        fileBackedTaskManager.getSubtaskList().clear();
                         System.out.println("Список задач очищен");
                     } else {
                         System.out.println("Здорово, что вы передумали!");
@@ -88,10 +90,10 @@ public class MainUI {
                 case "7" -> {
                     System.out.println("Введите номер задачи/подзадачи");
                     int userCommand = Integer.parseInt(getUserInput());
-                    if (fileBackedTaskManager.taskList.containsKey(userCommand)) {
-                        fileBackedTaskManager.updateTask((Task) fileBackedTaskManager.taskList.get(userCommand));
-                    } else if (fileBackedTaskManager.subtaskList.containsKey(userCommand)) {
-                        fileBackedTaskManager.updateSubtask((Subtask) fileBackedTaskManager.subtaskList.get(userCommand));
+                    if (fileBackedTaskManager.getTaskList().containsKey(userCommand)) {
+                        fileBackedTaskManager.updateTask((Task) fileBackedTaskManager.getTaskList().get(userCommand), Status.valueOf(getUserInput()));
+                    } else if (fileBackedTaskManager.getSubtaskList().containsKey(userCommand)) {
+                        fileBackedTaskManager.updateSubtask((Subtask) fileBackedTaskManager.getSubtaskList().get(userCommand), Status.valueOf(getUserInput()));
                     }
                 }
 
@@ -124,9 +126,9 @@ public class MainUI {
 
     public static <T extends Task> ArrayList<T> printItems(InMemoryTaskManager taskMaster) {
         ArrayList<T> allItems = new ArrayList<>();
-        taskMaster.taskList.values().forEach(task -> allItems.add((T) task));
-        taskMaster.epicList.values().forEach(epic -> allItems.add((T) epic));
-        taskMaster.subtaskList.values().forEach(subtask -> allItems.add((T) subtask));
+        taskMaster.getTaskList().values().forEach(task -> allItems.add((T) task));
+        taskMaster.getEpicList().values().forEach(epic -> allItems.add((T) epic));
+        taskMaster.getSubtaskList().values().forEach(subtask -> allItems.add((T) subtask));
         return allItems;
     }
 

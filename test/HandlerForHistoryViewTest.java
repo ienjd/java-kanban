@@ -15,7 +15,9 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HandlerForHistoryViewTest {
-    HttpTaskServer<InMemoryTaskManager> httpTaskServer = new HttpTaskServer<>(new InMemoryTaskManager());
+
+    InMemoryTaskManager manager = new InMemoryTaskManager();
+    HttpTaskServer<InMemoryTaskManager> httpTaskServer = new HttpTaskServer<>(manager);
 
     @BeforeEach
     public void startServer() throws IOException {
@@ -24,24 +26,24 @@ class HandlerForHistoryViewTest {
 
     @AfterEach
     public void stopServer() {
-        httpTaskServer.taskManager.idCount = 0;
+        manager.setIdCount(0);
         httpTaskServer.stop();
     }
     @Test
     public void handlerReturnHistoryList() throws IOException, InterruptedException {
 
-        Task task = httpTaskServer.taskManager.createTask("er", "er");
+        Task task = manager.createTask("er", "er");
         task.setDuration(15);
         task.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
-        httpTaskServer.taskManager.addTaskToList(task, httpTaskServer.taskManager.taskList);
+        manager.addTaskToList(task, manager.getTaskList());
 
-        Task task2 = httpTaskServer.taskManager.createTask("er", "er");
+        Task task2 = manager.createTask("er", "er");
         task2.setDuration(15);
         task2.setStartTime(LocalDateTime.of(2025, 11, 20, 15, 0));
-        httpTaskServer.taskManager.addTaskToList(task2, httpTaskServer.taskManager.taskList);
+        manager.addTaskToList(task2, manager.getTaskList());
 
-        httpTaskServer.taskManager.findTask(task2.getId());
-        httpTaskServer.taskManager.findTask(task.getId());
+        manager.findTask(task2.getId());
+        manager.findTask(task.getId());
 
         URI uri = URI.create("http://localhost:8080/history");
 
@@ -60,11 +62,10 @@ class HandlerForHistoryViewTest {
         HttpResponse<String> response = client.send(request, handler);
 
         int code = response.statusCode();
-        System.out.println(httpTaskServer.taskManager.getHistory());
 
         assertEquals(200, code);
-        assertTrue(httpTaskServer.taskManager.getHistory().size() == 2);
-        assertEquals(httpTaskServer.taskManager.getHistory().getFirst(), task2);
-        assertEquals(httpTaskServer.taskManager.getHistory().getLast(), task);
+        assertTrue(manager.getHistory().size() == 2);
+        assertEquals(manager.getHistory().getFirst(), task2);
+        assertEquals(manager.getHistory().getLast(), task);
     }
 }

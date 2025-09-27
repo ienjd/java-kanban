@@ -16,7 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HandlerForTaskTest {
 
-    HttpTaskServer<InMemoryTaskManager> httpTaskServer = new HttpTaskServer<>(new InMemoryTaskManager());
+    InMemoryTaskManager manager = new InMemoryTaskManager();
+    HttpTaskServer<InMemoryTaskManager> httpTaskServer = new HttpTaskServer<>(manager);
 
     @BeforeEach
     public void startServer() throws IOException {
@@ -25,16 +26,16 @@ class HandlerForTaskTest {
 
     @AfterEach
     public void stopServer(){
-        httpTaskServer.taskManager.idCount = 0;
+        manager.setIdCount(0);
         httpTaskServer.stop();
     }
 
     @Test
     public void handlerReturnCode200() throws IOException, InterruptedException {
-        Task task = httpTaskServer.taskManager.createTask("er", "er");
+        Task task = manager.createTask("er", "er");
         task.setDuration(15);
         task.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
-        httpTaskServer.taskManager.addTaskToList(task, httpTaskServer.taskManager.taskList);
+        manager.addTaskToList(task, manager.getTaskList());
         URI uri = URI.create("http://localhost:8080/tasks");
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -53,10 +54,10 @@ class HandlerForTaskTest {
 
         int code = response.statusCode();
 
-        System.out.println(response.body());
 
         assertEquals(200, code);
-        assertTrue(!httpTaskServer.taskManager.taskList.values().isEmpty());
+        assertEquals(true, !manager.getTaskList().values().isEmpty());
+        assertTrue( manager.getTaskList().size() != 0);
     }
 
     @Test
@@ -88,21 +89,21 @@ class HandlerForTaskTest {
         int code = response.statusCode();
 
         assertEquals(201, code);
-        assertNotNull(httpTaskServer.taskManager.findTask(1));
+        assertNotNull(manager.findTask(1));
     }
 
     @Test
     public void handlerReturnCorrectTask() throws IOException, InterruptedException {
 
-        Task task = httpTaskServer.taskManager.createTask("er", "er");
+        Task task = manager.createTask("er", "er");
         task.setDuration(15);
         task.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
-        httpTaskServer.taskManager.addTaskToList(task, httpTaskServer.taskManager.taskList);
+        manager.addTaskToList(task, manager.getTaskList());
 
-        Task task2 = httpTaskServer.taskManager.createTask("er", "er");
+        Task task2 = manager.createTask("er", "er");
         task2.setDuration(15);
         task2.setStartTime(LocalDateTime.of(2025, 10, 20, 17, 0));
-        httpTaskServer.taskManager.addTaskToList(task2, httpTaskServer.taskManager.taskList);
+        manager.addTaskToList(task2, manager.getTaskList());
 
         URI uri = URI.create("http://localhost:8080/tasks/1");
 
@@ -122,8 +123,8 @@ class HandlerForTaskTest {
         String task1 = response.body();
         int code = response.statusCode();
 
-        assertEquals(httpTaskServer.gson.toJson(task), task1);
-        assertEquals(task, httpTaskServer.gson.fromJson(response.body(), Task.class));
+        assertEquals(httpTaskServer.convertToJson(task), task1);
+        assertEquals(task, httpTaskServer.convertFromJson(response.body()));
         assertEquals(201, code);
     }
 
@@ -131,12 +132,12 @@ class HandlerForTaskTest {
     @Test
     public void handlerDeleteCorrectTask() throws IOException, InterruptedException {
 
-        Task task = httpTaskServer.taskManager.createTask("er", "er");
+        Task task = manager.createTask("er", "er");
         task.setDuration(15);
         task.setStartTime(LocalDateTime.of(2025, 10, 20, 15, 0));
-        httpTaskServer.taskManager.addTaskToList(task, httpTaskServer.taskManager.taskList);
+        manager.addTaskToList(task, manager.getTaskList());
 
-        assertTrue(httpTaskServer.taskManager.taskList.containsValue(task));
+        assertTrue(manager.getTaskList().containsValue(task));
 
         URI uri = URI.create("http://localhost:8080/tasks/1");
 
@@ -153,8 +154,7 @@ class HandlerForTaskTest {
         HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
 
         HttpResponse<String> response = client.send(request, handler);
-        System.out.println();
 
-        assertFalse(httpTaskServer.taskManager.taskList.containsValue(task));
+        assertFalse(manager.getTaskList().containsValue(task));
     }
 }

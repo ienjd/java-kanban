@@ -4,13 +4,15 @@ import adapters.LocalDateTimeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 
-public class BaseHttpHandler {
+public abstract class BaseHttpHandler implements HttpHandler {
 
     Gson gson = new GsonBuilder()
             .setPrettyPrinting()

@@ -2,6 +2,7 @@ package handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import exceptions.ManagerSaveException;
 import manager.InMemoryTaskManager;
 import tasks.Subtask;
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-public class HandlerForSubtasks<T extends InMemoryTaskManager> extends BaseHttpHandler implements HttpHandler {
+public class HandlerForSubtasks<T extends InMemoryTaskManager> extends BaseHttpHandler {
 
     private final T taskManager;
 
@@ -26,11 +27,11 @@ public class HandlerForSubtasks<T extends InMemoryTaskManager> extends BaseHttpH
         if (reqMethod.equals("GET")) {
 
             if (Arrays.stream(splitReq).toList().getLast().equals("subtasks")) {
-                sendText(exchange, gson.toJson(taskManager.subtaskList.values()), 200);
+                sendText(exchange, gson.toJson(taskManager.getSubtaskList().values()), 200);
                 return;
             }
 
-            if (taskManager.subtaskList.containsKey(Integer.parseInt(Arrays.stream(splitReq).toList().getLast()))) {
+            if (taskManager.getSubtaskList().containsKey(Integer.parseInt(Arrays.stream(splitReq).toList().getLast()))) {
                 sendText(exchange, gson.toJson(taskManager.findTask(Integer.parseInt(Arrays.stream(splitReq)
                         .toList().getLast()))), 201);
             } else {
@@ -43,17 +44,19 @@ public class HandlerForSubtasks<T extends InMemoryTaskManager> extends BaseHttpH
             String body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             Subtask newTask = gson.fromJson(body, Subtask.class);
 
-            if (taskManager.subtaskList.containsKey(newTask.getId())) {
-                taskManager.updateSubtask(taskManager.findTask(newTask.getId()));
+            if (taskManager.getSubtaskList().containsKey(newTask.getId())) {
+                taskManager.updateSubtask(taskManager.findTask(newTask.getId()), newTask.getStatus());
+                System.out.println(newTask.getStatus());
                 sendText(exchange, gson.toJson(newTask), 201);
-            } else if (!taskManager.subtaskList.containsKey(newTask.getId())) {
-                if (taskManager.isOverLapping(newTask)) {
-                    sendNotFound(exchange, "Добавляемая задача пересекается по времени выполнения с уже существующими", 406);
-                } else {
-                    taskManager.addTaskToList(newTask, taskManager.subtaskList);
+            } else if (!taskManager.getSubtaskList().containsKey(newTask.getId())) {
+                try {
+                    taskManager.addTaskToList(newTask, taskManager.getSubtaskList());
+                    taskManager.fillSubtasks(taskManager.findTask(newTask.getEpicId()), newTask);
                     taskManager.setEpicStartTime(newTask.getEpicId());
                     taskManager.setEpicDuration(newTask.getEpicId());
                     sendText(exchange, gson.toJson(newTask), 201);
+                } catch (ManagerSaveException e) {
+                    sendText(exchange, gson.toJson(e.getMessage()), 406);
                 }
             }
 

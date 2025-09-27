@@ -2,6 +2,7 @@ package manager;
 
 import exceptions.ManagerSaveException;
 import tasks.Epic;
+import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
 import java.io.IOException;
@@ -25,9 +26,9 @@ public interface TaskManager {
 
     public ArrayList<Subtask> getEpicSubtasks(int epicId);
 
-    public void updateTask(Task task) throws ManagerSaveException;
+    public void updateTask(Task task, Status status) throws ManagerSaveException;
 
-    public void updateSubtask(Subtask subtask) throws ManagerSaveException;
+    public void updateSubtask(Subtask subtask, Status status) throws ManagerSaveException;
 
     public void updateEpic(Epic epic) throws ManagerSaveException;
 
