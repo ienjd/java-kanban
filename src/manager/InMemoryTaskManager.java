@@ -40,7 +40,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtaskList.clear();
     }
 
-    public void setIdCount(int idCount){
+    public void setIdCount(int idCount) {
         this.idCount = idCount;
     }
 
@@ -56,7 +56,7 @@ public class InMemoryTaskManager implements TaskManager {
         return subtaskList;
     }
 
-    public<T extends Task> ArrayList<T> getAllTasks(){
+    public <T extends Task> ArrayList <T> getAllTasks() {
         List<T> allTasks = new ArrayList<>();
         allTasks.addAll((Collection<T>) getTaskList().values());
         allTasks.addAll((Collection<T>) getSubtaskList().values());
@@ -64,7 +64,7 @@ public class InMemoryTaskManager implements TaskManager {
         return (ArrayList<T>) allTasks;
     }
 
-    public void deleteAllTasks(){
+    public void deleteAllTasks() {
         clearTaskList();
         clearEpicList();
         clearSubtaskList();
