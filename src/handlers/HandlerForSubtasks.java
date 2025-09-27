@@ -1,7 +1,6 @@
 package handlers;
 
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import exceptions.ManagerSaveException;
 import manager.InMemoryTaskManager;
 import tasks.Subtask;

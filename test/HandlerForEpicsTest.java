@@ -2,7 +2,6 @@ import adapters.DurationAdapter;
 import adapters.LocalDateTimeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import exceptions.ManagerSaveException;
 import main.HttpTaskServer;
 import manager.InMemoryTaskManager;
 import org.junit.jupiter.api.AfterEach;
@@ -16,8 +15,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
