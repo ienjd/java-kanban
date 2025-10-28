@@ -26,7 +26,7 @@ public class TaskTest {
         Task firstTask = inMemoryTaskManager.createTask("Первая подзадача", "Описание первой подзадачи");
         firstTask.setDuration(15);
         firstTask.setStartTime(LocalDateTime.of(2025, 1, 1, 1, 1));
-        inMemoryTaskManager.addTaskToList(firstTask, inMemoryTaskManager.taskList);
+        inMemoryTaskManager.addTaskToList(firstTask, inMemoryTaskManager.getTaskList());
 
 
         Assertions.assertEquals("PT15M", firstTask.getDuration().toString());

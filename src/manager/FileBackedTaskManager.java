@@ -84,12 +84,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             object = (T) new Task(attributes[2], attributes[4], Integer.parseInt(attributes[0]), Status.valueOf(attributes[3]));
             object.setDuration(Integer.parseInt(attributes[6]));
             object.setStartTime(LocalDateTime.parse(attributes[5]));
-            addTaskToList(object, taskList);
+            addTaskToList(object, getTaskList());
         } else if (attributes[1].equals("Epic")) {
             object = (T) new Epic(attributes[2], attributes[4], Integer.parseInt(attributes[0]), Status.valueOf(attributes[3]));
             object.setDuration(Integer.parseInt(attributes[6]));
             object.setStartTime(LocalDateTime.parse(attributes[5]));
-            addTaskToList(object, epicList);
+            addTaskToList(object, getEpicList());
         } else if (attributes[1].equals("Subtask")) {
             object = (T) new Subtask(attributes[2], attributes[4], Integer.parseInt(attributes[0]), Status.valueOf(attributes[3]),
                     Integer.parseInt(attributes[5]));
@@ -97,7 +97,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             object.setStatus(Status.valueOf(attributes[3]));
             object.setDuration(Integer.parseInt(attributes[6]));
             object.setStartTime(LocalDateTime.parse(attributes[7]));
-            addTaskToList(object, subtaskList);
+            addTaskToList(object, getSubtaskList());
         }
     }
 
@@ -114,8 +114,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateTask(Task task) throws ManagerSaveException {
-        super.updateTask(task);
+    public void updateTask(Task task, Status status) throws ManagerSaveException {
+        super.updateTask(task, status);
         save();
     }
 
@@ -126,8 +126,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) throws ManagerSaveException {
-        super.updateSubtask(subtask);
+    public void updateSubtask(Subtask subtask, Status status) throws ManagerSaveException {
+        super.updateSubtask(subtask, status);
         save();
     }
 

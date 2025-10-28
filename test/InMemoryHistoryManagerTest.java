@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import tasks.Task;
 
 public class InMemoryHistoryManagerTest extends TaskManagerTest {
+
     InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
     InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
 
@@ -14,7 +15,7 @@ public class InMemoryHistoryManagerTest extends TaskManagerTest {
         for (int i = 0; i < inMemoryHistoryManager.getHistory().size(); i++) {
             inMemoryHistoryManager.remove(i);
         }
-        inMemoryTaskManager.idCount = 0;
+        inMemoryTaskManager.setIdCount(0);
     }
 
     @Test
